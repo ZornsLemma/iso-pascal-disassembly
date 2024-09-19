@@ -42,36 +42,32 @@ oscli       = &fff7
     equs "Pascal"                                                     ; 8009: 50 61 73... Pas
 .copyright
     equb 0                                                            ; 800f: 00          .
-.l8010
-service_handler = l8010+3
-    equs "(C)", &c9, 7, &d0, "(", &a5, &ef, &c9, &a3, &d0, " ", &a5   ; 8010: 28 43 29... (C)
-    equs &f0, &c9, &c0, &d0, &1a, &a5, &f1, &d0, &16, &a2, &80, " "   ; 801e: f0 c9 c0... ...
-    equs "g", &80, &a9, 3, &a2, &16, " ", &f4, &ff, &8e, 0            ; 802a: 67 80 a9... g..
-; overlapping: cmp #7                                                 ; 8013: c9 07       ..
-; overlapping: bne sub_c803f                                          ; 8015: d0 28       .(
-; overlapping: lda l00ef                                              ; 8017: a5 ef       ..
-; overlapping: cmp #&a3                                               ; 8019: c9 a3       ..
-; overlapping: bne sub_c803d                                          ; 801b: d0 20       .
-; overlapping: lda l00f0                                              ; 801d: a5 f0       ..
-; overlapping: cmp #&c0                                               ; 801f: c9 c0       ..
-; overlapping: bne sub_c803d                                          ; 8021: d0 1a       ..
-; overlapping: lda l00f1                                              ; 8023: a5 f1       ..
-; overlapping: bne sub_c803d                                          ; 8025: d0 16       ..
-; overlapping: ldx #&80                                               ; 8027: a2 80       ..
-; overlapping: jsr sub_c8067                                          ; 8029: 20 67 80     g.
-; overlapping: lda #3                                                 ; 802c: a9 03       ..
-; overlapping: ldx #&16                                               ; 802e: a2 16       ..
-; overlapping: jsr osbyte                                             ; 8030: 20 f4 ff     ..
-; overlapping: stx l0100                                              ; 8033: 8e 00 01    ...
-    equb 1                                                            ; 8035: 01          .
+    equs "(C)"                                                        ; 8010: 28 43 29    (C)
 
+.service_handler
+    cmp #7                                                            ; 8013: c9 07       ..
+    bne c803f                                                         ; 8015: d0 28       .(
+    lda l00ef                                                         ; 8017: a5 ef       ..
+    cmp #&a3                                                          ; 8019: c9 a3       ..
+    bne c803d                                                         ; 801b: d0 20       .
+    lda l00f0                                                         ; 801d: a5 f0       ..
+    cmp #&c0                                                          ; 801f: c9 c0       ..
+    bne c803d                                                         ; 8021: d0 1a       ..
+    lda l00f1                                                         ; 8023: a5 f1       ..
+    bne c803d                                                         ; 8025: d0 16       ..
+    ldx #&80                                                          ; 8027: a2 80       ..
+    jsr sub_c8067                                                     ; 8029: 20 67 80     g.
+    lda #osbyte_select_output_stream                                  ; 802c: a9 03       ..
+    ldx #%00010110                                                    ; 802e: a2 16       ..
+    jsr osbyte                                                        ; 8030: 20 f4 ff     ..            ; Select output stream based on X: disable RS232 output; disable VDU driver; disable printer output; disable printer despite CTRL-B/C state; disable SPOOLed output; enable printer output even without VDU 1 first
+    stx l0100                                                         ; 8033: 8e 00 01    ...            ; X is the previous output stream status byte
     lda #osbyte_enter_language                                        ; 8036: a9 8e       ..
     ldx romsel_copy                                                   ; 8038: a6 f4       ..             ; X=ROM number
     jmp osbyte                                                        ; 803a: 4c f4 ff    L..            ; Enter language ROM X
 
-.sub_c803d
+.c803d
     lda #7                                                            ; 803d: a9 07       ..
-.sub_c803f
+.c803f
     rts                                                               ; 803f: 60          `
 
 .l8040
@@ -1846,6 +1842,8 @@ service_handler = l8010+3
 .pydis_end
 
 ; Automatically generated labels:
+;     c803d
+;     c803f
 ;     c80a4
 ;     l006a
 ;     l006b
@@ -1857,10 +1855,7 @@ service_handler = l8010+3
 ;     l00f1
 ;     l0100
 ;     l062e
-;     l8010
 ;     l8040
-;     sub_c803d
-;     sub_c803f
 ;     sub_c8067
     assert <(l006a) == &6a
     assert <(l8040) == &40
