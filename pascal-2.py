@@ -51,5 +51,15 @@ comment(0x8024, "*HELP handler")
 
 expr(0x8068, "our_osbyte_a")
 expr(0x806e, "our_osbyte_x")
+entry(0x8092, "unrecognised_osbyte_handler_done")
+entry(0x8904, "unrecognised_osbyte_handler_rts")
+
+label(0x8095, "osbyte_163_192_x_minus_1_table")
+byte(0x8095, 3)
+expr(0x8077, make_subtract("osbyte_163_192_x_minus_1_table", 1))
+
+entry(0x8098, "brkv_handler")
+expr(0x822c, make_lo("brkv_handler"))
+expr(0x8231, make_hi("brkv_handler"))
 
 go()
