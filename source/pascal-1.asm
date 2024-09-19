@@ -62,7 +62,7 @@ oscli       = &fff7
     bne unrecognised_osbyte_handler_done                              ; 8025: d0 16       ..
 ; TODO: do we read the last break type then ignore the result here?
     ldx #&80                                                          ; 8027: a2 80       ..
-    jsr read_last_break_type_using_supplied_x                         ; 8029: 20 67 80     g.
+    jsr set_last_break_type_to_x_and_return_with_old_break_type_in_x  ; 8029: 20 67 80     g.
     lda #osbyte_select_output_stream                                  ; 802c: a9 03       ..
     ldx #%00010110                                                    ; 802e: a2 16       ..
     jsr osbyte                                                        ; 8030: 20 f4 ff     ..            ; Select output stream based on X: disable RS232 output; disable VDU driver; disable printer output; disable printer despite CTRL-B/C state; disable SPOOLed output; enable printer output even without VDU 1 first
@@ -77,7 +77,12 @@ oscli       = &fff7
     rts                                                               ; 803f: 60          `
 
 ; TODO: Why do we using OSCLI *FX instead of just executing OSBYTE directly? Wouldn't
-; that be shorter?
+; that be shorter? I suspect we deliberately want the error-generating behaviour of *FX
+; because this is all related to invoking the other ROM and generating an error if it's
+; missing.
+; TODO: I suspect in terms of a PALPROM conversion this code could be removed to free
+; up space and the startup simplified, because it's not possible to have only one ROM
+; present.
 ; It is assumed both of these strings share the same high byte.
 .fx163_192_1
     equs "fx163,192,1"                                                ; 8040: 66 78 31... fx1
@@ -96,7 +101,7 @@ oscli       = &fff7
     bne loop_c805a                                                    ; 8061: d0 f7       ..
     ldx #<fx163_192_3                                                 ; 8063: a2 4c       .L
     bne in_practice_do_fx163_192_3                                    ; 8065: d0 3f       .?             ; always branch
-.read_last_break_type_using_supplied_x
+.set_last_break_type_to_x_and_return_with_old_break_type_in_x
     lda #osbyte_read_write_last_break_type                            ; 8067: a9 fd       ..
     ldy #3                                                            ; 8069: a0 03       ..
     jmp osbyte                                                        ; 806b: 4c f4 ff    L..            ; Read/Write type of last reset
@@ -111,9 +116,13 @@ oscli       = &fff7
     lda #>brkv_handler                                                ; 8078: a9 80       ..
     sta brkv+1                                                        ; 807a: 8d 03 02    ...
     ldx #0                                                            ; 807d: a2 00       ..
-    jsr read_last_break_type_using_supplied_x                         ; 807f: 20 67 80     g.
+    jsr set_last_break_type_to_x_and_return_with_old_break_type_in_x  ; 807f: 20 67 80     g.
     txa                                                               ; 8082: 8a          .
-; TODO: always branch? this makes no sense
+; branch if last_break_type is one of the standard values, don't branch if our
+; unrecognised OSBYTE handler set it to &80. TODO: I suspect what's happening here is
+; that our language entry attempts to invoke the other ROM via *FX163,192,1 and that
+; ROM in due course will attempt to enter us via *FX163,192,0 which will lead to us
+; getting back here with b7 of last break type set.
     bpl do_fx163_192_1                                                ; 8083: 10 1f       ..
     lda #1                                                            ; 8085: a9 01       ..
     sta l006b                                                         ; 8087: 85 6b       .k
