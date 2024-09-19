@@ -50,4 +50,18 @@ expr(0x80a5, make_lo("fx163_192_1"))
 expr(0x80a7, make_hi("fx163_192_1"))
 comment(0x8040, "It is assumed both of these strings share the same high byte.")
 
+entry(0x8067, "read_last_break_type_using_supplied_x")
+comment(0x8083, "TODO: always branch? this makes no sense")
+
+comment(0x8017, "Unrecognised OSBYTE handler")
+constant(163, "our_osbyte_a")
+expr(0x801a, "our_osbyte_a")
+constant(192, "our_osbyte_x")
+expr(0x8020, "our_osbyte_x")
+label(0xef, "osbyte_a")
+label(0xf0, "osbyte_x")
+label(0xf1, "osbyte_y")
+entry(0x803d, "unrecognised_osbyte_handler_done")
+entry(0x803f, "rts")
+
 go()

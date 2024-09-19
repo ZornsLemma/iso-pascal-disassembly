@@ -3,6 +3,8 @@ osbyte_enter_language               = 142
 osbyte_read_write_last_break_type   = 253
 osbyte_select_output_stream         = 3
 osword_read_io_memory               = 5
+our_osbyte_a                        = 163
+our_osbyte_x                        = 192
 
 ; Memory locations
 l006a       = &006a
@@ -10,9 +12,9 @@ l006b       = &006b
 l006c       = &006c
 l006d       = &006d
 l006e       = &006e
-l00ef       = &00ef
-l00f0       = &00f0
-l00f1       = &00f1
+osbyte_a    = &00ef
+osbyte_x    = &00f0
+osbyte_y    = &00f1
 romsel_copy = &00f4
 l00fd       = &00fd
 l0100       = &0100
@@ -48,17 +50,18 @@ oscli       = &fff7
 
 .service_handler
     cmp #7                                                            ; 8013: c9 07       ..
-    bne c803f                                                         ; 8015: d0 28       .(
-    lda l00ef                                                         ; 8017: a5 ef       ..
-    cmp #&a3                                                          ; 8019: c9 a3       ..
-    bne c803d                                                         ; 801b: d0 20       .
-    lda l00f0                                                         ; 801d: a5 f0       ..
-    cmp #&c0                                                          ; 801f: c9 c0       ..
-    bne c803d                                                         ; 8021: d0 1a       ..
-    lda l00f1                                                         ; 8023: a5 f1       ..
-    bne c803d                                                         ; 8025: d0 16       ..
+    bne rts                                                           ; 8015: d0 28       .(
+; Unrecognised OSBYTE handler
+    lda osbyte_a                                                      ; 8017: a5 ef       ..
+    cmp #our_osbyte_a                                                 ; 8019: c9 a3       ..
+    bne unrecognised_osbyte_handler_done                              ; 801b: d0 20       .
+    lda osbyte_x                                                      ; 801d: a5 f0       ..
+    cmp #our_osbyte_x                                                 ; 801f: c9 c0       ..
+    bne unrecognised_osbyte_handler_done                              ; 8021: d0 1a       ..
+    lda osbyte_y                                                      ; 8023: a5 f1       ..
+    bne unrecognised_osbyte_handler_done                              ; 8025: d0 16       ..
     ldx #&80                                                          ; 8027: a2 80       ..
-    jsr sub_c8067                                                     ; 8029: 20 67 80     g.
+    jsr read_last_break_type_using_supplied_x                         ; 8029: 20 67 80     g.
     lda #osbyte_select_output_stream                                  ; 802c: a9 03       ..
     ldx #%00010110                                                    ; 802e: a2 16       ..
     jsr osbyte                                                        ; 8030: 20 f4 ff     ..            ; Select output stream based on X: disable RS232 output; disable VDU driver; disable printer output; disable printer despite CTRL-B/C state; disable SPOOLed output; enable printer output even without VDU 1 first
@@ -67,9 +70,9 @@ oscli       = &fff7
     ldx romsel_copy                                                   ; 8038: a6 f4       ..             ; X=ROM number
     jmp osbyte                                                        ; 803a: 4c f4 ff    L..            ; Enter language ROM X
 
-.c803d
+.unrecognised_osbyte_handler_done
     lda #7                                                            ; 803d: a9 07       ..
-.c803f
+.rts
     rts                                                               ; 803f: 60          `
 
 ; It is assumed both of these strings share the same high byte.
@@ -90,7 +93,7 @@ oscli       = &fff7
     bne loop_c805a                                                    ; 8061: d0 f7       ..
     ldx #<fx163_192_3                                                 ; 8063: a2 4c       .L
     bne c80a6                                                         ; 8065: d0 3f       .?
-.sub_c8067
+.read_last_break_type_using_supplied_x
     lda #osbyte_read_write_last_break_type                            ; 8067: a9 fd       ..
     ldy #3                                                            ; 8069: a0 03       ..
     jmp osbyte                                                        ; 806b: 4c f4 ff    L..            ; Read/Write type of last reset
@@ -105,8 +108,9 @@ oscli       = &fff7
     lda #>brkv_handler                                                ; 8078: a9 80       ..
     sta brkv+1                                                        ; 807a: 8d 03 02    ...
     ldx #0                                                            ; 807d: a2 00       ..
-    jsr sub_c8067                                                     ; 807f: 20 67 80     g.
+    jsr read_last_break_type_using_supplied_x                         ; 807f: 20 67 80     g.
     txa                                                               ; 8082: 8a          .
+; TODO: always branch? this makes no sense
     bpl c80a4                                                         ; 8083: 10 1f       ..
     lda #1                                                            ; 8085: a9 01       ..
     sta l006b                                                         ; 8087: 85 6b       .k
@@ -1856,8 +1860,6 @@ oscli       = &fff7
 .pydis_end
 
 ; Automatically generated labels:
-;     c803d
-;     c803f
 ;     c80a4
 ;     c80a6
 ;     l006a
@@ -1865,15 +1867,11 @@ oscli       = &fff7
 ;     l006c
 ;     l006d
 ;     l006e
-;     l00ef
-;     l00f0
-;     l00f1
 ;     l00fd
 ;     l0100
 ;     l041a
 ;     l062e
 ;     loop_c805a
-;     sub_c8067
     assert <(l006a) == &6a
     assert <brkv_handler == &58
     assert <fx163_192_1 == &40
@@ -1886,5 +1884,7 @@ oscli       = &fff7
     assert osbyte_read_write_last_break_type == &fd
     assert osbyte_select_output_stream == &03
     assert osword_read_io_memory == &05
+    assert our_osbyte_a == &a3
+    assert our_osbyte_x == &c0
 
 save pydis_start, pydis_end
