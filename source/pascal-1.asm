@@ -72,9 +72,11 @@ oscli       = &fff7
 .c803f
     rts                                                               ; 803f: 60          `
 
-.l8040
+; It is assumed both of these strings share the same high byte.
+.fx163_192_1
     equs "fx163,192,1"                                                ; 8040: 66 78 31... fx1
     equb &0d                                                          ; 804b: 0d          .
+.fx163_192_3
     equs "fx163,192,3"                                                ; 804c: 66 78 31... fx1
     equb &0d                                                          ; 8057: 0d          .
 
@@ -86,7 +88,7 @@ oscli       = &fff7
     iny                                                               ; 805f: c8          .
     tya                                                               ; 8060: 98          .
     bne loop_c805a                                                    ; 8061: d0 f7       ..
-    ldx #&4c ; 'L'                                                    ; 8063: a2 4c       .L
+    ldx #<fx163_192_3                                                 ; 8063: a2 4c       .L
     bne c80a6                                                         ; 8065: d0 3f       .?
 .sub_c8067
     lda #osbyte_read_write_last_break_type                            ; 8067: a9 fd       ..
@@ -122,9 +124,9 @@ oscli       = &fff7
     jmp (l062e)                                                       ; 80a1: 6c 2e 06    l..
 
 .c80a4
-    ldx #<(l8040)                                                     ; 80a4: a2 40       .@
+    ldx #<fx163_192_1                                                 ; 80a4: a2 40       .@
 .c80a6
-    ldy #>(l8040)                                                     ; 80a6: a0 80       ..
+    ldy #>fx163_192_1                                                 ; 80a6: a0 80       ..
     jmp oscli                                                         ; 80a8: 4c f7 ff    L..
 
     equb &b1, &18, &aa, &c8, &b1, &18, &60, &a0, &24, &20, &ab, &80   ; 80ab: b1 18 aa... ...
@@ -1870,15 +1872,15 @@ oscli       = &fff7
 ;     l0100
 ;     l041a
 ;     l062e
-;     l8040
 ;     loop_c805a
 ;     sub_c8067
     assert <(l006a) == &6a
-    assert <(l8040) == &40
     assert <brkv_handler == &58
+    assert <fx163_192_1 == &40
+    assert <fx163_192_3 == &4c
     assert >(l006a) == &00
-    assert >(l8040) == &80
     assert >brkv_handler == &80
+    assert >fx163_192_1 == &80
     assert copyright - rom_header == &0f
     assert osbyte_enter_language == &8e
     assert osbyte_read_write_last_break_type == &fd

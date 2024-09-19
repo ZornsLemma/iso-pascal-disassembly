@@ -43,4 +43,11 @@ entry(0x8058, "brkv_handler")
 expr(0x8074, make_lo("brkv_handler"))
 expr(0x8079, make_hi("brkv_handler"))
 
+label(0x8040, "fx163_192_1")
+label(0x804c, "fx163_192_3")
+expr(0x8064, make_lo("fx163_192_3"))
+expr(0x80a5, make_lo("fx163_192_1"))
+expr(0x80a7, make_hi("fx163_192_1"))
+comment(0x8040, "It is assumed both of these strings share the same high byte.")
+
 go()
