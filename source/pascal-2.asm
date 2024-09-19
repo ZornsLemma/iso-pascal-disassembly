@@ -11,6 +11,8 @@ osbyte_select_output_stream         = 3
 osfind_close                        = 0
 osword_read_io_memory               = 5
 osword_read_line                    = 0
+our_osbyte_a                        = 163
+our_osbyte_x                        = 192
 
 ; Memory locations
 l0000       = &0000
@@ -77,9 +79,9 @@ l0044       = &0044
 l0045       = &0045
 l004b       = &004b
 l0053       = &0053
-l00ef       = &00ef
-l00f0       = &00f0
-l00f1       = &00f1
+osbyte_a    = &00ef
+osbyte_x    = &00f0
+osbyte_y    = &00f1
 os_text_ptr = &00f2
 romsel_copy = &00f4
 l00ff       = &00ff
@@ -174,11 +176,12 @@ oscli       = &fff7
 
 .service_handler
     cmp #4                                                            ; 8018: c9 04       ..
-    beq c8043                                                         ; 801a: f0 27       .'
+    beq unrecognised_command_handler                                  ; 801a: f0 27       .'
     cmp #7                                                            ; 801c: c9 07       ..
-    beq c8065                                                         ; 801e: f0 45       .E
+    beq unrecognised_osbyte_handler                                   ; 801e: f0 45       .E
     cmp #9                                                            ; 8020: c9 09       ..
-    bne c8035                                                         ; 8022: d0 11       ..
+    bne rts                                                           ; 8022: d0 11       ..
+; *HELP handler
     tya                                                               ; 8024: 98          .
     pha                                                               ; 8025: 48          H
     ldy #&0c                                                          ; 8026: a0 0c       ..
@@ -190,7 +193,7 @@ oscli       = &fff7
     pla                                                               ; 8031: 68          h
     tay                                                               ; 8032: a8          .
     lda #9                                                            ; 8033: a9 09       ..
-.c8035
+.rts
     rts                                                               ; 8035: 60          `
 
 .l8036
@@ -200,7 +203,7 @@ oscli       = &fff7
     equs "LACSAP"                                                     ; 803c: 4c 41 43... LAC
     equb &0d                                                          ; 8042: 0d          .
 
-.c8043
+.unrecognised_command_handler
     tya                                                               ; 8043: 98          .
     pha                                                               ; 8044: 48          H
     ldx #5                                                            ; 8045: a2 05       ..
@@ -224,14 +227,14 @@ oscli       = &fff7
     ldx romsel_copy                                                   ; 8062: a6 f4       ..
     rts                                                               ; 8064: 60          `
 
-.c8065
-    lda l00ef                                                         ; 8065: a5 ef       ..
-    cmp #&a3                                                          ; 8067: c9 a3       ..
+.unrecognised_osbyte_handler
+    lda osbyte_a                                                      ; 8065: a5 ef       ..
+    cmp #our_osbyte_a                                                 ; 8067: c9 a3       ..
     bne c8092                                                         ; 8069: d0 27       .'
-    lda l00f0                                                         ; 806b: a5 f0       ..
-    cmp #&c0                                                          ; 806d: c9 c0       ..
+    lda osbyte_x                                                      ; 806b: a5 f0       ..
+    cmp #our_osbyte_x                                                 ; 806d: c9 c0       ..
     bne c8092                                                         ; 806f: d0 21       .!
-    lda l00f1                                                         ; 8071: a5 f1       ..
+    lda osbyte_y                                                      ; 8071: a5 f1       ..
     beq c8092                                                         ; 8073: f0 1d       ..
     tax                                                               ; 8075: aa          .
     lda c8094,x                                                       ; 8076: bd 94 80    ...
@@ -3435,10 +3438,7 @@ oscli       = &fff7
 .pydis_end
 
 ; Automatically generated labels:
-;     c8035
-;     c8043
 ;     c805e
-;     c8065
 ;     c808b
 ;     c8092
 ;     c8094
@@ -3643,9 +3643,6 @@ oscli       = &fff7
 ;     l0045
 ;     l004b
 ;     l0053
-;     l00ef
-;     l00f0
-;     l00f1
 ;     l00ff
 ;     l0100
 ;     l0400
@@ -3817,5 +3814,7 @@ oscli       = &fff7
     assert osfind_close == &00
     assert osword_read_io_memory == &05
     assert osword_read_line == &00
+    assert our_osbyte_a == &a3
+    assert our_osbyte_x == &c0
 
 save pydis_start, pydis_end

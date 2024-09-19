@@ -38,4 +38,18 @@ def is_sideways_rom():
 load(0x8000, "orig/pascal-2.rom", "6502", "63d8f8041dbb844ba10ecd36d8ff2511")
 is_sideways_rom()
 
+label(0xef, "osbyte_a")
+label(0xf0, "osbyte_x")
+label(0xf1, "osbyte_y")
+constant(163, "our_osbyte_a")
+constant(192, "our_osbyte_x")
+
+entry(0x8043, "unrecognised_command_handler")
+entry(0x8065, "unrecognised_osbyte_handler")
+entry(0x8035, "rts")
+comment(0x8024, "*HELP handler")
+
+expr(0x8068, "our_osbyte_a")
+expr(0x806e, "our_osbyte_x")
+
 go()

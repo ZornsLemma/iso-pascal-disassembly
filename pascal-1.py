@@ -35,9 +35,14 @@ def is_sideways_rom():
     string(0x8000 + copyright_offset + 1, 3) # hack
     # ENHANCE: We could recognise tube transfer/relocation data in header
 
-
 load(0x8000, "orig/pascal-1.rom", "6502", "2171aa110b958d8c78eda541c217dba7")
 is_sideways_rom()
+
+label(0xef, "osbyte_a")
+label(0xf0, "osbyte_x")
+label(0xf1, "osbyte_y")
+constant(163, "our_osbyte_a")
+constant(192, "our_osbyte_x")
 
 entry(0x8058, "brkv_handler")
 expr(0x8074, make_lo("brkv_handler"))
@@ -59,13 +64,8 @@ entry(0x8067, "set_last_break_type_to_x_and_return_with_old_break_type_in_x")
 comment(0x8083, "branch if last_break_type is one of the standard values, don't branch if our unrecognised OSBYTE handler set it to &80. TODO: I suspect what's happening here is that our language entry attempts to invoke the other ROM via *FX163,192,1 and that ROM in due course will attempt to enter us via *FX163,192,0 which will lead to us getting back here with b7 of last break type set.")
 
 comment(0x8017, "Unrecognised OSBYTE handler")
-constant(163, "our_osbyte_a")
 expr(0x801a, "our_osbyte_a")
-constant(192, "our_osbyte_x")
 expr(0x8020, "our_osbyte_x")
-label(0xef, "osbyte_a")
-label(0xf0, "osbyte_x")
-label(0xf1, "osbyte_y")
 entry(0x803d, "unrecognised_osbyte_handler_done")
 comment(0x8027, "TODO: do we read the last break type then ignore the result here?")
 entry(0x803f, "rts")
