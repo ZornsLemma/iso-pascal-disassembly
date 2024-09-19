@@ -60,6 +60,7 @@ oscli       = &fff7
     bne unrecognised_osbyte_handler_done                              ; 8021: d0 1a       ..
     lda osbyte_y                                                      ; 8023: a5 f1       ..
     bne unrecognised_osbyte_handler_done                              ; 8025: d0 16       ..
+; TODO: do we read the last break type then ignore the result here?
     ldx #&80                                                          ; 8027: a2 80       ..
     jsr read_last_break_type_using_supplied_x                         ; 8029: 20 67 80     g.
     lda #osbyte_select_output_stream                                  ; 802c: a9 03       ..
@@ -75,6 +76,8 @@ oscli       = &fff7
 .rts
     rts                                                               ; 803f: 60          `
 
+; TODO: Why do we using OSCLI *FX instead of just executing OSBYTE directly? Wouldn't
+; that be shorter?
 ; It is assumed both of these strings share the same high byte.
 .fx163_192_1
     equs "fx163,192,1"                                                ; 8040: 66 78 31... fx1
@@ -92,7 +95,7 @@ oscli       = &fff7
     tya                                                               ; 8060: 98          .
     bne loop_c805a                                                    ; 8061: d0 f7       ..
     ldx #<fx163_192_3                                                 ; 8063: a2 4c       .L
-    bne c80a6                                                         ; 8065: d0 3f       .?
+    bne in_practice_do_fx163_192_3                                    ; 8065: d0 3f       .?             ; always branch
 .read_last_break_type_using_supplied_x
     lda #osbyte_read_write_last_break_type                            ; 8067: a9 fd       ..
     ldy #3                                                            ; 8069: a0 03       ..
@@ -111,7 +114,7 @@ oscli       = &fff7
     jsr read_last_break_type_using_supplied_x                         ; 807f: 20 67 80     g.
     txa                                                               ; 8082: 8a          .
 ; TODO: always branch? this makes no sense
-    bpl c80a4                                                         ; 8083: 10 1f       ..
+    bpl do_fx163_192_1                                                ; 8083: 10 1f       ..
     lda #1                                                            ; 8085: a9 01       ..
     sta l006b                                                         ; 8087: 85 6b       .k
     lda #0                                                            ; 8089: a9 00       ..
@@ -127,9 +130,9 @@ oscli       = &fff7
     jsr osbyte                                                        ; 809e: 20 f4 ff     ..            ; Select output stream based on X
     jmp (l062e)                                                       ; 80a1: 6c 2e 06    l..
 
-.c80a4
+.do_fx163_192_1
     ldx #<fx163_192_1                                                 ; 80a4: a2 40       .@
-.c80a6
+.in_practice_do_fx163_192_3
     ldy #>fx163_192_1                                                 ; 80a6: a0 80       ..
     jmp oscli                                                         ; 80a8: 4c f7 ff    L..
 
@@ -1860,8 +1863,6 @@ oscli       = &fff7
 .pydis_end
 
 ; Automatically generated labels:
-;     c80a4
-;     c80a6
 ;     l006a
 ;     l006b
 ;     l006c
