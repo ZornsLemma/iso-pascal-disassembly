@@ -29,4 +29,10 @@ expr(0x8231, make_hi("brkv_handler"))
 
 entry(0x808b, "pascal_command_handler")
 
+comment(0x8235, "Set last break type to 0 and get old value in X")
+entry(0x82a7, "real_language_entry") # TODO: guess
+comment(0x823e, "Branch if b7 of original last break type clear")
+comment(0x8253, "Branch if b6 of original last break type clear")
+comment(0x8256, "Branch if b5 of original last break type clear")
+
 go()

@@ -422,12 +422,14 @@ oscli       = &fff7
     sta brkv                                                          ; 822d: 8d 02 02    ...
     lda #>brkv_handler                                                ; 8230: a9 80       ..
     sta brkv+1                                                        ; 8232: 8d 03 02    ...
+; Set last break type to 0 and get old value in X
     ldx #0                                                            ; 8235: a2 00       ..
     ldy #3                                                            ; 8237: a0 03       ..
     lda #osbyte_read_write_last_break_type                            ; 8239: a9 fd       ..
     jsr osbyte                                                        ; 823b: 20 f4 ff     ..            ; Read/Write type of last reset
+; Branch if b7 of original last break type clear
     txa                                                               ; 823e: 8a          .              ; X=value of type of last reset
-    bpl c82a7                                                         ; 823f: 10 66       .f
+    bpl real_language_entry                                           ; 823f: 10 66       .f
     pha                                                               ; 8241: 48          H
     jsr sub_ca493                                                     ; 8242: 20 93 a4     ..
     lda #1                                                            ; 8245: a9 01       ..
@@ -437,8 +439,10 @@ oscli       = &fff7
     lda #osbyte_select_output_stream                                  ; 824d: a9 03       ..
     jsr osbyte                                                        ; 824f: 20 f4 ff     ..            ; Select output stream based on X
     pla                                                               ; 8252: 68          h
+; Branch if b6 of original last break type clear
     rol a                                                             ; 8253: 2a          *
-    bpl c82a7                                                         ; 8254: 10 51       .Q
+    bpl real_language_entry                                           ; 8254: 10 51       .Q
+; Branch if b5 of original last break type clear
     rol a                                                             ; 8256: 2a          *
     bpl c8265                                                         ; 8257: 10 0c       ..
     jsr sub_c9184                                                     ; 8259: 20 84 91     ..
@@ -479,7 +483,7 @@ oscli       = &fff7
 .c82a4
     jmp c8344                                                         ; 82a4: 4c 44 83    LD.
 
-.c82a7
+.real_language_entry
     lda #osbyte_read_os_version                                       ; 82a7: a9 00       ..
     ldx #1                                                            ; 82a9: a2 01       ..
 
@@ -3549,7 +3553,6 @@ oscli       = &fff7
 ;     c81bc
 ;     c8265
 ;     c82a4
-;     c82a7
 ;     c82c1
 ;     c831a
 ;     c8324
