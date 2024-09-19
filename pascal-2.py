@@ -62,4 +62,6 @@ entry(0x8098, "brkv_handler")
 expr(0x822c, make_lo("brkv_handler"))
 expr(0x8231, make_hi("brkv_handler"))
 
+entry(0x808b, "pascal_command_handler")
+
 go()

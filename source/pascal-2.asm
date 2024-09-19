@@ -216,7 +216,7 @@ oscli       = &fff7
 .loop_c8047
     lda (os_text_ptr),y                                               ; 8047: b1 f2       ..
     cmp #&2e ; '.'                                                    ; 8049: c9 2e       ..
-    beq c808b                                                         ; 804b: f0 3e       .>
+    beq pascal_command_handler                                        ; 804b: f0 3e       .>
     and #&df                                                          ; 804d: 29 df       ).
     cmp l803c,x                                                       ; 804f: dd 3c 80    .<.
     bne c805e                                                         ; 8052: d0 0a       ..
@@ -225,7 +225,7 @@ oscli       = &fff7
     bpl loop_c8047                                                    ; 8056: 10 ef       ..
     lda (os_text_ptr),y                                               ; 8058: b1 f2       ..
     cmp #&21 ; '!'                                                    ; 805a: c9 21       .!
-    bcc c808b                                                         ; 805c: 90 2d       .-
+    bcc pascal_command_handler                                        ; 805c: 90 2d       .-
 .c805e
     pla                                                               ; 805e: 68          h
     tay                                                               ; 805f: a8          .
@@ -252,7 +252,7 @@ oscli       = &fff7
     ldx #%00010110                                                    ; 8083: a2 16       ..
     jsr osbyte                                                        ; 8085: 20 f4 ff     ..            ; Select output stream based on X: disable RS232 output; disable VDU driver; disable printer output; disable printer despite CTRL-B/C state; disable SPOOLed output; enable printer output even without VDU 1 first
     stx l0100                                                         ; 8088: 8e 00 01    ...            ; X is the previous output stream status byte
-.c808b
+.pascal_command_handler
     lda #osbyte_enter_language                                        ; 808b: a9 8e       ..
     ldx romsel_copy                                                   ; 808d: a6 f4       ..             ; X=ROM number
     jmp osbyte                                                        ; 808f: 4c f4 ff    L..            ; Enter language ROM X
@@ -3535,7 +3535,6 @@ oscli       = &fff7
 
 ; Automatically generated labels:
 ;     c805e
-;     c808b
 ;     c80a5
 ;     c80b6
 ;     c80bf
