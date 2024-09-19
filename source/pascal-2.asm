@@ -134,14 +134,6 @@ l065b       = &065b
 l065c       = &065c
 l0f03       = &0f03
 l6e69       = &6e69
-l8028       = &8028
-l8035       = &8035
-l8036       = &8036
-l803c       = &803c
-l8043       = &8043
-l8047       = &8047
-l805e       = &805e
-l8065       = &8065
 lf461       = &f461
 osfind      = &ffce
 osargs      = &ffda
@@ -178,82 +170,87 @@ oscli       = &fff7
     equs "1.10"                                                       ; 8010: 31 2e 31... 1.1
 .copyright
     equb 0                                                            ; 8014: 00          .
-.l8015
-service_handler = l8015+3
-    equs "(C)", &c9, 4, &f0, "'", &c9, 7, &f0, "E", &c9, 9, &d0, &11  ; 8015: 28 43 29... (C)
-    equs &98, "H", &a0, &0c, &b9, "6", &80, " ", &e3, &ff, &88, &10   ; 8024: 98 48 a0... .H.
-    equs &f7, "h", &a8, &a9, 9, "`", &0d, "01.1 LACSAP", &0d, &98, "H"; 8030: f7 68 a8... .h.
-    equs &a2, 5, &b1, &f2, &c9, ".", &f0, ">)", &df, &dd, "<", &80    ; 8045: a2 05 b1... ...
-    equs &d0, &0a, &c8, &ca, &10, &ef, &b1, &f2, &c9, "!", &90, "-"   ; 8052: d0 0a c8... ...
-    equs "h", &a8, &a9, 4, &a6, &f4, "`", &a5, &ef, &c9, &a3, &d0, "'"; 805e: 68 a8 a9... h..
-    equs &a5, &f0, &c9, &c0, &d0, "!", &a5, &f1, &f0, &1d, &aa, &bd   ; 806b: a5 f0 c9... ...
-    equs &94, &80, &aa, &a0, 3, &a9, &fd, " ", &f4, &ff, &a9, 3, &a2  ; 8077: 94 80 aa... ...
-    equs &16, " ", &f4, &ff, &8e, 0                                   ; 8084: 16 20 f4... . .
-; overlapping: cmp #4                                                 ; 8018: c9 04       ..
-; overlapping: beq l8043                                              ; 801a: f0 27       .'
-; overlapping: cmp #7                                                 ; 801c: c9 07       ..
-; overlapping: beq l8065                                              ; 801e: f0 45       .E
-; overlapping: cmp #9                                                 ; 8020: c9 09       ..
-; overlapping: bne l8035                                              ; 8022: d0 11       ..
-; overlapping: tya                                                    ; 8024: 98          .
-; overlapping: pha                                                    ; 8025: 48          H
-; overlapping: ldy #&0c                                               ; 8026: a0 0c       ..
-; overlapping: lda l8036,y                                            ; 8028: b9 36 80    .6.
-; overlapping: jsr osasci                                             ; 802b: 20 e3 ff     ..
-; overlapping: dey                                                    ; 802e: 88          .
-; overlapping: bpl l8028                                              ; 802f: 10 f7       ..
-; overlapping: pla                                                    ; 8031: 68          h
-; overlapping: tay                                                    ; 8032: a8          .
-; overlapping: lda #9                                                 ; 8033: a9 09       ..
-; overlapping: rts                                                    ; 8035: 60          `
-; overlapping: tya                                                    ; 8043: 98          .
-; overlapping: pha                                                    ; 8044: 48          H
-; overlapping: ldx #5                                                 ; 8045: a2 05       ..
-; overlapping: lda (os_text_ptr),y                                    ; 8047: b1 f2       ..
-; overlapping: cmp #&2e ; '.'                                         ; 8049: c9 2e       ..
-; overlapping: beq sub_c808b                                          ; 804b: f0 3e       .>
-; overlapping: and #&df                                               ; 804d: 29 df       ).
-; overlapping: cmp l803c,x                                            ; 804f: dd 3c 80    .<.
-; overlapping: bne l805e                                              ; 8052: d0 0a       ..
-; overlapping: iny                                                    ; 8054: c8          .
-; overlapping: dex                                                    ; 8055: ca          .
-; overlapping: bpl l8047                                              ; 8056: 10 ef       ..
-; overlapping: lda (os_text_ptr),y                                    ; 8058: b1 f2       ..
-; overlapping: cmp #&21 ; '!'                                         ; 805a: c9 21       .!
-; overlapping: bcc sub_c808b                                          ; 805c: 90 2d       .-
-; overlapping: pla                                                    ; 805e: 68          h
-; overlapping: tay                                                    ; 805f: a8          .
-; overlapping: lda #4                                                 ; 8060: a9 04       ..
-; overlapping: ldx romsel_copy                                        ; 8062: a6 f4       ..
-; overlapping: rts                                                    ; 8064: 60          `
-; overlapping: lda l00ef                                              ; 8065: a5 ef       ..
-; overlapping: cmp #&a3                                               ; 8067: c9 a3       ..
-; overlapping: bne sub_c8092                                          ; 8069: d0 27       .'
-; overlapping: lda l00f0                                              ; 806b: a5 f0       ..
-; overlapping: cmp #&c0                                               ; 806d: c9 c0       ..
-; overlapping: bne sub_c8092                                          ; 806f: d0 21       .!
-; overlapping: lda l00f1                                              ; 8071: a5 f1       ..
-; overlapping: beq sub_c8092                                          ; 8073: f0 1d       ..
-; overlapping: tax                                                    ; 8075: aa          .
-; overlapping: lda sub_c8094,x                                        ; 8076: bd 94 80    ...
-; overlapping: tax                                                    ; 8079: aa          .
-; overlapping: ldy #3                                                 ; 807a: a0 03       ..
-; overlapping: lda #&fd                                               ; 807c: a9 fd       ..
-; overlapping: jsr osbyte                                             ; 807e: 20 f4 ff     ..
-; overlapping: lda #3                                                 ; 8081: a9 03       ..
-; overlapping: ldx #&16                                               ; 8083: a2 16       ..
-; overlapping: jsr osbyte                                             ; 8085: 20 f4 ff     ..
-; overlapping: stx l0100                                              ; 8088: 8e 00 01    ...
-    equb 1                                                            ; 808a: 01          .
+    equs "(C)"                                                        ; 8015: 28 43 29    (C)
 
-.sub_c808b
+.service_handler
+    cmp #4                                                            ; 8018: c9 04       ..
+    beq c8043                                                         ; 801a: f0 27       .'
+    cmp #7                                                            ; 801c: c9 07       ..
+    beq c8065                                                         ; 801e: f0 45       .E
+    cmp #9                                                            ; 8020: c9 09       ..
+    bne c8035                                                         ; 8022: d0 11       ..
+    tya                                                               ; 8024: 98          .
+    pha                                                               ; 8025: 48          H
+    ldy #&0c                                                          ; 8026: a0 0c       ..
+.loop_c8028
+    lda l8036,y                                                       ; 8028: b9 36 80    .6.
+    jsr osasci                                                        ; 802b: 20 e3 ff     ..            ; Write character
+    dey                                                               ; 802e: 88          .
+    bpl loop_c8028                                                    ; 802f: 10 f7       ..
+    pla                                                               ; 8031: 68          h
+    tay                                                               ; 8032: a8          .
+    lda #9                                                            ; 8033: a9 09       ..
+.c8035
+    rts                                                               ; 8035: 60          `
+
+.l8036
+    equb &0d                                                          ; 8036: 0d          .
+    equs "01.1 "                                                      ; 8037: 30 31 2e... 01.
+.l803c
+    equs "LACSAP"                                                     ; 803c: 4c 41 43... LAC
+    equb &0d                                                          ; 8042: 0d          .
+
+.c8043
+    tya                                                               ; 8043: 98          .
+    pha                                                               ; 8044: 48          H
+    ldx #5                                                            ; 8045: a2 05       ..
+.loop_c8047
+    lda (os_text_ptr),y                                               ; 8047: b1 f2       ..
+    cmp #&2e ; '.'                                                    ; 8049: c9 2e       ..
+    beq c808b                                                         ; 804b: f0 3e       .>
+    and #&df                                                          ; 804d: 29 df       ).
+    cmp l803c,x                                                       ; 804f: dd 3c 80    .<.
+    bne c805e                                                         ; 8052: d0 0a       ..
+    iny                                                               ; 8054: c8          .
+    dex                                                               ; 8055: ca          .
+    bpl loop_c8047                                                    ; 8056: 10 ef       ..
+    lda (os_text_ptr),y                                               ; 8058: b1 f2       ..
+    cmp #&21 ; '!'                                                    ; 805a: c9 21       .!
+    bcc c808b                                                         ; 805c: 90 2d       .-
+.c805e
+    pla                                                               ; 805e: 68          h
+    tay                                                               ; 805f: a8          .
+    lda #4                                                            ; 8060: a9 04       ..
+    ldx romsel_copy                                                   ; 8062: a6 f4       ..
+    rts                                                               ; 8064: 60          `
+
+.c8065
+    lda l00ef                                                         ; 8065: a5 ef       ..
+    cmp #&a3                                                          ; 8067: c9 a3       ..
+    bne c8092                                                         ; 8069: d0 27       .'
+    lda l00f0                                                         ; 806b: a5 f0       ..
+    cmp #&c0                                                          ; 806d: c9 c0       ..
+    bne c8092                                                         ; 806f: d0 21       .!
+    lda l00f1                                                         ; 8071: a5 f1       ..
+    beq c8092                                                         ; 8073: f0 1d       ..
+    tax                                                               ; 8075: aa          .
+    lda c8094,x                                                       ; 8076: bd 94 80    ...
+    tax                                                               ; 8079: aa          .
+    ldy #3                                                            ; 807a: a0 03       ..
+    lda #osbyte_read_write_last_break_type                            ; 807c: a9 fd       ..
+    jsr osbyte                                                        ; 807e: 20 f4 ff     ..            ; Read/Write type of last reset
+    lda #osbyte_select_output_stream                                  ; 8081: a9 03       ..
+    ldx #%00010110                                                    ; 8083: a2 16       ..
+    jsr osbyte                                                        ; 8085: 20 f4 ff     ..            ; Select output stream based on X: disable RS232 output; disable VDU driver; disable printer output; disable printer despite CTRL-B/C state; disable SPOOLed output; enable printer output even without VDU 1 first
+    stx l0100                                                         ; 8088: 8e 00 01    ...            ; X is the previous output stream status byte
+.c808b
     lda #osbyte_enter_language                                        ; 808b: a9 8e       ..
     ldx romsel_copy                                                   ; 808d: a6 f4       ..             ; X=ROM number
     jmp osbyte                                                        ; 808f: 4c f4 ff    L..            ; Enter language ROM X
 
-.sub_c8092
+.c8092
     lda #7                                                            ; 8092: a9 07       ..
-.sub_c8094
+.c8094
     rts                                                               ; 8094: 60          `
 
     equb &80, &c0, &e0, &a2, &ff, &9a, &ae, &16,   4, &e0,   2, &d0   ; 8095: 80 c0 e0... ...
@@ -3438,6 +3435,13 @@ service_handler = l8015+3
 .pydis_end
 
 ; Automatically generated labels:
+;     c8035
+;     c8043
+;     c805e
+;     c8065
+;     c808b
+;     c8092
+;     c8094
 ;     c8101
 ;     c8180
 ;     c8186
@@ -3693,15 +3697,8 @@ service_handler = l8015+3
 ;     l065c
 ;     l0f03
 ;     l6e69
-;     l8015
-;     l8028
-;     l8035
 ;     l8036
 ;     l803c
-;     l8043
-;     l8047
-;     l805e
-;     l8065
 ;     l81c2
 ;     l8466
 ;     l8470
@@ -3715,6 +3712,8 @@ service_handler = l8015+3
 ;     lb072
 ;     lb6a0
 ;     lf461
+;     loop_c8028
+;     loop_c8047
 ;     loop_c8179
 ;     loop_c8305
 ;     loop_c8376
@@ -3737,9 +3736,6 @@ service_handler = l8015+3
 ;     loop_cb5a8
 ;     loop_cb68e
 ;     loop_cbdb4
-;     sub_c808b
-;     sub_c8092
-;     sub_c8094
 ;     sub_c80e9
 ;     sub_c8104
 ;     sub_c817a
