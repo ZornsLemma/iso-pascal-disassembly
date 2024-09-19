@@ -39,4 +39,8 @@ def is_sideways_rom():
 load(0x8000, "orig/pascal-1.rom", "6502", "2171aa110b958d8c78eda541c217dba7")
 is_sideways_rom()
 
+entry(0x8058, "brkv_handler")
+expr(0x8074, make_lo("brkv_handler"))
+expr(0x8079, make_hi("brkv_handler"))
+
 go()

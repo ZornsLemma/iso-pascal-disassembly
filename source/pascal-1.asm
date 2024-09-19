@@ -14,8 +14,10 @@ l00ef       = &00ef
 l00f0       = &00f0
 l00f1       = &00f1
 romsel_copy = &00f4
+l00fd       = &00fd
 l0100       = &0100
 brkv        = &0202
+l041a       = &041a
 l062e       = &062e
 osword      = &fff1
 osbyte      = &fff4
@@ -74,9 +76,18 @@ oscli       = &fff7
     equs "fx163,192,1"                                                ; 8040: 66 78 31... fx1
     equb &0d                                                          ; 804b: 0d          .
     equs "fx163,192,3"                                                ; 804c: 66 78 31... fx1
-    equb &0d, &a0,   0, &b1, &fd, &99, &1a,   4, &c8, &98, &d0, &f7   ; 8057: 0d a0 00... ...
-    equb &a2, &4c, &d0, &3f                                           ; 8063: a2 4c d0... .L.
+    equb &0d                                                          ; 8057: 0d          .
 
+.brkv_handler
+    ldy #0                                                            ; 8058: a0 00       ..
+.loop_c805a
+    lda (l00fd),y                                                     ; 805a: b1 fd       ..
+    sta l041a,y                                                       ; 805c: 99 1a 04    ...
+    iny                                                               ; 805f: c8          .
+    tya                                                               ; 8060: 98          .
+    bne loop_c805a                                                    ; 8061: d0 f7       ..
+    ldx #&4c ; 'L'                                                    ; 8063: a2 4c       .L
+    bne c80a6                                                         ; 8065: d0 3f       .?
 .sub_c8067
     lda #osbyte_read_write_last_break_type                            ; 8067: a9 fd       ..
     ldy #3                                                            ; 8069: a0 03       ..
@@ -87,9 +98,9 @@ oscli       = &fff7
     cld                                                               ; 806f: d8          .
     ldx #&ff                                                          ; 8070: a2 ff       ..
     txs                                                               ; 8072: 9a          .
-    lda #&58 ; 'X'                                                    ; 8073: a9 58       .X
+    lda #<brkv_handler                                                ; 8073: a9 58       .X
     sta brkv                                                          ; 8075: 8d 02 02    ...
-    lda #&80                                                          ; 8078: a9 80       ..
+    lda #>brkv_handler                                                ; 8078: a9 80       ..
     sta brkv+1                                                        ; 807a: 8d 03 02    ...
     ldx #0                                                            ; 807d: a2 00       ..
     jsr sub_c8067                                                     ; 807f: 20 67 80     g.
@@ -112,6 +123,7 @@ oscli       = &fff7
 
 .c80a4
     ldx #<(l8040)                                                     ; 80a4: a2 40       .@
+.c80a6
     ldy #>(l8040)                                                     ; 80a6: a0 80       ..
     jmp oscli                                                         ; 80a8: 4c f7 ff    L..
 
@@ -1845,6 +1857,7 @@ oscli       = &fff7
 ;     c803d
 ;     c803f
 ;     c80a4
+;     c80a6
 ;     l006a
 ;     l006b
 ;     l006c
@@ -1853,14 +1866,19 @@ oscli       = &fff7
 ;     l00ef
 ;     l00f0
 ;     l00f1
+;     l00fd
 ;     l0100
+;     l041a
 ;     l062e
 ;     l8040
+;     loop_c805a
 ;     sub_c8067
     assert <(l006a) == &6a
     assert <(l8040) == &40
+    assert <brkv_handler == &58
     assert >(l006a) == &00
     assert >(l8040) == &80
+    assert >brkv_handler == &80
     assert copyright - rom_header == &0f
     assert osbyte_enter_language == &8e
     assert osbyte_read_write_last_break_type == &fd
