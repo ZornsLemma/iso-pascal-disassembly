@@ -124,6 +124,7 @@ oscli       = &fff7
 ; ROM in due course will attempt to enter us via *FX163,192,0 which will lead to us
 ; getting back here with b7 of last break type set.
     bpl do_fx163_192_1                                                ; 8083: 10 1f       ..
+; Read the byte at &100 in the I/O processor and store it at &6E.
     lda #1                                                            ; 8085: a9 01       ..
     sta l006b                                                         ; 8087: 85 6b       .k
     lda #0                                                            ; 8089: a9 00       ..

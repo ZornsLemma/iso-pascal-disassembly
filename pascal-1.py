@@ -70,4 +70,6 @@ entry(0x803d, "unrecognised_osbyte_handler_done")
 comment(0x8027, "TODO: do we read the last break type then ignore the result here?")
 entry(0x803f, "rts")
 
+comment(0x8085, "Read the byte at &100 in the I/O processor and store it at &6E.")
+
 go()
