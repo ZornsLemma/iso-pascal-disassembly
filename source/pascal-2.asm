@@ -92,8 +92,8 @@ l0100                           = &0100
 brkv                            = &0202
 machine_high_order_address_low  = &0400
 machine_high_order_address_high = &0401
-l0402                           = &0402
-l0403                           = &0403
+himem_low                       = &0402
+himem_high                      = &0403
 oshwm_low1                      = &0404
 oshwm_low3                      = &0405
 oshwm_high1                     = &0407
@@ -686,9 +686,9 @@ oscli                           = &fff7
     jsr sub_c84b3                                                     ; 83df: 20 b3 84     ..
     lda l0411                                                         ; 83e2: ad 11 04    ...
     beq c8412                                                         ; 83e5: f0 2b       .+
-    lda l0402                                                         ; 83e7: ad 02 04    ...
+    lda himem_low                                                     ; 83e7: ad 02 04    ...
     sta l062e                                                         ; 83ea: 8d 2e 06    ...
-    lda l0403                                                         ; 83ed: ad 03 04    ...
+    lda himem_high                                                    ; 83ed: ad 03 04    ...
     sta l062f                                                         ; 83f0: 8d 2f 06    ./.
     ldx l0411                                                         ; 83f3: ae 11 04    ...
     lda oshwm_low1,x                                                  ; 83f6: bd 04 04    ...
@@ -795,8 +795,8 @@ oscli                           = &fff7
 .sub_c855d
     lda #osbyte_read_himem                                            ; 855d: a9 84       ..
     jsr osbyte                                                        ; 855f: 20 f4 ff     ..            ; Read top of user memory (HIMEM)
-    stx l0402                                                         ; 8562: 8e 02 04    ...            ; X and Y contain the address of HIMEM (low, high)
-    sty l0403                                                         ; 8565: 8c 03 04    ...
+    stx himem_low                                                     ; 8562: 8e 02 04    ...            ; X and Y contain the address of HIMEM (low, high)
+    sty himem_high                                                    ; 8565: 8c 03 04    ...
     rts                                                               ; 8568: 60          `
 
     equb   0,   2, &82                                                ; 8569: 00 02 82    ...
@@ -818,7 +818,7 @@ oscli                           = &fff7
     rts                                                               ; 8587: 60          `
 
 .sub_c8588
-    jsr sub_c85fc                                                     ; 8588: 20 fc 85     ..
+    jsr set_yx_to_himem_minus_2                                       ; 8588: 20 fc 85     ..
     lda oshwm_low_zp                                                  ; 858b: a5 04       ..
     sta l0008                                                         ; 858d: 85 08       ..
     lda oshwm_high_zp                                                 ; 858f: a5 05       ..
@@ -879,12 +879,12 @@ oscli                           = &fff7
     bpl loop_c85f5                                                    ; 85f9: 10 fa       ..
     rts                                                               ; 85fb: 60          `
 
-.sub_c85fc
+.set_yx_to_himem_minus_2
     sec                                                               ; 85fc: 38          8
-    lda l0402                                                         ; 85fd: ad 02 04    ...
+    lda himem_low                                                     ; 85fd: ad 02 04    ...
     sbc #2                                                            ; 8600: e9 02       ..
     tax                                                               ; 8602: aa          .
-    lda l0403                                                         ; 8603: ad 03 04    ...
+    lda himem_high                                                    ; 8603: ad 03 04    ...
     sbc #0                                                            ; 8606: e9 00       ..
     tay                                                               ; 8608: a8          .
     rts                                                               ; 8609: 60          `
@@ -2276,11 +2276,11 @@ oscli                           = &fff7
     lda oshwm_high_zp                                                 ; afe0: a5 05       ..
     adc #0                                                            ; afe2: 69 00       i.
     sta l0028                                                         ; afe4: 85 28       .(
-    lda l0402                                                         ; afe6: ad 02 04    ...
+    lda himem_low                                                     ; afe6: ad 02 04    ...
     sbc #0                                                            ; afe9: e9 00       ..
     sta l0029                                                         ; afeb: 85 29       .)
     tax                                                               ; afed: aa          .
-    lda l0403                                                         ; afee: ad 03 04    ...
+    lda himem_high                                                    ; afee: ad 03 04    ...
     sbc #0                                                            ; aff1: e9 00       ..
     sta l002a                                                         ; aff3: 85 2a       .*
     rts                                                               ; aff5: 60          `
@@ -2705,8 +2705,8 @@ oscli                           = &fff7
     lda #0                                                            ; b39f: a9 00       ..
     adc l0011                                                         ; b3a1: 65 11       e.
     tay                                                               ; b3a3: a8          .
-    cpx l0402                                                         ; b3a4: ec 02 04    ...
-    sbc l0403                                                         ; b3a7: ed 03 04    ...
+    cpx himem_low                                                     ; b3a4: ec 02 04    ...
+    sbc himem_high                                                    ; b3a7: ed 03 04    ...
     bcs cb3b0                                                         ; b3aa: b0 04       ..
     stx l0010                                                         ; b3ac: 86 10       ..
     sty l0011                                                         ; b3ae: 84 11       ..
@@ -3758,8 +3758,6 @@ oscli                           = &fff7
 ;     l00fe
 ;     l00ff
 ;     l0100
-;     l0402
-;     l0403
 ;     l040b
 ;     l040e
 ;     l0410
@@ -3855,7 +3853,6 @@ oscli                           = &fff7
 ;     sub_c859b
 ;     sub_c85ca
 ;     sub_c85f1
-;     sub_c85fc
 ;     sub_c87e2
 ;     sub_c90dd
 ;     sub_c9137

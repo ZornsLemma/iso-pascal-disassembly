@@ -14,6 +14,8 @@ label(0x401, "machine_high_order_address_high")
 # TODO: Why all these copies of OSHWM?
 label(0x04, "oshwm_low_zp")
 label(0x05, "oshwm_high_zp")
+label(0x402, "himem_low")
+label(0x403, "himem_high")
 label(0x404, "oshwm_low1")
 label(0x407, "oshwm_high1")
 label(0x40a, "oshwm_low2")
@@ -68,5 +70,7 @@ entry(0x89fc, "bulk_copy_from_l000a_to_l000e")
 entry(0x8a07, "bulk_copy_loop_x_test")
 
 entry(0xa493, "zero_misc_values")
+
+entry(0x85fc, "set_yx_to_himem_minus_2")
 
 go()
