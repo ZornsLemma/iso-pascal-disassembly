@@ -9,6 +9,18 @@ config.set_label_references(False)
 load(0x8000, "orig/pascal-2.rom", "6502", "63d8f8041dbb844ba10ecd36d8ff2511")
 is_sideways_rom()
 
+label(0x400, "machine_high_order_address_low")
+label(0x401, "machine_high_order_address_high")
+# TODO: Why all these copies of OSHWM?
+label(0x04, "oshwm_low_zp")
+label(0x05, "oshwm_high_zp")
+label(0x404, "oshwm_low1")
+label(0x407, "oshwm_high1")
+label(0x40a, "oshwm_low2")
+label(0x40d, "oshwm_high2")
+label(0x405, "oshwm_low3")
+label(0x408, "oshwm_high3")
+
 entry(0x8043, "unrecognised_command_handler")
 entry(0x8065, "unrecognised_osbyte_handler")
 entry(0x8035, "rts")

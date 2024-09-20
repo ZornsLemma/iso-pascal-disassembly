@@ -16,143 +16,143 @@ our_osbyte_a                        = 163
 our_osbyte_x                        = 192
 
 ; Memory locations
-l0000                   = &0000
-l0001                   = &0001
-l0002                   = &0002
-l0003                   = &0003
-l0004                   = &0004
-l0005                   = &0005
-l0006                   = &0006
-l0007                   = &0007
-l0008                   = &0008
-l0009                   = &0009
-l000a                   = &000a
-l000b                   = &000b
-l000c                   = &000c
-l000d                   = &000d
-l000e                   = &000e
-l000f                   = &000f
-l0010                   = &0010
-l0011                   = &0011
-l0012                   = &0012
-l0013                   = &0013
-l0014                   = &0014
-l0015                   = &0015
-l0016                   = &0016
-l0017                   = &0017
-l0018                   = &0018
-l0019                   = &0019
-l001a                   = &001a
-l001b                   = &001b
-l001c                   = &001c
-l001e                   = &001e
-l001f                   = &001f
-l0020                   = &0020
-l0022                   = &0022
-l0024                   = &0024
-l0025                   = &0025
-l0026                   = &0026
-l0027                   = &0027
-l0028                   = &0028
-l0029                   = &0029
-l002a                   = &002a
-l002b                   = &002b
-l002c                   = &002c
-l002d                   = &002d
-l002f                   = &002f
-l0030                   = &0030
-l0031                   = &0031
-l0032                   = &0032
-l0033                   = &0033
-l0035                   = &0035
-l0036                   = &0036
-l0037                   = &0037
-l0038                   = &0038
-l0039                   = &0039
-l003a                   = &003a
-l003e                   = &003e
-l003f                   = &003f
-l0040                   = &0040
-l0041                   = &0041
-l0042                   = &0042
-l0043                   = &0043
-l0044                   = &0044
-l0045                   = &0045
-l004b                   = &004b
-l0053                   = &0053
-osbyte_a                = &00ef
-osbyte_x                = &00f0
-osbyte_y                = &00f1
-os_text_ptr             = &00f2
-romsel_copy             = &00f4
-l00fd                   = &00fd
-l00fe                   = &00fe
-l00ff                   = &00ff
-l0100                   = &0100
-brkv                    = &0202
-l0400                   = &0400
-l0401                   = &0401
-l0402                   = &0402
-l0403                   = &0403
-l0404                   = &0404
-l0405                   = &0405
-l0407                   = &0407
-l0408                   = &0408
-l040a                   = &040a
-l040b                   = &040b
-l040d                   = &040d
-l040e                   = &040e
-l0410                   = &0410
-l0411                   = &0411
-l0412                   = &0412
-l0413                   = &0413
-l0414                   = &0414
-l0415                   = &0415
-l0416                   = &0416
-simplified_machine_type = &0417
-l0418                   = &0418
-l041a                   = &041a
-l0420                   = &0420
-l0519                   = &0519
-l051a                   = &051a
-l061a                   = &061a
-l061b                   = &061b
-l061c                   = &061c
-l061d                   = &061d
-l0624                   = &0624
-l0625                   = &0625
-l0626                   = &0626
-l0627                   = &0627
-l062e                   = &062e
-l062f                   = &062f
-l0632                   = &0632
-l063a                   = &063a
-l0642                   = &0642
-l064a                   = &064a
-l0655                   = &0655
-l0656                   = &0656
-l0657                   = &0657
-l0658                   = &0658
-l0659                   = &0659
-l065a                   = &065a
-l065b                   = &065b
-l065c                   = &065c
-l0f03                   = &0f03
-l208d                   = &208d
-l6e69                   = &6e69
-l7420                   = &7420
-le8e8                   = &e8e8
-lf461                   = &f461
-osfind                  = &ffce
-osargs                  = &ffda
-osfile                  = &ffdd
-osrdch                  = &ffe0
-osasci                  = &ffe3
-osnewl                  = &ffe7
-oswrch                  = &ffee
-osword                  = &fff1
-osbyte                  = &fff4
-oscli                   = &fff7
+l0000                           = &0000
+l0001                           = &0001
+l0002                           = &0002
+l0003                           = &0003
+oshwm_low_zp                    = &0004
+oshwm_high_zp                   = &0005
+l0006                           = &0006
+l0007                           = &0007
+l0008                           = &0008
+l0009                           = &0009
+l000a                           = &000a
+l000b                           = &000b
+l000c                           = &000c
+l000d                           = &000d
+l000e                           = &000e
+l000f                           = &000f
+l0010                           = &0010
+l0011                           = &0011
+l0012                           = &0012
+l0013                           = &0013
+l0014                           = &0014
+l0015                           = &0015
+l0016                           = &0016
+l0017                           = &0017
+l0018                           = &0018
+l0019                           = &0019
+l001a                           = &001a
+l001b                           = &001b
+l001c                           = &001c
+l001e                           = &001e
+l001f                           = &001f
+l0020                           = &0020
+l0022                           = &0022
+l0024                           = &0024
+l0025                           = &0025
+l0026                           = &0026
+l0027                           = &0027
+l0028                           = &0028
+l0029                           = &0029
+l002a                           = &002a
+l002b                           = &002b
+l002c                           = &002c
+l002d                           = &002d
+l002f                           = &002f
+l0030                           = &0030
+l0031                           = &0031
+l0032                           = &0032
+l0033                           = &0033
+l0035                           = &0035
+l0036                           = &0036
+l0037                           = &0037
+l0038                           = &0038
+l0039                           = &0039
+l003a                           = &003a
+l003e                           = &003e
+l003f                           = &003f
+l0040                           = &0040
+l0041                           = &0041
+l0042                           = &0042
+l0043                           = &0043
+l0044                           = &0044
+l0045                           = &0045
+l004b                           = &004b
+l0053                           = &0053
+osbyte_a                        = &00ef
+osbyte_x                        = &00f0
+osbyte_y                        = &00f1
+os_text_ptr                     = &00f2
+romsel_copy                     = &00f4
+l00fd                           = &00fd
+l00fe                           = &00fe
+l00ff                           = &00ff
+l0100                           = &0100
+brkv                            = &0202
+machine_high_order_address_low  = &0400
+machine_high_order_address_high = &0401
+l0402                           = &0402
+l0403                           = &0403
+oshwm_low1                      = &0404
+oshwm_low3                      = &0405
+oshwm_high1                     = &0407
+oshwm_high3                     = &0408
+oshwm_low2                      = &040a
+l040b                           = &040b
+oshwm_high2                     = &040d
+l040e                           = &040e
+l0410                           = &0410
+l0411                           = &0411
+l0412                           = &0412
+l0413                           = &0413
+l0414                           = &0414
+l0415                           = &0415
+l0416                           = &0416
+simplified_machine_type         = &0417
+l0418                           = &0418
+l041a                           = &041a
+l0420                           = &0420
+l0519                           = &0519
+l051a                           = &051a
+l061a                           = &061a
+l061b                           = &061b
+l061c                           = &061c
+l061d                           = &061d
+l0624                           = &0624
+l0625                           = &0625
+l0626                           = &0626
+l0627                           = &0627
+l062e                           = &062e
+l062f                           = &062f
+l0632                           = &0632
+l063a                           = &063a
+l0642                           = &0642
+l064a                           = &064a
+l0655                           = &0655
+l0656                           = &0656
+l0657                           = &0657
+l0658                           = &0658
+l0659                           = &0659
+l065a                           = &065a
+l065b                           = &065b
+l065c                           = &065c
+l0f03                           = &0f03
+l208d                           = &208d
+l6e69                           = &6e69
+l7420                           = &7420
+le8e8                           = &e8e8
+lf461                           = &f461
+osfind                          = &ffce
+osargs                          = &ffda
+osfile                          = &ffdd
+osrdch                          = &ffe0
+osasci                          = &ffe3
+osnewl                          = &ffe7
+oswrch                          = &ffee
+osword                          = &fff1
+osbyte                          = &fff4
+oscli                           = &fff7
 
     org &8000
 
@@ -458,11 +458,11 @@ oscli                   = &fff7
     lda l0411                                                         ; 8265: ad 11 04    ...
     beq c82a4                                                         ; 8268: f0 3a       .:
     ldx l0410                                                         ; 826a: ae 10 04    ...
-    lda l040a,x                                                       ; 826d: bd 0a 04    ...
-    sta l0405,x                                                       ; 8270: 9d 05 04    ...
+    lda oshwm_low2,x                                                  ; 826d: bd 0a 04    ...
+    sta oshwm_low3,x                                                  ; 8270: 9d 05 04    ...
     sta l000e                                                         ; 8273: 85 0e       ..
-    lda l040d,x                                                       ; 8275: bd 0d 04    ...
-    sta l0408,x                                                       ; 8278: 9d 08 04    ...
+    lda oshwm_high2,x                                                 ; 8275: bd 0d 04    ...
+    sta oshwm_high3,x                                                 ; 8278: 9d 08 04    ...
     sta l000f                                                         ; 827b: 85 0f       ..
     ldy #&76 ; 'v'                                                    ; 827d: a0 76       .v
     lda (l0018),y                                                     ; 827f: b1 18       ..
@@ -481,9 +481,9 @@ oscli                   = &fff7
     inx                                                               ; 8296: e8          .
     stx l0411                                                         ; 8297: 8e 11 04    ...
     lda l000e                                                         ; 829a: a5 0e       ..
-    sta l040a,x                                                       ; 829c: 9d 0a 04    ...
+    sta oshwm_low2,x                                                  ; 829c: 9d 0a 04    ...
     lda l000f                                                         ; 829f: a5 0f       ..
-    sta l040d,x                                                       ; 82a1: 9d 0d 04    ...
+    sta oshwm_high2,x                                                 ; 82a1: 9d 0d 04    ...
 .c82a4
     jmp c8344                                                         ; 82a4: 4c 44 83    LD.
 
@@ -525,18 +525,18 @@ oscli                   = &fff7
     stx simplified_machine_type                                       ; 82c1: 8e 17 04    ...
     lda #osbyte_read_high_order_address                               ; 82c4: a9 82       ..
     jsr osbyte                                                        ; 82c6: 20 f4 ff     ..            ; Read the filing system 'machine high order address'
-    stx l0400                                                         ; 82c9: 8e 00 04    ...            ; X and Y contain the machine high order address (low, high)
-    sty l0401                                                         ; 82cc: 8c 01 04    ...
+    stx machine_high_order_address_low                                ; 82c9: 8e 00 04    ...            ; X and Y contain the machine high order address (low, high)
+    sty machine_high_order_address_high                               ; 82cc: 8c 01 04    ...
     lda #osbyte_read_oshwm                                            ; 82cf: a9 83       ..
     jsr osbyte                                                        ; 82d1: 20 f4 ff     ..            ; Read top of operating system RAM address (OSHWM)
-    stx l0004                                                         ; 82d4: 86 04       ..             ; X and Y contain the address of OSHWM (low, high)
-    sty l0005                                                         ; 82d6: 84 05       ..
-    stx l0404                                                         ; 82d8: 8e 04 04    ...
-    sty l0407                                                         ; 82db: 8c 07 04    ...
-    stx l040a                                                         ; 82de: 8e 0a 04    ...
-    sty l040d                                                         ; 82e1: 8c 0d 04    ...
-    stx l0405                                                         ; 82e4: 8e 05 04    ...
-    sty l0408                                                         ; 82e7: 8c 08 04    ...
+    stx oshwm_low_zp                                                  ; 82d4: 86 04       ..             ; X and Y contain the address of OSHWM (low, high)
+    sty oshwm_high_zp                                                 ; 82d6: 84 05       ..
+    stx oshwm_low1                                                    ; 82d8: 8e 04 04    ...
+    sty oshwm_high1                                                   ; 82db: 8c 07 04    ...
+    stx oshwm_low2                                                    ; 82de: 8e 0a 04    ...
+    sty oshwm_high2                                                   ; 82e1: 8c 0d 04    ...
+    stx oshwm_low3                                                    ; 82e4: 8e 05 04    ...
+    sty oshwm_high3                                                   ; 82e7: 8c 08 04    ...
     jsr sub_c855d                                                     ; 82ea: 20 5d 85     ].
     ldx #0                                                            ; 82ed: a2 00       ..
     stx l0418                                                         ; 82ef: 8e 18 04    ...
@@ -687,13 +687,13 @@ oscli                   = &fff7
     lda l0403                                                         ; 83ed: ad 03 04    ...
     sta l062f                                                         ; 83f0: 8d 2f 06    ./.
     ldx l0411                                                         ; 83f3: ae 11 04    ...
-    lda l0404,x                                                       ; 83f6: bd 04 04    ...
+    lda oshwm_low1,x                                                  ; 83f6: bd 04 04    ...
     sta l001e                                                         ; 83f9: 85 1e       ..
-    lda l0407,x                                                       ; 83fb: bd 07 04    ...
+    lda oshwm_high1,x                                                 ; 83fb: bd 07 04    ...
     sta l001f                                                         ; 83fe: 85 1f       ..
-    lda l040a,x                                                       ; 8400: bd 0a 04    ...
+    lda oshwm_low2,x                                                  ; 8400: bd 0a 04    ...
     sta l0018                                                         ; 8403: 85 18       ..
-    lda l040d,x                                                       ; 8405: bd 0d 04    ...
+    lda oshwm_high2,x                                                 ; 8405: bd 0d 04    ...
     sta l0019                                                         ; 8408: 85 19       ..
     ldx #0                                                            ; 840a: a2 00       ..
     stx l0659                                                         ; 840c: 8e 59 06    .Y.
@@ -815,9 +815,9 @@ oscli                   = &fff7
 
 .sub_c8588
     jsr sub_c85fc                                                     ; 8588: 20 fc 85     ..
-    lda l0004                                                         ; 858b: a5 04       ..
+    lda oshwm_low_zp                                                  ; 858b: a5 04       ..
     sta l0008                                                         ; 858d: 85 08       ..
-    lda l0005                                                         ; 858f: a5 05       ..
+    lda oshwm_high_zp                                                 ; 858f: a5 05       ..
     jsr sub_c859b                                                     ; 8591: 20 9b 85     ..
     stx l040b                                                         ; 8594: 8e 0b 04    ...
     sty l040e                                                         ; 8597: 8c 0e 04    ...
@@ -911,13 +911,13 @@ oscli                   = &fff7
 .c8639
     ldx l040b                                                         ; 8639: ae 0b 04    ...
     stx l0412                                                         ; 863c: 8e 12 04    ...
-    cpx l0004                                                         ; 863f: e4 04       ..
+    cpx oshwm_low_zp                                                  ; 863f: e4 04       ..
     lda l040e                                                         ; 8641: ad 0e 04    ...
     sta l0413                                                         ; 8644: 8d 13 04    ...
-    sbc l0005                                                         ; 8647: e5 05       ..
+    sbc oshwm_high_zp                                                 ; 8647: e5 05       ..
     bcc c8655                                                         ; 8649: 90 0a       ..
     ldy #0                                                            ; 864b: a0 00       ..
-    lda (l0004),y                                                     ; 864d: b1 04       ..
+    lda (oshwm_low_zp),y                                              ; 864d: b1 04       ..
     sta l0414                                                         ; 864f: 8d 14 04    ...
     inc l0415                                                         ; 8652: ee 15 04    ...
 .c8655
@@ -2266,10 +2266,10 @@ oscli                   = &fff7
 
 .sub_cafd9
     clc                                                               ; afd9: 18          .
-    lda l0004                                                         ; afda: a5 04       ..
+    lda oshwm_low_zp                                                  ; afda: a5 04       ..
     adc #1                                                            ; afdc: 69 01       i.
     sta l0027                                                         ; afde: 85 27       .'
-    lda l0005                                                         ; afe0: a5 05       ..
+    lda oshwm_high_zp                                                 ; afe0: a5 05       ..
     adc #0                                                            ; afe2: 69 00       i.
     sta l0028                                                         ; afe4: 85 28       .(
     lda l0402                                                         ; afe6: ad 02 04    ...
@@ -3254,9 +3254,9 @@ oscli                   = &fff7
     equb &0d, &ea, &4c, &44, &83                                      ; b779: 0d ea 4c... ..L
 
 .sub_cb77e
-    lda l0004                                                         ; b77e: a5 04       ..
+    lda oshwm_low_zp                                                  ; b77e: a5 04       ..
     sta l0002                                                         ; b780: 85 02       ..
-    lda l0005                                                         ; b782: a5 05       ..
+    lda oshwm_high_zp                                                 ; b782: a5 05       ..
     sta l0003                                                         ; b784: 85 03       ..
     jsr sub_cb727                                                     ; b786: 20 27 b7     '.
     lda l0002                                                         ; b789: a5 02       ..
@@ -3694,8 +3694,6 @@ oscli                   = &fff7
 ;     l0001
 ;     l0002
 ;     l0003
-;     l0004
-;     l0005
 ;     l0006
 ;     l0007
 ;     l0008
@@ -3758,17 +3756,9 @@ oscli                   = &fff7
 ;     l00fe
 ;     l00ff
 ;     l0100
-;     l0400
-;     l0401
 ;     l0402
 ;     l0403
-;     l0404
-;     l0405
-;     l0407
-;     l0408
-;     l040a
 ;     l040b
-;     l040d
 ;     l040e
 ;     l0410
 ;     l0411
