@@ -35,4 +35,11 @@ comment(0x823e, "Branch if b7 of original last break type clear")
 comment(0x8253, "Branch if b6 of original last break type clear")
 comment(0x8256, "Branch if b5 of original last break type clear")
 
+entry(0x89d5, "some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes")
+comment(0x89dc, "Set l0014=-l0012=-(X on entry), unless the result is zero in which case jump to the test at the end of the copy loop.")
+comment(0x89e6, "Subtract 8-bit value at l0014 from 16-bit value at l000a")
+comment(0x89f2, "Subtract 8-bit value at l0014 from 16-bit value at l000e")
+entry(0x89fc, "bulk_copy_from_l000a_to_l000e")
+entry(0x8a07, "bulk_copy_loop_x_test")
+
 go()

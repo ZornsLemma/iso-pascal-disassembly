@@ -472,7 +472,7 @@ oscli       = &fff7
     iny                                                               ; 828c: c8          .
     lda (l0018),y                                                     ; 828d: b1 18       ..
     tay                                                               ; 828f: a8          .
-    jsr c89d5                                                         ; 8290: 20 d5 89     ..
+    jsr some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes    ; 8290: 20 d5 89     ..
     ldx l0410                                                         ; 8293: ae 10 04    ...
     inx                                                               ; 8296: e8          .
     stx l0411                                                         ; 8297: 8e 11 04    ...
@@ -1036,17 +1036,20 @@ oscli       = &fff7
     equb &89, &a9,   3, &60, &20,   5, &9b, &20, &c4, &9a, &20, &d3   ; 89c2: 89 a9 03... ...
     equb &9a, &20, &d9, &89, &a9,   2, &60                            ; 89ce: 9a 20 d9... . .
 
-.c89d5
+.some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes
     stx l0012                                                         ; 89d5: 86 12       ..
     sty l0013                                                         ; 89d7: 84 13       ..
     ldx l0013                                                         ; 89d9: a6 13       ..
     inx                                                               ; 89db: e8          .
+; Set l0014=-l0012=-(X on entry), unless the result is zero in which case jump to the
+; test at the end of the copy loop.
     sec                                                               ; 89dc: 38          8
     lda #0                                                            ; 89dd: a9 00       ..
     sbc l0012                                                         ; 89df: e5 12       ..
     tay                                                               ; 89e1: a8          .
-    beq c8a07                                                         ; 89e2: f0 23       .#
+    beq bulk_copy_loop_x_test                                         ; 89e2: f0 23       .#
     sta l0014                                                         ; 89e4: 85 14       ..
+; Subtract 8-bit value at l0014 from 16-bit value at l000a
     sec                                                               ; 89e6: 38          8
     lda l000a                                                         ; 89e7: a5 0a       ..
     sbc l0014                                                         ; 89e9: e5 14       ..
@@ -1054,22 +1057,23 @@ oscli       = &fff7
     bcs c89f2                                                         ; 89ed: b0 03       ..
     dec l000b                                                         ; 89ef: c6 0b       ..
     sec                                                               ; 89f1: 38          8
+; Subtract 8-bit value at l0014 from 16-bit value at l000e
 .c89f2
     lda l000e                                                         ; 89f2: a5 0e       ..
     sbc l0014                                                         ; 89f4: e5 14       ..
     sta l000e                                                         ; 89f6: 85 0e       ..
-    bcs c89fc                                                         ; 89f8: b0 02       ..
+    bcs bulk_copy_from_l000a_to_l000e                                 ; 89f8: b0 02       ..
     dec l000f                                                         ; 89fa: c6 0f       ..
-.c89fc
+.bulk_copy_from_l000a_to_l000e
     lda (l000a),y                                                     ; 89fc: b1 0a       ..
     sta (l000e),y                                                     ; 89fe: 91 0e       ..
     iny                                                               ; 8a00: c8          .
-    bne c89fc                                                         ; 8a01: d0 f9       ..
+    bne bulk_copy_from_l000a_to_l000e                                 ; 8a01: d0 f9       ..
     inc l000b                                                         ; 8a03: e6 0b       ..
     inc l000f                                                         ; 8a05: e6 0f       ..
-.c8a07
+.bulk_copy_loop_x_test
     dex                                                               ; 8a07: ca          .
-    bne c89fc                                                         ; 8a08: d0 f2       ..
+    bne bulk_copy_from_l000a_to_l000e                                 ; 8a08: d0 f2       ..
     rts                                                               ; 8a0a: 60          `
 
     equb &20, &1e, &8a, &a9,   1, &60, &84, &20, &a9,   1, &60, &c8   ; 8a0b: 20 1e 8a...  ..
@@ -2832,7 +2836,7 @@ oscli       = &fff7
     tya                                                               ; b47f: 98          .
     adc l0003                                                         ; b480: 65 03       e.
     sta l0003                                                         ; b482: 85 03       ..
-    jmp c89d5                                                         ; b484: 4c d5 89    L..
+    jmp some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes    ; b484: 4c d5 89    L..
 
     equb &20, &9d, &b2, &20, &b9, &b1, &c5, &24, &90,   2, &a5, &24   ; b487: 20 9d b2...  ..
     equb &18, &65,   0, &aa, &a9,   0, &65,   1, &a8, &4c, &5c, &b4   ; b493: 18 65 00... .e.
@@ -3586,10 +3590,7 @@ oscli       = &fff7
 ;     c8655
 ;     c87a3
 ;     c87c7
-;     c89d5
 ;     c89f2
-;     c89fc
-;     c8a07
 ;     c90e5
 ;     c90f2
 ;     c90fd
