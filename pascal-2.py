@@ -290,6 +290,11 @@ label(0xa746, "fx163_192_2")
 stringcr(0xa746)
 expr(0x9539, "fx163_192_2")
 
+label(0xa9e3, "opcode_subrange1_jump_table_low")
+label(0xa920+0xca, "opcode_subrange1_jump_table_high")
+expr(0xa9ce, make_subtract("opcode_subrange1_jump_table_low", 0xca))
+expr(0xa9d3, make_subtract("opcode_subrange1_jump_table_high", 0xca))
+
 # TODO: opcode_d0_handler has some kind of jump table but it's not clear to me what X range is - ditto 7b_handler - ditto 76_handler
 # TODO: ed_handler is doing some kind of indirect jump
 

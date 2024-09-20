@@ -6768,7 +6768,6 @@ oscli                           = &fff7
     jsr c9a8a                                                         ; a919: 20 8a 9a     ..
     jsr sub_c9ab6                                                     ; a91c: 20 b6 9a     ..
 .sub_ca91f
-la920 = sub_ca91f+1
     jsr c8eb5                                                         ; a91f: 20 b5 8e     ..
     bcc ca916                                                         ; a922: 90 f2       ..
     clc                                                               ; a924: 18          .
@@ -6889,9 +6888,9 @@ la951 = sub_ca94f+2
 .bytecode_opcode_ce_handler
 .bytecode_opcode_cf_handler
 .bytecode_opcode_d0_handler
-    lda bytecode_opcode_4c_handler,x                                  ; a9cd: bd 19 a9    ...
+    lda opcode_subrange1_jump_table_low - 202,x                       ; a9cd: bd 19 a9    ...
     sta l0008                                                         ; a9d0: 85 08       ..
-    lda la920,x                                                       ; a9d2: bd 20 a9    . .
+    lda opcode_subrange1_jump_table_high - 202,x                      ; a9d2: bd 20 a9    . .
     sta l0009                                                         ; a9d5: 85 09       ..
     jsr sub_ca297                                                     ; a9d7: 20 97 a2     ..
     jsr jmp_indirect_via_l0008                                        ; a9da: 20 e2 87     ..
@@ -6899,8 +6898,10 @@ la951 = sub_ca94f+2
     lda #1                                                            ; a9e0: a9 01       ..
     rts                                                               ; a9e2: 60          `
 
-    equb &ed, &33, &2b, &a0, &b5, &68, &78, &aa, &ac, &ac, &aa, &ac   ; a9e3: ed 33 2b... .3+
-    equb &ac, &ad                                                     ; a9ef: ac ad       ..
+.opcode_subrange1_jump_table_low
+    equb &ed, &33, &2b, &a0, &b5, &68, &78                            ; a9e3: ed 33 2b... .3+
+.opcode_subrange1_jump_table_high
+    equb &aa, &ac, &ac, &aa, &ac, &ac, &ad                            ; a9ea: aa ac ac... ...
 
 .bytecode_opcode_d1_handler
 .bytecode_opcode_d2_handler
@@ -10511,7 +10512,6 @@ la951 = sub_ca94f+2
 ;     la734
 ;     la73e
 ;     la786
-;     la920
 ;     la951
 ;     laf70
 ;     lb26e
@@ -11514,6 +11514,8 @@ la951 = sub_ca94f+2
     assert >string_true == &a7
     assert copyright - rom_header == &14
     assert fx163_192_2 == &a746
+    assert opcode_subrange1_jump_table_high - 202 == &a920
+    assert opcode_subrange1_jump_table_low - 202 == &a919
     assert osbyte_163_192_x_minus_1_table - 1 == &8094
     assert osbyte_acknowledge_escape == &7e
     assert osbyte_enter_language == &8e
