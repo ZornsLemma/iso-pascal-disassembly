@@ -2028,7 +2028,7 @@ oscli                           = &fff7
     equs "zero"                                                       ; 8bd1: 7a 65 72... zer
     equb 0                                                            ; 8bd5: 00          .
 
-.opcode_subrange1_for_75_handler
+.opcode_75_sub_handler
     lda l0046                                                         ; 8bd6: a5 46       .F
     ora l0047                                                         ; 8bd8: 05 47       .G
     ora l0048                                                         ; 8bda: 05 48       .H
@@ -2113,10 +2113,10 @@ oscli                           = &fff7
     equs "MOD"                                                        ; 8c59: 4d 4f 44    MOD
     equb 0                                                            ; 8c5c: 00          .
 
-.opcode_subrange1_for_76_handler
+.opcode_76_sub_handler
     lda l0049                                                         ; 8c5d: a5 49       .I
     bmi loop_c8c56                                                    ; 8c5f: 30 f5       0.
-    jsr opcode_subrange1_for_75_handler                               ; 8c61: 20 d6 8b     ..
+    jsr opcode_75_sub_handler                                         ; 8c61: 20 d6 8b     ..
     jsr c8d13                                                         ; 8c64: 20 13 8d     ..
     ora l006b                                                         ; 8c67: 05 6b       .k
     ora l006c                                                         ; 8c69: 05 6c       .l
@@ -2125,7 +2125,7 @@ oscli                           = &fff7
     lda l0661                                                         ; 8c6f: ad 61 06    .a.
     bpl c8c8b                                                         ; 8c72: 10 17       ..
     jsr sub_c8c3c                                                     ; 8c74: 20 3c 8c     <.
-.opcode_subrange1_for_72_handler
+.opcode_72_sub_handler
     clc                                                               ; 8c77: 18          .
     ldx #4                                                            ; 8c78: a2 04       ..
     ldy #0                                                            ; 8c7a: a0 00       ..
@@ -2140,7 +2140,7 @@ oscli                           = &fff7
 .c8c8b
     rts                                                               ; 8c8b: 60          `
 
-.opcode_subrange1_for_74_handler
+.opcode_74_sub_handler
     jsr sub_c8ba9                                                     ; 8c8c: 20 a9 8b     ..
     lda l0046                                                         ; 8c8f: a5 46       .F
     cmp l006a                                                         ; 8c91: c5 6a       .j
@@ -2229,7 +2229,7 @@ oscli                           = &fff7
     bpl loop_c8d15                                                    ; 8d1c: 10 f7       ..
     rts                                                               ; 8d1e: 60          `
 
-.opcode_subrange1_for_73_handler
+.opcode_73_sub_handler
     sec                                                               ; 8d1f: 38          8
     ldx #4                                                            ; 8d20: a2 04       ..
     ldy #0                                                            ; 8d22: a0 00       ..
@@ -2279,7 +2279,7 @@ oscli                           = &fff7
     jsr sub_c9a46                                                     ; 8d66: 20 46 9a     F.
     jsr sub_c8b96                                                     ; 8d69: 20 96 8b     ..
     jsr sub_c8b8b                                                     ; 8d6c: 20 8b 8b     ..
-    jsr opcode_subrange1_for_74_handler                               ; 8d6f: 20 8c 8c     ..
+    jsr opcode_74_sub_handler                                         ; 8d6f: 20 8c 8c     ..
     jsr sub_c9d96                                                     ; 8d72: 20 96 9d     ..
     lda #1                                                            ; 8d75: a9 01       ..
     rts                                                               ; 8d77: 60          `
@@ -5420,9 +5420,9 @@ oscli                           = &fff7
 .ca0ff
     rts                                                               ; a0ff: 60          `
 
-.opcode_subrange1_for_79_handler
+.opcode_79_sub_handler
     jsr c9ee8                                                         ; a100: 20 e8 9e     ..
-.opcode_subrange1_for_78_handler
+.opcode_78_sub_handler
     jsr sub_ca304                                                     ; a103: 20 04 a3     ..
     beq ca0ff                                                         ; a106: f0 f7       ..
 .sub_ca108
@@ -6298,11 +6298,11 @@ oscli                           = &fff7
     equb <bytecode_opcode_fe_handler                                  ; a605: 48          H
     equb <bytecode_opcode_ff_handler                                  ; a606: 4e          N
 .opcode_subrange3_jump_table_low
-    equb <opcode_subrange1_for_72_handler                             ; a607: 77          w
-    equb <opcode_subrange1_for_73_handler                             ; a608: 1f          .
-    equb <opcode_subrange1_for_74_handler                             ; a609: 8c          .
-    equb <opcode_subrange1_for_75_handler                             ; a60a: d6          .
-    equb <opcode_subrange1_for_76_handler                             ; a60b: 5d          ]
+    equb <opcode_72_sub_handler                                       ; a607: 77          w
+    equb <opcode_73_sub_handler                                       ; a608: 1f          .
+    equb <opcode_74_sub_handler                                       ; a609: 8c          .
+    equb <opcode_75_sub_handler                                       ; a60a: d6          .
+    equb <opcode_76_sub_handler                                       ; a60b: 5d          ]
 .bytecode_jump_table_high
     equb >bytecode_opcode_00_handler                                  ; a60c: 88          .
     equb >bytecode_opcode_01_handler                                  ; a60d: 88          .
@@ -6572,12 +6572,12 @@ oscli                           = &fff7
     equb >bytecode_opcode_fe_handler                                  ; a70a: 8e          .
     equb >bytecode_opcode_ff_handler                                  ; a70b: 8b          .
 .opcode_subrange3_jump_table_high
-    equb >opcode_subrange1_for_72_handler                             ; a70c: 8c          .
-    equb >opcode_subrange1_for_73_handler                             ; a70d: 8d          .
+    equb >opcode_72_sub_handler                                       ; a70c: 8c          .
+    equb >opcode_73_sub_handler                                       ; a70d: 8d          .
 .la70e
-    equb >opcode_subrange1_for_74_handler                             ; a70e: 8c          .
-    equb >opcode_subrange1_for_75_handler                             ; a70f: 8b          .
-    equb >opcode_subrange1_for_76_handler                             ; a710: 8c          .
+    equb >opcode_74_sub_handler                                       ; a70e: 8c          .
+    equb >opcode_75_sub_handler                                       ; a70f: 8b          .
+    equb >opcode_76_sub_handler                                       ; a710: 8c          .
     equb 2, 5                                                         ; a711: 02 05       ..
 .la713
     equb 6, 3, 4, 1                                                   ; a713: 06 03 04... ...
@@ -7020,15 +7020,15 @@ oscli                           = &fff7
     rts                                                               ; a9c4: 60          `
 
 .opcode_subrange2_jump_table_low
-    equb <opcode_subrange1_for_78_handler                             ; a9c5: 03          .
-    equb <opcode_subrange1_for_79_handler                             ; a9c6: 00          .
-    equb <opcode_subrange1_for_7a_handler                             ; a9c7: ed          .
-    equb <opcode_subrange1_for_7b_handler                             ; a9c8: 59          Y
+    equb <opcode_78_sub_handler                                       ; a9c5: 03          .
+    equb <opcode_79_sub_handler                                       ; a9c6: 00          .
+    equb <opcode_7a_sub_handler                                       ; a9c7: ed          .
+    equb <opcode_7b_sub_handler                                       ; a9c8: 59          Y
 .opcode_subrange2_jump_table_high
-    equb >opcode_subrange1_for_78_handler                             ; a9c9: a1          .
-    equb >opcode_subrange1_for_79_handler                             ; a9ca: a1          .
-    equb >opcode_subrange1_for_7a_handler                             ; a9cb: aa          .
-    equb >opcode_subrange1_for_7b_handler                             ; a9cc: ab          .
+    equb >opcode_78_sub_handler                                       ; a9c9: a1          .
+    equb >opcode_79_sub_handler                                       ; a9ca: a1          .
+    equb >opcode_7a_sub_handler                                       ; a9cb: aa          .
+    equb >opcode_7b_sub_handler                                       ; a9cc: ab          .
 
 .bytecode_opcode_ca_handler
 .bytecode_opcode_cb_handler
@@ -7048,21 +7048,21 @@ oscli                           = &fff7
     rts                                                               ; a9e2: 60          `
 
 .opcode_subrange1_jump_table_low
-    equb <opcode_subrange1_for_ca_handler                             ; a9e3: ed          .
-    equb <opcode_subrange1_for_cb_handler                             ; a9e4: 33          3
-    equb <opcode_subrange1_for_cc_handler                             ; a9e5: 2b          +
-    equb <opcode_subrange1_for_cd_handler                             ; a9e6: a0          .
-    equb <opcode_subrange1_for_ce_handler                             ; a9e7: b5          .
-    equb <opcode_subrange1_for_cf_handler                             ; a9e8: 68          h
-    equb <opcode_subrange1_for_d0_handler                             ; a9e9: 78          x
+    equb <opcode_ca_sub_handler                                       ; a9e3: ed          .
+    equb <opcode_cb_sub_handler                                       ; a9e4: 33          3
+    equb <opcode_cc_sub_handler                                       ; a9e5: 2b          +
+    equb <opcode_cd_sub_handler                                       ; a9e6: a0          .
+    equb <opcode_ce_sub_handler                                       ; a9e7: b5          .
+    equb <opcode_cf_sub_handler                                       ; a9e8: 68          h
+    equb <opcode_d0_sub_handler                                       ; a9e9: 78          x
 .opcode_subrange1_jump_table_high
-    equb >opcode_subrange1_for_ca_handler                             ; a9ea: aa          .
-    equb >opcode_subrange1_for_cb_handler                             ; a9eb: ac          .
-    equb >opcode_subrange1_for_cc_handler                             ; a9ec: ac          .
-    equb >opcode_subrange1_for_cd_handler                             ; a9ed: aa          .
-    equb >opcode_subrange1_for_ce_handler                             ; a9ee: ac          .
-    equb >opcode_subrange1_for_cf_handler                             ; a9ef: ac          .
-    equb >opcode_subrange1_for_d0_handler                             ; a9f0: ad          .
+    equb >opcode_ca_sub_handler                                       ; a9ea: aa          .
+    equb >opcode_cb_sub_handler                                       ; a9eb: ac          .
+    equb >opcode_cc_sub_handler                                       ; a9ec: ac          .
+    equb >opcode_cd_sub_handler                                       ; a9ed: aa          .
+    equb >opcode_ce_sub_handler                                       ; a9ee: ac          .
+    equb >opcode_cf_sub_handler                                       ; a9ef: ac          .
+    equb >opcode_d0_sub_handler                                       ; a9f0: ad          .
 
 .bytecode_opcode_d1_handler
 .bytecode_opcode_d2_handler
@@ -7075,7 +7075,7 @@ oscli                           = &fff7
     sta l000b                                                         ; a9fe: 85 0b       ..
     lda l003e                                                         ; aa00: a5 3e       .>
     bmi caa0a                                                         ; aa02: 30 06       0.
-    jsr opcode_subrange1_for_78_handler                               ; aa04: 20 03 a1     ..
+    jsr opcode_78_sub_handler                                         ; aa04: 20 03 a1     ..
     jmp caa0d                                                         ; aa07: 4c 0d aa    L..
 
 .caa0a
@@ -7090,7 +7090,7 @@ oscli                           = &fff7
     equb &80,   0,   0,   0,   0                                      ; aa16: 80 00 00... ...
 
 .sub_caa1b
-    jsr opcode_subrange1_for_79_handler                               ; aa1b: 20 00 a1     ..
+    jsr opcode_79_sub_handler                                         ; aa1b: 20 00 a1     ..
     jmp c9ee8                                                         ; aa1e: 4c e8 9e    L..
 
 .bytecode_opcode_77_handler
@@ -7168,7 +7168,7 @@ oscli                           = &fff7
 
     equb &82, &2d, &f8, &54, &58                                      ; aa9b: 82 2d f8... .-.
 
-.opcode_subrange1_for_cd_handler
+.opcode_cd_sub_handler
     lda l0040                                                         ; aaa0: a5 40       .@
     cmp #&87                                                          ; aaa2: c9 87       ..
     bcc caab5                                                         ; aaa4: 90 0f       ..
@@ -7204,13 +7204,13 @@ oscli                           = &fff7
     lda l003a                                                         ; aadf: a5 3a       .:
     beq caaea                                                         ; aae1: f0 07       ..
 .loop_caae3
-    jsr opcode_subrange1_for_ca_handler                               ; aae3: 20 ed aa     ..
+    jsr opcode_ca_sub_handler                                         ; aae3: 20 ed aa     ..
     dec l003a                                                         ; aae6: c6 3a       .:
     bne loop_caae3                                                    ; aae8: d0 f9       ..
 .caaea
     jsr sub_ca364                                                     ; aaea: 20 64 a3     d.
-.opcode_subrange1_for_ca_handler
-.opcode_subrange1_for_7a_handler
+.opcode_ca_sub_handler
+.opcode_7a_sub_handler
     lda l0041                                                         ; aaed: a5 41       .A
     beq cab38                                                         ; aaef: f0 47       .G
     jsr sub_ca304                                                     ; aaf1: 20 04 a3     ..
@@ -7277,7 +7277,7 @@ oscli                           = &fff7
 .lab54
     equb 2, 8, 8, 8, 8                                                ; ab54: 02 08 08... ...
 
-.opcode_subrange1_for_7b_handler
+.opcode_7b_sub_handler
     lda l0041                                                         ; ab59: a5 41       .A
     beq loop_cab50                                                    ; ab5b: f0 f3       ..
     jsr sub_ca304                                                     ; ab5d: 20 04 a3     ..
@@ -7391,7 +7391,7 @@ oscli                           = &fff7
     jsr ca2a0                                                         ; ac0d: 20 a0 a2     ..
 .loop_cac10
     jsr sub_ca368                                                     ; ac10: 20 68 a3     h.
-    jsr opcode_subrange1_for_7b_handler                               ; ac13: 20 59 ab     Y.
+    jsr opcode_7b_sub_handler                                         ; ac13: 20 59 ab     Y.
     clc                                                               ; ac16: 18          .
     lda l0031                                                         ; ac17: a5 31       .1
     adc #5                                                            ; ac19: 69 05       i.
@@ -7399,17 +7399,17 @@ oscli                           = &fff7
     sta l000a                                                         ; ac1d: 85 0a       ..
     lda #&bf                                                          ; ac1f: a9 bf       ..
     sta l000b                                                         ; ac21: 85 0b       ..
-    jsr opcode_subrange1_for_78_handler                               ; ac23: 20 03 a1     ..
+    jsr opcode_78_sub_handler                                         ; ac23: 20 03 a1     ..
     dec l0035                                                         ; ac26: c6 35       .5
     bne loop_cac10                                                    ; ac28: d0 e6       ..
     rts                                                               ; ac2a: 60          `
 
-.opcode_subrange1_for_cc_handler
+.opcode_cc_sub_handler
     jsr sub_cad13                                                     ; ac2b: 20 13 ad     ..
     inc l003a                                                         ; ac2e: e6 3a       .:
     jmp cac36                                                         ; ac30: 4c 36 ac    L6.
 
-.opcode_subrange1_for_cb_handler
+.opcode_cb_sub_handler
     jsr sub_cad13                                                     ; ac33: 20 13 ad     ..
 .cac36
     lda l003a                                                         ; ac36: a5 3a       .:
@@ -7420,7 +7420,7 @@ oscli                           = &fff7
 
 .cac42
     jsr sub_ca2d3                                                     ; ac42: 20 d3 a2     ..
-    jsr opcode_subrange1_for_ca_handler                               ; ac45: 20 ed aa     ..
+    jsr opcode_ca_sub_handler                                         ; ac45: 20 ed aa     ..
     lda #5                                                            ; ac48: a9 05       ..
     ldy #&a9                                                          ; ac4a: a0 a9       ..
     jsr sub_cabfe                                                     ; ac4c: 20 fe ab     ..
@@ -7431,11 +7431,11 @@ oscli                           = &fff7
     bcc cac42                                                         ; ac54: 90 ec       ..
     jsr cac42                                                         ; ac56: 20 42 ac     B.
     jsr sub_ca2d7                                                     ; ac59: 20 d7 a2     ..
-    jsr opcode_subrange1_for_ca_handler                               ; ac5c: 20 ed aa     ..
+    jsr opcode_ca_sub_handler                                         ; ac5c: 20 ed aa     ..
     jsr ca2df                                                         ; ac5f: 20 df a2     ..
     jsr sub_ca4fa                                                     ; ac62: 20 fa a4     ..
     jsr sub_caa1b                                                     ; ac65: 20 1b aa     ..
-.opcode_subrange1_for_cf_handler
+.opcode_cf_sub_handler
     jsr sub_ca4d6                                                     ; ac68: 20 d6 a4     ..
     beq cac97                                                         ; ac6b: f0 2a       .*
     bmi cac98                                                         ; ac6d: 30 29       0)
@@ -7451,10 +7451,10 @@ oscli                           = &fff7
     jsr ca2df                                                         ; ac80: 20 df a2     ..
     lda #&53 ; 'S'                                                    ; ac83: a9 53       .S
     sta l000a                                                         ; ac85: 85 0a       ..
-    jsr opcode_subrange1_for_7b_handler                               ; ac87: 20 59 ab     Y.
+    jsr opcode_7b_sub_handler                                         ; ac87: 20 59 ab     Y.
     lda #&58 ; 'X'                                                    ; ac8a: a9 58       .X
     sta l000a                                                         ; ac8c: 85 0a       ..
-    jsr opcode_subrange1_for_78_handler                               ; ac8e: 20 03 a1     ..
+    jsr opcode_78_sub_handler                                         ; ac8e: 20 03 a1     ..
     dec l0040                                                         ; ac91: c6 40       .@
     dec l0038                                                         ; ac93: c6 38       .8
     bne loop_cac80                                                    ; ac95: d0 e9       ..
@@ -7481,7 +7481,7 @@ oscli                           = &fff7
     equs "lost"                                                       ; acb0: 6c 6f 73... los
     equb 0                                                            ; acb4: 00          .
 
-.opcode_subrange1_for_ce_handler
+.opcode_ce_sub_handler
     jsr sub_ca4d6                                                     ; acb5: 20 d6 a4     ..
     bmi caca1                                                         ; acb8: 30 e7       0.
     beq caca1                                                         ; acba: f0 e5       ..
@@ -7510,9 +7510,9 @@ oscli                           = &fff7
     ldy #&54 ; 'T'                                                    ; ace2: a0 54       .T
     jsr sub_cabfe                                                     ; ace4: 20 fe ab     ..
     jsr sub_ca35c                                                     ; ace7: 20 5c a3     \.
-    jsr opcode_subrange1_for_ca_handler                               ; acea: 20 ed aa     ..
-    jsr opcode_subrange1_for_ca_handler                               ; aced: 20 ed aa     ..
-    jsr opcode_subrange1_for_78_handler                               ; acf0: 20 03 a1     ..
+    jsr opcode_ca_sub_handler                                         ; acea: 20 ed aa     ..
+    jsr opcode_ca_sub_handler                                         ; aced: 20 ed aa     ..
+    jsr opcode_78_sub_handler                                         ; acf0: 20 03 a1     ..
     jsr sub_ca2d7                                                     ; acf3: 20 d7 a2     ..
     pla                                                               ; acf6: 68          h
     sec                                                               ; acf7: 38          8
@@ -7522,9 +7522,9 @@ oscli                           = &fff7
     sta l000a                                                         ; acff: 85 0a       ..
     lda #&ad                                                          ; ad01: a9 ad       ..
     sta l000b                                                         ; ad03: 85 0b       ..
-    jsr opcode_subrange1_for_ca_handler                               ; ad05: 20 ed aa     ..
+    jsr opcode_ca_sub_handler                                         ; ad05: 20 ed aa     ..
     jsr sub_ca368                                                     ; ad08: 20 68 a3     h.
-    jmp opcode_subrange1_for_78_handler                               ; ad0b: 4c 03 a1    L..
+    jmp opcode_78_sub_handler                                         ; ad0b: 4c 03 a1    L..
 
     equb &80, &31, &72, &17, &f8                                      ; ad0e: 80 31 72... .1r
 
@@ -7559,21 +7559,21 @@ oscli                           = &fff7
     jsr ca428                                                         ; ad4e: 20 28 a4     (.
     jsr sub_ca2cf                                                     ; ad51: 20 cf a2     ..
     jsr sub_cabf1                                                     ; ad54: 20 f1 ab     ..
-    jsr opcode_subrange1_for_ca_handler                               ; ad57: 20 ed aa     ..
+    jsr opcode_ca_sub_handler                                         ; ad57: 20 ed aa     ..
     jsr sub_ca368                                                     ; ad5a: 20 68 a3     h.
-    jsr opcode_subrange1_for_78_handler                               ; ad5d: 20 03 a1     ..
+    jsr opcode_78_sub_handler                                         ; ad5d: 20 03 a1     ..
     jsr ca2df                                                         ; ad60: 20 df a2     ..
     jsr sub_ca360                                                     ; ad63: 20 60 a3     `.
     jsr ca2a0                                                         ; ad66: 20 a0 a2     ..
     jsr sub_cabf5                                                     ; ad69: 20 f5 ab     ..
-    jsr opcode_subrange1_for_ca_handler                               ; ad6c: 20 ed aa     ..
+    jsr opcode_ca_sub_handler                                         ; ad6c: 20 ed aa     ..
     jsr sub_ca368                                                     ; ad6f: 20 68 a3     h.
-    jmp opcode_subrange1_for_78_handler                               ; ad72: 4c 03 a1    L..
+    jmp opcode_78_sub_handler                                         ; ad72: 4c 03 a1    L..
 
 .cad75
     jmp ca29d                                                         ; ad75: 4c 9d a2    L..
 
-.opcode_subrange1_for_d0_handler
+.opcode_d0_sub_handler
     jsr sub_ca4d6                                                     ; ad78: 20 d6 a4     ..
     beq cad88                                                         ; ad7b: f0 0b       ..
     bpl cadaa                                                         ; ad7d: 10 2b       .+
@@ -7607,9 +7607,9 @@ oscli                           = &fff7
     jsr sub_cab3e                                                     ; adb0: 20 3e ab     >.
     jsr cad89                                                         ; adb3: 20 89 ad     ..
     jsr sub_cabf1                                                     ; adb6: 20 f1 ab     ..
-    jsr opcode_subrange1_for_78_handler                               ; adb9: 20 03 a1     ..
+    jsr opcode_78_sub_handler                                         ; adb9: 20 03 a1     ..
     jsr sub_cabf5                                                     ; adbc: 20 f5 ab     ..
-    jsr opcode_subrange1_for_78_handler                               ; adbf: 20 03 a1     ..
+    jsr opcode_78_sub_handler                                         ; adbf: 20 03 a1     ..
     jmp c9ee8                                                         ; adc2: 4c e8 9e    L..
 
 .bytecode_opcode_d9_handler
@@ -11747,22 +11747,22 @@ oscli                           = &fff7
     assert <input_buffer == &1a
     assert <interpreter_size == &af
     assert <interpreter_start == &a3
-    assert <opcode_subrange1_for_72_handler == &77
-    assert <opcode_subrange1_for_73_handler == &1f
-    assert <opcode_subrange1_for_74_handler == &8c
-    assert <opcode_subrange1_for_75_handler == &d6
-    assert <opcode_subrange1_for_76_handler == &5d
-    assert <opcode_subrange1_for_78_handler == &03
-    assert <opcode_subrange1_for_79_handler == &00
-    assert <opcode_subrange1_for_7a_handler == &ed
-    assert <opcode_subrange1_for_7b_handler == &59
-    assert <opcode_subrange1_for_ca_handler == &ed
-    assert <opcode_subrange1_for_cb_handler == &33
-    assert <opcode_subrange1_for_cc_handler == &2b
-    assert <opcode_subrange1_for_cd_handler == &a0
-    assert <opcode_subrange1_for_ce_handler == &b5
-    assert <opcode_subrange1_for_cf_handler == &68
-    assert <opcode_subrange1_for_d0_handler == &78
+    assert <opcode_72_sub_handler == &77
+    assert <opcode_73_sub_handler == &1f
+    assert <opcode_74_sub_handler == &8c
+    assert <opcode_75_sub_handler == &d6
+    assert <opcode_76_sub_handler == &5d
+    assert <opcode_78_sub_handler == &03
+    assert <opcode_79_sub_handler == &00
+    assert <opcode_7a_sub_handler == &ed
+    assert <opcode_7b_sub_handler == &59
+    assert <opcode_ca_sub_handler == &ed
+    assert <opcode_cb_sub_handler == &33
+    assert <opcode_cc_sub_handler == &2b
+    assert <opcode_cd_sub_handler == &a0
+    assert <opcode_ce_sub_handler == &b5
+    assert <opcode_cf_sub_handler == &68
+    assert <opcode_d0_sub_handler == &78
     assert <something2 == &16
     assert <something_00_handler == &58
     assert <something_01_handler == &41
@@ -12078,22 +12078,22 @@ oscli                           = &fff7
     assert >input_buffer == &05
     assert >interpreter_size == &1f
     assert >interpreter_start == &87
-    assert >opcode_subrange1_for_72_handler == &8c
-    assert >opcode_subrange1_for_73_handler == &8d
-    assert >opcode_subrange1_for_74_handler == &8c
-    assert >opcode_subrange1_for_75_handler == &8b
-    assert >opcode_subrange1_for_76_handler == &8c
-    assert >opcode_subrange1_for_78_handler == &a1
-    assert >opcode_subrange1_for_79_handler == &a1
-    assert >opcode_subrange1_for_7a_handler == &aa
-    assert >opcode_subrange1_for_7b_handler == &ab
-    assert >opcode_subrange1_for_ca_handler == &aa
-    assert >opcode_subrange1_for_cb_handler == &ac
-    assert >opcode_subrange1_for_cc_handler == &ac
-    assert >opcode_subrange1_for_cd_handler == &aa
-    assert >opcode_subrange1_for_ce_handler == &ac
-    assert >opcode_subrange1_for_cf_handler == &ac
-    assert >opcode_subrange1_for_d0_handler == &ad
+    assert >opcode_72_sub_handler == &8c
+    assert >opcode_73_sub_handler == &8d
+    assert >opcode_74_sub_handler == &8c
+    assert >opcode_75_sub_handler == &8b
+    assert >opcode_76_sub_handler == &8c
+    assert >opcode_78_sub_handler == &a1
+    assert >opcode_79_sub_handler == &a1
+    assert >opcode_7a_sub_handler == &aa
+    assert >opcode_7b_sub_handler == &ab
+    assert >opcode_ca_sub_handler == &aa
+    assert >opcode_cb_sub_handler == &ac
+    assert >opcode_cc_sub_handler == &ac
+    assert >opcode_cd_sub_handler == &aa
+    assert >opcode_ce_sub_handler == &ac
+    assert >opcode_cf_sub_handler == &ac
+    assert >opcode_d0_sub_handler == &ad
     assert >something2 == &aa
     assert >something_00_handler == &b8
     assert >something_01_handler == &b7

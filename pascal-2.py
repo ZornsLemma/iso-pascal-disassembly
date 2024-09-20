@@ -297,7 +297,7 @@ expr(0xa9d3, make_subtract("opcode_subrange1_jump_table_high", 0xca))
 def subrange(lo_base, hi_base, n, offset):
     for i in range(n):
         target = get_u8_binary(lo_base+i) + (get_u8_binary(hi_base+i) << 8)
-        target_label = entry(target, "opcode_subrange1_for_%02x_handler" % (offset + i)) # TODO: REMOVE '1' FROM NAME
+        target_label = entry(target, "opcode_%02x_sub_handler" % (offset + i))
         byte(lo_base+i)
         expr(lo_base+i, make_lo(target_label))
         byte(hi_base+i)
