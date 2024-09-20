@@ -115,17 +115,22 @@ for i in range(9):
 
 # TODO: I think this is probably related to copying the interpreter into main RAM below HIMEM for compilation as described into the user guide.
 # TODO: We can therefore probably derive interpreter_size from some pair of labels in this ROM.
+
+
+# TODO: Rename these "compiler_interpreter_foo"?
+entry(0x87a3, "interpreter_start")
 constant(0x1faf, "interpreter_size")
+comment(0x87a3+0x1faf, "TODO: The interpreter copied into RAM for compilation ends here. It is probably correct that there are additional bytecode implementations beyond this point, but presumably they are not used by the compiler itself.")
+label(0x87a3+0x1faf, "interpreter_end")
+# TODO: I'd like to do this, but the output won't assemble: constant("interpreter_end - interpreter_start", "interpreter_size")
 expr(0x86b5, make_lo("interpreter_size"))
 expr(0x86bd, make_hi("interpreter_size"))
 expr(0x86e0, make_lo("interpreter_size"))
 expr(0x86e2, make_hi("interpreter_size"))
-
-entry(0x87a3, "something1")
-expr(0x86c5, make_lo("something1"))
-expr(0x86c9, make_hi("something1"))
-expr(0x86d3, make_lo("something1"))
-expr(0x86dc, make_hi("something1"))
+expr(0x86c5, make_lo("interpreter_start"))
+expr(0x86c9, make_hi("interpreter_start"))
+expr(0x86d3, make_lo("interpreter_start"))
+expr(0x86dc, make_hi("interpreter_start"))
 
 entry(0x87e2, "jmp_indirect_via_l0008")
 
@@ -222,6 +227,7 @@ for i in range(36):
 
 entry(0xb30c, "print_yx_as_decimal")
 entry(0xb374, "something_to_do_with_finding_cr")
+entry(0xb42b, "copyish_from_l000a_to_l000e")
 entry(0xb45c, "bulk_copy_from_l0000_to_l0002")
 entry(0xb634, "maybe_clear_part_of_screen")
 

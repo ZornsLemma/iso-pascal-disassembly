@@ -818,7 +818,7 @@ oscli                           = &fff7
     sta l0019                                                         ; 8408: 85 19       ..
     ldx #0                                                            ; 840a: a2 00       ..
     stx l0659                                                         ; 840c: 8e 59 06    .Y.
-    jmp something1                                                    ; 840f: 4c a3 87    L..
+    jmp interpreter_start                                             ; 840f: 4c a3 87    L..
 
 .c8412
     brk                                                               ; 8412: 00          .
@@ -1189,22 +1189,22 @@ oscli                           = &fff7
     sbc #>interpreter_size                                            ; 86bc: e9 1f       ..
     sta l062f                                                         ; 86be: 8d 2f 06    ./.
     jsr sub_c9814                                                     ; 86c1: 20 14 98     ..
-    lda #<something1                                                  ; 86c4: a9 a3       ..
+    lda #<interpreter_start                                           ; 86c4: a9 a3       ..
     sta l000a                                                         ; 86c6: 85 0a       ..
-    lda #>something1                                                  ; 86c8: a9 87       ..
+    lda #>interpreter_start                                           ; 86c8: a9 87       ..
     sta l000b                                                         ; 86ca: 85 0b       ..
     sec                                                               ; 86cc: 38          8
     lda l062e                                                         ; 86cd: ad 2e 06    ...
     sta l000e                                                         ; 86d0: 85 0e       ..
-    sbc #<something1                                                  ; 86d2: e9 a3       ..
+    sbc #<interpreter_start                                           ; 86d2: e9 a3       ..
     sta l004a                                                         ; 86d4: 85 4a       .J
     lda l062f                                                         ; 86d6: ad 2f 06    ./.
     sta l000f                                                         ; 86d9: 85 0f       ..
-    sbc #>something1                                                  ; 86db: e9 87       ..
+    sbc #>interpreter_start                                           ; 86db: e9 87       ..
     sta l004b                                                         ; 86dd: 85 4b       .K
     ldx #<interpreter_size                                            ; 86df: a2 af       ..
     ldy #>interpreter_size                                            ; 86e1: a0 1f       ..
-    jsr sub_cb42b                                                     ; 86e3: 20 2b b4     +.
+    jsr copyish_from_l000a_to_l000e                                   ; 86e3: 20 2b b4     +.
 .c86e6
     ldy #0                                                            ; 86e6: a0 00       ..
     lda (l000e),y                                                     ; 86e8: b1 0e       ..
@@ -1313,7 +1313,7 @@ oscli                           = &fff7
     equs "fx163,192,0"                                                ; 8797: 66 78 31... fx1
     equb &0d                                                          ; 87a2: 0d          .
 
-.something1
+.interpreter_start
     ldx #0                                                            ; 87a3: a2 00       ..
     stx l0416                                                         ; 87a5: 8e 16 04    ...
     ldx #0                                                            ; 87a8: a2 00       ..
@@ -6463,6 +6463,10 @@ oscli                           = &fff7
     equs "fx163,192,2"                                                ; a746: 66 78 31... fx1
     equb &0d                                                          ; a751: 0d          .
 
+; TODO: The interpreter copied into RAM for compilation ends here. It is probably
+; correct that there are additional bytecode implementations beyond this point, but
+; presumably they are not used by the compiler itself.
+.interpreter_end
 .bytecode_opcode_e3_handler
     iny                                                               ; a752: c8          .
     lda (l0002),y                                                     ; a753: b1 02       ..
@@ -8076,7 +8080,7 @@ la951 = sub_ca94f+2
     sbc l0013                                                         ; b425: e5 13       ..
     sta l000f                                                         ; b427: 85 0f       ..
     sta l0001                                                         ; b429: 85 01       ..
-.sub_cb42b
+.copyish_from_l000a_to_l000e
     stx l0012                                                         ; b42b: 86 12       ..
     sty l0013                                                         ; b42d: 84 13       ..
 .sub_cb42f
@@ -10839,7 +10843,6 @@ la951 = sub_ca94f+2
 ;     sub_cb39b
 ;     sub_cb3b1
 ;     sub_cb3fd
-;     sub_cb42b
 ;     sub_cb42f
 ;     sub_cb455
 ;     sub_cb487
@@ -11167,7 +11170,7 @@ la951 = sub_ca94f+2
     assert <command_trace_handler == &ff
     assert <input_buffer == &1a
     assert <interpreter_size == &af
-    assert <something1 == &a3
+    assert <interpreter_start == &a3
     assert <something_00_handler == &58
     assert <something_01_handler == &41
     assert <something_02_handler == &96
@@ -11477,7 +11480,7 @@ la951 = sub_ca94f+2
     assert >command_trace_handler == &84
     assert >input_buffer == &05
     assert >interpreter_size == &1f
-    assert >something1 == &87
+    assert >interpreter_start == &87
     assert >something_00_handler == &b8
     assert >something_01_handler == &b7
     assert >something_02_handler == &b7
