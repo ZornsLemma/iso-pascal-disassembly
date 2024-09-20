@@ -101,13 +101,53 @@ for i in range(256):
 
 entry(0x85fc, "set_yx_to_himem_minus_2")
 
+tokens = [
+    "No ",
+    "only",
+    "Bad ",
+    "variable",
+    "Undefined ",
+    "overflow",
+    "file",
+    "range",
+    "open",
+    "Field ",
+    "text",
+    "Not ",
+    "number",
+    "*********",
+    "Escape",
+    "found",
+    "eplace",
+    "Insert ",
+]
+
 def fpnti_hook(target, addr):
-    # TODO: This could expand out tokens (as comments) and &80+'c' as 'c'-plus-space
     addr += 3
-    start_addr = addr + 3
+    start_addr = addr
     while get_u8_binary(addr) != 0xea:
         addr += 1
-    string(start_addr, addr - start_addr)
+    run_start = start_addr
+    for pc in range(start_addr, addr):
+        c = get_u8_binary(pc)
+        if c <= 0x7f:
+            pass
+        else:
+            if pc > run_start:
+                string(run_start, pc - run_start)
+            run_start = pc + 1
+            byte(pc)
+            if c >= 0x80+0x20:
+                # TODO: I think we could do with a "make_char()" in py8dis, just hack it for now
+                expr(pc, make_add(0x80, "'%c'" % (c-0x80)))
+                if c >= 0x80+0x20:
+                    comment(pc, '"%c "' % (c-0x80), inline=True)
+            else:
+                token = c - 0x80
+                expr(pc, make_add(0x80, token))
+                comment(pc, '"%s" (token %d)' % (tokens[token], token), inline=True)
+    if addr > run_start:
+        string(run_start, addr - run_start)
     return addr
 
 hook_subroutine(0xb284, "fancy_print_nop_terminated_inline", fpnti_hook)

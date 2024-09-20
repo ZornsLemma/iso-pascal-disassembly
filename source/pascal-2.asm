@@ -336,8 +336,15 @@ oscli                           = &fff7
 .c80bf
     jsr sub_cb1eb                                                     ; 80bf: 20 eb b1     ..
     jsr fancy_print_nop_terminated_inline                             ; 80c2: 20 84 b2     ..
-    equb &0d, &8d, &20                                                ; 80c5: 0d 8d 20    ..
-    equs &8e, " t", &ef, "continu", &e5, &8d                          ; 80c8: 8e 20 74... . t
+    equs &0d                                                          ; 80c5: 0d          .
+    equb 128 + 13                                                     ; 80c6: 8d          .              ; "*********" (token 13)
+    equs " "                                                          ; 80c7: 20
+    equb 128 + 14                                                     ; 80c8: 8e          .              ; "Escape" (token 14)
+    equs " t"                                                         ; 80c9: 20 74        t
+    equb 128 + ('o')                                                  ; 80cb: ef          .              ; "o "
+    equs "continu"                                                    ; 80cc: 63 6f 6e... con
+    equb 128 + ('e')                                                  ; 80d3: e5          .              ; "e "
+    equb 128 + 13                                                     ; 80d4: 8d          .              ; "*********" (token 13)
 
     nop                                                               ; 80d5: ea          .
 .loop_c80d6
@@ -368,15 +375,18 @@ oscli                           = &fff7
 
 .sub_c8104
     jsr fancy_print_nop_terminated_inline                             ; 8104: 20 84 b2     ..
-    equb &20, &61, &f4                                                ; 8107: 20 61 f4     a.
-    equs "lin", &e5                                                   ; 810a: 6c 69 6e... lin
+    equs " a"                                                         ; 8107: 20 61        a
+    equb 128 + ('t')                                                  ; 8109: f4          .              ; "t "
+    equs "lin"                                                        ; 810a: 6c 69 6e    lin
+    equb 128 + ('e')                                                  ; 810d: e5          .              ; "e "
 
     nop                                                               ; 810e: ea          .
     ldx l065b                                                         ; 810f: ae 5b 06    .[.
     ldy l065c                                                         ; 8112: ac 5c 06    .\.
     jsr sub_cb30c                                                     ; 8115: 20 0c b3     ..
     jsr fancy_print_nop_terminated_inline                             ; 8118: 20 84 b2     ..
-    equb &20, &69, &ee                                                ; 811b: 20 69 ee     i.
+    equs " i"                                                         ; 811b: 20 69        i
+    equb 128 + ('n')                                                  ; 811d: ee          .              ; "n "
 
     nop                                                               ; 811e: ea          .
     lda #0                                                            ; 811f: a9 00       ..
@@ -889,8 +899,7 @@ oscli                           = &fff7
     cmp #7                                                            ; 854a: c9 07       ..
     bne c855d                                                         ; 854c: d0 0f       ..
     jsr fancy_print_nop_terminated_inline                             ; 854e: 20 84 b2     ..
-    equb &1c,   0, &18                                                ; 8551: 1c 00 18    ...
-    equs "'", &10                                                     ; 8554: 27 10       '.
+    equs &1c, 0, &18, "'", &10                                        ; 8551: 1c 00 18... ...
 
     nop                                                               ; 8556: ea          .
     ldx #0                                                            ; 8557: a2 00       ..
@@ -6451,14 +6460,14 @@ oscli                           = &fff7
     cmp #2                                                            ; a8ba: c9 02       ..
     bcc ca8d1                                                         ; a8bc: 90 13       ..
     jsr fancy_print_nop_terminated_inline                             ; a8be: 20 84 b2     ..
-    equb &5b                                                          ; a8c1: 5b          [
+    equs "["                                                          ; a8c1: 5b          [
 
     nop                                                               ; a8c2: ea          .
     ldx l065b                                                         ; a8c3: ae 5b 06    .[.
     ldy l065c                                                         ; a8c6: ac 5c 06    .\.
     jsr sub_cb30c                                                     ; a8c9: 20 0c b3     ..
     jsr fancy_print_nop_terminated_inline                             ; a8cc: 20 84 b2     ..
-    equb &dd                                                          ; a8cf: dd          .
+    equb 128 + (']')                                                  ; a8cf: dd          .              ; "] "
 
     nop                                                               ; a8d0: ea          .
 .ca8d1
@@ -6542,7 +6551,7 @@ la920 = sub_ca91f+1
     beq ca95d                                                         ; a940: f0 1b       ..
     stx l0015                                                         ; a942: 86 15       ..
     jsr fancy_print_nop_terminated_inline                             ; a944: 20 84 b2     ..
-    equb &28                                                          ; a947: 28          (
+    equs "("                                                          ; a947: 28          (
 
     nop                                                               ; a948: ea          .
     ldx l0015                                                         ; a949: a6 15       ..
@@ -6556,7 +6565,7 @@ la951 = sub_ca94f+2
     dex                                                               ; a953: ca          .
     bne ca94d                                                         ; a954: d0 f7       ..
     jsr fancy_print_nop_terminated_inline                             ; a956: 20 84 b2     ..
-    equb &a9                                                          ; a959: a9          .
+    equb 128 + (')')                                                  ; a959: a9          .              ; ") "
 
     nop                                                               ; a95a: ea          .
     ldx l0015                                                         ; a95b: a6 15       ..
@@ -7227,8 +7236,7 @@ la951 = sub_ca94f+2
     lda #0                                                            ; b146: a9 00       ..
     sta l0035                                                         ; b148: 85 35       .5
     jsr fancy_print_nop_terminated_inline                             ; b14a: 20 84 b2     ..
-    equb &0d,   3, &0f                                                ; b14d: 0d 03 0f    ...
-    equs &1a                                                          ; b150: 1a          .
+    equs &0d, 3, &0f, &1a                                             ; b14d: 0d 03 0f... ...
 
     nop                                                               ; b151: ea          .
     lda #osbyte_select_printer                                        ; b152: a9 05       ..
@@ -7365,15 +7373,16 @@ la951 = sub_ca94f+2
     lda l0036                                                         ; b22f: a5 36       .6
     bne cb241                                                         ; b231: d0 0e       ..
     jsr fancy_print_nop_terminated_inline                             ; b233: 20 84 b2     ..
-    equs "#Ov"                                                        ; b236: 23 4f 76    #Ov
-    equs "er ", &a0                                                   ; b239: 65 72 20... er
+    equs "#Over "                                                     ; b236: 23 4f 76... #Ov
+    equb 128 + (' ')                                                  ; b23c: a0          .              ; "  "
 
     nop                                                               ; b23d: ea          .
     jmp cb247                                                         ; b23e: 4c 47 b2    LG.
 
 .cb241
     jsr fancy_print_nop_terminated_inline                             ; b241: 20 84 b2     ..
-    equb &23, &91                                                     ; b244: 23 91       #.
+    equs "#"                                                          ; b244: 23          #
+    equb 128 + 17                                                     ; b245: 91          .              ; "Insert " (token 17)
 
     nop                                                               ; b246: ea          .
 .cb247
@@ -7386,8 +7395,7 @@ la951 = sub_ca94f+2
     ora #&30 ; '0'                                                    ; b256: 09 30       .0
     jsr oswrch                                                        ; b258: 20 ee ff     ..            ; Write character
     jsr fancy_print_nop_terminated_inline                             ; b25b: 20 84 b2     ..
-    equs " ma"                                                        ; b25e: 20 6d 61     ma
-    equs "rk(s)"                                                      ; b261: 72 6b 28... rk(
+    equs " mark(s)"                                                   ; b25e: 20 6d 61...  ma
 
     nop                                                               ; b266: ea          .
     lda #&13                                                          ; b267: a9 13       ..
@@ -9382,6 +9390,16 @@ la951 = sub_ca94f+2
     assert &80+'t' == &f4
     assert &80+'w' == &f7
     assert &80+'y' == &f9
+    assert 128 + (' ') == &a0
+    assert 128 + (')') == &a9
+    assert 128 + (']') == &dd
+    assert 128 + ('e') == &e5
+    assert 128 + ('n') == &ee
+    assert 128 + ('o') == &ef
+    assert 128 + ('t') == &f4
+    assert 128 + 13 == &8d
+    assert 128 + 14 == &8e
+    assert 128 + 17 == &91
     assert <(l003e) == &3e
     assert <(l051a) == &1a
     assert <brkv_handler == &98
