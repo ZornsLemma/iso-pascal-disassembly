@@ -5334,9 +5334,9 @@ oscli                           = &fff7
 .ca0ff
     rts                                                               ; a0ff: 60          `
 
-.sub_ca100
+.opcode_subrange1_for_79_handler
     jsr c9ee8                                                         ; a100: 20 e8 9e     ..
-.ca103
+.opcode_subrange1_for_78_handler
     jsr sub_ca304                                                     ; a103: 20 04 a3     ..
     beq ca0ff                                                         ; a106: f0 f7       ..
 .sub_ca108
@@ -6847,8 +6847,6 @@ oscli                           = &fff7
     ldy #2                                                            ; a94b: a0 02       ..
 .ca94d
     lda (l0002),y                                                     ; a94d: b1 02       ..
-.sub_ca94f
-la951 = sub_ca94f+2
     jsr oswrch                                                        ; a94f: 20 ee ff     ..            ; Write character
     iny                                                               ; a952: c8          .
     dex                                                               ; a953: ca          .
@@ -6916,9 +6914,9 @@ la951 = sub_ca94f+2
 .bytecode_opcode_79_handler
 .bytecode_opcode_7a_handler
 .bytecode_opcode_7b_handler
-    lda ca94d,x                                                       ; a9ac: bd 4d a9    .M.
+    lda opcode_subrange2_jump_table_low - 120,x                       ; a9ac: bd 4d a9    .M.
     sta l0008                                                         ; a9af: 85 08       ..
-    lda la951,x                                                       ; a9b1: bd 51 a9    .Q.
+    lda opcode_subrange2_jump_table_high - 120,x                      ; a9b1: bd 51 a9    .Q.
     sta l0009                                                         ; a9b4: 85 09       ..
     jsr sub_ca297                                                     ; a9b6: 20 97 a2     ..
     jsr sub_c9a4a                                                     ; a9b9: 20 4a 9a     J.
@@ -6927,7 +6925,16 @@ la951 = sub_ca94f+2
     lda #1                                                            ; a9c2: a9 01       ..
     rts                                                               ; a9c4: 60          `
 
-    equb   3,   0, &ed, &59, &a1, &a1, &aa, &ab                       ; a9c5: 03 00 ed... ...
+.opcode_subrange2_jump_table_low
+    equb <opcode_subrange1_for_78_handler                             ; a9c5: 03          .
+    equb <opcode_subrange1_for_79_handler                             ; a9c6: 00          .
+    equb <opcode_subrange1_for_7a_handler                             ; a9c7: ed          .
+    equb <opcode_subrange1_for_7b_handler                             ; a9c8: 59          Y
+.opcode_subrange2_jump_table_high
+    equb >opcode_subrange1_for_78_handler                             ; a9c9: a1          .
+    equb >opcode_subrange1_for_79_handler                             ; a9ca: a1          .
+    equb >opcode_subrange1_for_7a_handler                             ; a9cb: aa          .
+    equb >opcode_subrange1_for_7b_handler                             ; a9cc: ab          .
 
 .bytecode_opcode_ca_handler
 .bytecode_opcode_cb_handler
@@ -6974,7 +6981,7 @@ la951 = sub_ca94f+2
     sta l000b                                                         ; a9fe: 85 0b       ..
     lda l003e                                                         ; aa00: a5 3e       .>
     bmi caa0a                                                         ; aa02: 30 06       0.
-    jsr ca103                                                         ; aa04: 20 03 a1     ..
+    jsr opcode_subrange1_for_78_handler                               ; aa04: 20 03 a1     ..
     jmp caa0d                                                         ; aa07: 4c 0d aa    L..
 
 .caa0a
@@ -6989,7 +6996,7 @@ la951 = sub_ca94f+2
     equb &80,   0,   0,   0,   0                                      ; aa16: 80 00 00... ...
 
 .sub_caa1b
-    jsr sub_ca100                                                     ; aa1b: 20 00 a1     ..
+    jsr opcode_subrange1_for_79_handler                               ; aa1b: 20 00 a1     ..
     jmp c9ee8                                                         ; aa1e: 4c e8 9e    L..
 
 .bytecode_opcode_77_handler
@@ -7109,6 +7116,7 @@ la951 = sub_ca94f+2
 .caaea
     jsr sub_ca364                                                     ; aaea: 20 64 a3     d.
 .opcode_subrange1_for_ca_handler
+.opcode_subrange1_for_7a_handler
     lda l0041                                                         ; aaed: a5 41       .A
     beq cab38                                                         ; aaef: f0 47       .G
     jsr sub_ca304                                                     ; aaf1: 20 04 a3     ..
@@ -7175,7 +7183,7 @@ la951 = sub_ca94f+2
 .lab54
     equb 2, 8, 8, 8, 8                                                ; ab54: 02 08 08... ...
 
-.sub_cab59
+.opcode_subrange1_for_7b_handler
     lda l0041                                                         ; ab59: a5 41       .A
     beq loop_cab50                                                    ; ab5b: f0 f3       ..
     jsr sub_ca304                                                     ; ab5d: 20 04 a3     ..
@@ -7289,7 +7297,7 @@ la951 = sub_ca94f+2
     jsr ca2a0                                                         ; ac0d: 20 a0 a2     ..
 .loop_cac10
     jsr sub_ca368                                                     ; ac10: 20 68 a3     h.
-    jsr sub_cab59                                                     ; ac13: 20 59 ab     Y.
+    jsr opcode_subrange1_for_7b_handler                               ; ac13: 20 59 ab     Y.
     clc                                                               ; ac16: 18          .
     lda l0031                                                         ; ac17: a5 31       .1
     adc #5                                                            ; ac19: 69 05       i.
@@ -7297,7 +7305,7 @@ la951 = sub_ca94f+2
     sta l000a                                                         ; ac1d: 85 0a       ..
     lda #&bf                                                          ; ac1f: a9 bf       ..
     sta l000b                                                         ; ac21: 85 0b       ..
-    jsr ca103                                                         ; ac23: 20 03 a1     ..
+    jsr opcode_subrange1_for_78_handler                               ; ac23: 20 03 a1     ..
     dec l0035                                                         ; ac26: c6 35       .5
     bne loop_cac10                                                    ; ac28: d0 e6       ..
     rts                                                               ; ac2a: 60          `
@@ -7349,10 +7357,10 @@ la951 = sub_ca94f+2
     jsr ca2df                                                         ; ac80: 20 df a2     ..
     lda #&53 ; 'S'                                                    ; ac83: a9 53       .S
     sta l000a                                                         ; ac85: 85 0a       ..
-    jsr sub_cab59                                                     ; ac87: 20 59 ab     Y.
+    jsr opcode_subrange1_for_7b_handler                               ; ac87: 20 59 ab     Y.
     lda #&58 ; 'X'                                                    ; ac8a: a9 58       .X
     sta l000a                                                         ; ac8c: 85 0a       ..
-    jsr ca103                                                         ; ac8e: 20 03 a1     ..
+    jsr opcode_subrange1_for_78_handler                               ; ac8e: 20 03 a1     ..
     dec l0040                                                         ; ac91: c6 40       .@
     dec l0038                                                         ; ac93: c6 38       .8
     bne loop_cac80                                                    ; ac95: d0 e9       ..
@@ -7410,7 +7418,7 @@ la951 = sub_ca94f+2
     jsr sub_ca35c                                                     ; ace7: 20 5c a3     \.
     jsr opcode_subrange1_for_ca_handler                               ; acea: 20 ed aa     ..
     jsr opcode_subrange1_for_ca_handler                               ; aced: 20 ed aa     ..
-    jsr ca103                                                         ; acf0: 20 03 a1     ..
+    jsr opcode_subrange1_for_78_handler                               ; acf0: 20 03 a1     ..
     jsr sub_ca2d7                                                     ; acf3: 20 d7 a2     ..
     pla                                                               ; acf6: 68          h
     sec                                                               ; acf7: 38          8
@@ -7422,7 +7430,7 @@ la951 = sub_ca94f+2
     sta l000b                                                         ; ad03: 85 0b       ..
     jsr opcode_subrange1_for_ca_handler                               ; ad05: 20 ed aa     ..
     jsr sub_ca368                                                     ; ad08: 20 68 a3     h.
-    jmp ca103                                                         ; ad0b: 4c 03 a1    L..
+    jmp opcode_subrange1_for_78_handler                               ; ad0b: 4c 03 a1    L..
 
     equb &80, &31, &72, &17, &f8                                      ; ad0e: 80 31 72... .1r
 
@@ -7459,14 +7467,14 @@ la951 = sub_ca94f+2
     jsr sub_cabf1                                                     ; ad54: 20 f1 ab     ..
     jsr opcode_subrange1_for_ca_handler                               ; ad57: 20 ed aa     ..
     jsr sub_ca368                                                     ; ad5a: 20 68 a3     h.
-    jsr ca103                                                         ; ad5d: 20 03 a1     ..
+    jsr opcode_subrange1_for_78_handler                               ; ad5d: 20 03 a1     ..
     jsr ca2df                                                         ; ad60: 20 df a2     ..
     jsr sub_ca360                                                     ; ad63: 20 60 a3     `.
     jsr ca2a0                                                         ; ad66: 20 a0 a2     ..
     jsr sub_cabf5                                                     ; ad69: 20 f5 ab     ..
     jsr opcode_subrange1_for_ca_handler                               ; ad6c: 20 ed aa     ..
     jsr sub_ca368                                                     ; ad6f: 20 68 a3     h.
-    jmp ca103                                                         ; ad72: 4c 03 a1    L..
+    jmp opcode_subrange1_for_78_handler                               ; ad72: 4c 03 a1    L..
 
 .cad75
     jmp ca29d                                                         ; ad75: 4c 9d a2    L..
@@ -7505,9 +7513,9 @@ la951 = sub_ca94f+2
     jsr sub_cab3e                                                     ; adb0: 20 3e ab     >.
     jsr cad89                                                         ; adb3: 20 89 ad     ..
     jsr sub_cabf1                                                     ; adb6: 20 f1 ab     ..
-    jsr ca103                                                         ; adb9: 20 03 a1     ..
+    jsr opcode_subrange1_for_78_handler                               ; adb9: 20 03 a1     ..
     jsr sub_cabf5                                                     ; adbc: 20 f5 ab     ..
-    jsr ca103                                                         ; adbf: 20 03 a1     ..
+    jsr opcode_subrange1_for_78_handler                               ; adbf: 20 03 a1     ..
     jmp c9ee8                                                         ; adc2: 4c e8 9e    L..
 
 .bytecode_opcode_d9_handler
@@ -10482,7 +10490,6 @@ la951 = sub_ca94f+2
 ;     ca08a
 ;     ca0e3
 ;     ca0ff
-;     ca103
 ;     ca13d
 ;     ca152
 ;     ca176
@@ -10973,7 +10980,6 @@ la951 = sub_ca94f+2
 ;     la734
 ;     la73e
 ;     la786
-;     la951
 ;     lab54
 ;     laf70
 ;     lb26e
@@ -11247,7 +11253,6 @@ la951 = sub_ca94f+2
 ;     sub_ca08b
 ;     sub_ca09a
 ;     sub_ca0eb
-;     sub_ca100
 ;     sub_ca108
 ;     sub_ca10e
 ;     sub_ca202
@@ -11277,12 +11282,10 @@ la951 = sub_ca94f+2
 ;     sub_ca83a
 ;     sub_ca8b1
 ;     sub_ca91f
-;     sub_ca94f
 ;     sub_ca973
 ;     sub_caa1b
 ;     sub_cab3e
 ;     sub_cab44
-;     sub_cab59
 ;     sub_cabed
 ;     sub_cabf1
 ;     sub_cabf5
@@ -11644,6 +11647,10 @@ la951 = sub_ca94f+2
     assert <input_buffer == &1a
     assert <interpreter_size == &af
     assert <interpreter_start == &a3
+    assert <opcode_subrange1_for_78_handler == &03
+    assert <opcode_subrange1_for_79_handler == &00
+    assert <opcode_subrange1_for_7a_handler == &ed
+    assert <opcode_subrange1_for_7b_handler == &59
     assert <opcode_subrange1_for_ca_handler == &ed
     assert <opcode_subrange1_for_cb_handler == &33
     assert <opcode_subrange1_for_cc_handler == &2b
@@ -11966,6 +11973,10 @@ la951 = sub_ca94f+2
     assert >input_buffer == &05
     assert >interpreter_size == &1f
     assert >interpreter_start == &87
+    assert >opcode_subrange1_for_78_handler == &a1
+    assert >opcode_subrange1_for_79_handler == &a1
+    assert >opcode_subrange1_for_7a_handler == &aa
+    assert >opcode_subrange1_for_7b_handler == &ab
     assert >opcode_subrange1_for_ca_handler == &aa
     assert >opcode_subrange1_for_cb_handler == &ac
     assert >opcode_subrange1_for_cc_handler == &ac
@@ -12016,6 +12027,8 @@ la951 = sub_ca94f+2
     assert fx163_192_2 == &a746
     assert opcode_subrange1_jump_table_high - 202 == &a920
     assert opcode_subrange1_jump_table_low - 202 == &a919
+    assert opcode_subrange2_jump_table_high - 120 == &a951
+    assert opcode_subrange2_jump_table_low - 120 == &a94d
     assert osbyte_163_192_x_minus_1_table - 1 == &8094
     assert osbyte_acknowledge_escape == &7e
     assert osbyte_enter_language == &8e

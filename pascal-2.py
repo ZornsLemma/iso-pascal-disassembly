@@ -291,16 +291,24 @@ stringcr(0xa746)
 expr(0x9539, "fx163_192_2")
 
 label(0xa9e3, "opcode_subrange1_jump_table_low")
-label(0xa920+0xca, "opcode_subrange1_jump_table_high")
+label(0xa9ea, "opcode_subrange1_jump_table_high")
 expr(0xa9ce, make_subtract("opcode_subrange1_jump_table_low", 0xca))
 expr(0xa9d3, make_subtract("opcode_subrange1_jump_table_high", 0xca))
-for i in range(7):
-    target = get_u8_binary(0xa9e3+i) + (get_u8_binary(0xa9ea+i) << 8)
-    target_label = entry(target, "opcode_subrange1_for_%02x_handler" % (0xca + i))
-    byte(0xa9e3+i)
-    expr(0xa9e3+i, make_lo(target_label))
-    byte(0xa9ea+i)
-    expr(0xa9ea+i, make_hi(target_label))
+def subrange(lo_base, hi_base, n, offset):
+    for i in range(n):
+        target = get_u8_binary(lo_base+i) + (get_u8_binary(hi_base+i) << 8)
+        target_label = entry(target, "opcode_subrange1_for_%02x_handler" % (offset + i)) # TODO: REMOVE '1' FROM NAME
+        byte(lo_base+i)
+        expr(lo_base+i, make_lo(target_label))
+        byte(hi_base+i)
+        expr(hi_base+i, make_hi(target_label))
+subrange(0xa9e3, 0xa9ea, 7, 0xca)
+
+label(0xa9c5, "opcode_subrange2_jump_table_low")
+label(0xa9c9, "opcode_subrange2_jump_table_high")
+expr(0xa9ad, make_subtract("opcode_subrange2_jump_table_low", 0x78))
+expr(0xa9b2, make_subtract("opcode_subrange2_jump_table_high", 0x78))
+subrange(0xa9c5, 0xa9c9, 4, 0x78)
 
 # TODO: opcode_d0_handler has some kind of jump table but it's not clear to me what X range is - ditto 7b_handler - ditto 76_handler
 # TODO: ed_handler is doing some kind of indirect jump
