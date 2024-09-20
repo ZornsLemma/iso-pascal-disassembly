@@ -1428,7 +1428,7 @@ oscli                           = &fff7
 .bytecode_opcode_1a_handler
 .bytecode_opcode_1b_handler
 .bytecode_opcode_1c_handler
-    lda la71c,x                                                       ; 8844: bd 1c a7    ...
+    lda opcode_18_to_1c_table - 24,x                                  ; 8844: bd 1c a7    ...
     sta l004c                                                         ; 8847: 85 4c       .L
     jsr sub_c9ae2                                                     ; 8849: 20 e2 9a     ..
     ldx #1                                                            ; 884c: a2 01       ..
@@ -1566,7 +1566,7 @@ oscli                           = &fff7
     ldx #&0f                                                          ; 890c: a2 0f       ..
 .bytecode_opcode_0e_handler
 .bytecode_opcode_0f_handler
-    lda la726,x                                                       ; 890e: bd 26 a7    .&.
+    lda opcode_0e_0f_table - 14,x                                     ; 890e: bd 26 a7    .&.
     jsr sub_c87e5                                                     ; 8911: 20 e5 87     ..
     ldx #2                                                            ; 8914: a2 02       ..
 .c8916
@@ -1624,7 +1624,7 @@ oscli                           = &fff7
 .bytecode_opcode_13_handler
 .bytecode_opcode_14_handler
 .bytecode_opcode_15_handler
-    lda la723,x                                                       ; 895b: bd 23 a7    .#.
+    lda opcode_11_to_15_table - 17,x                                  ; 895b: bd 23 a7    .#.
     jsr sub_c87e5                                                     ; 895e: 20 e5 87     ..
     jsr sub_c892d                                                     ; 8961: 20 2d 89     -.
     ldx #2                                                            ; 8964: a2 02       ..
@@ -6624,15 +6624,12 @@ oscli                           = &fff7
     equb 6, 3, 4, 1                                                   ; a713: 06 03 04... ...
 .la717
     equb &ff, &fe, &fc, &f8, &f0                                      ; a717: ff fe fc... ...
-.la71c
     equb &e0, &c0                                                     ; a71c: e0 c0       ..
 .la71e
     equb &80                                                          ; a71e: 80          .
 .la71f
     equb 1, 2, 4, 8                                                   ; a71f: 01 02 04... ...
-.la723
     equb &10, &20, &40                                                ; a723: 10 20 40    . @
-.la726
     equb &80                                                          ; a726: 80          .
 .la727
     equb   8, &10, &18, &20                                           ; a727: 08 10 18... ...
@@ -6645,6 +6642,10 @@ oscli                           = &fff7
 .opcode_05_06_table
 .opcode_1d_1e_table
 .opcode_21_to_25_table
+.opcode_18_to_1c_table
+.opcode_16_17_table
+.opcode_11_to_15_table
+.opcode_0e_0f_table
     equb   0,   1,   3,   4, &1f, &1a,   5, &ff, &20, &ff             ; a734: 00 01 03... ...
 .la73e
     equs "pas___#"                                                    ; a73e: 70 61 73... pas
@@ -11105,11 +11106,8 @@ oscli                           = &fff7
 ;     l9998
 ;     l9999
 ;     la717
-;     la71c
 ;     la71e
 ;     la71f
-;     la723
-;     la726
 ;     la727
 ;     la73e
 ;     la786
@@ -12191,6 +12189,9 @@ oscli                           = &fff7
     assert copyright - rom_header == &14
     assert fx163_192_2 == &a746
     assert opcode_05_06_table - 5 == &a72f
+    assert opcode_0e_0f_table - 14 == &a726
+    assert opcode_11_to_15_table - 17 == &a723
+    assert opcode_18_to_1c_table - 24 == &a71c
     assert opcode_1d_1e_table - 29 == &a717
     assert opcode_21_to_25_table - 33 == &a713
     assert opcode_subrange1_jump_table_high - 202 == &a920
