@@ -132,6 +132,9 @@ expr(0x86c9, make_hi("interpreter_start"))
 expr(0x86d3, make_lo("interpreter_start"))
 expr(0x86dc, make_hi("interpreter_start"))
 
+comment(0x86e6, "TODO: It looks like we now patch the relocated copy of the interpreter to fix up absolute addresses.")
+entry(0x870e, "relocate_high_byte_of_operand")
+
 entry(0x87e2, "jmp_indirect_via_l0008")
 
 entry(0x89d5, "some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes")

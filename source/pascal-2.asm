@@ -1205,28 +1205,30 @@ oscli                           = &fff7
     ldx #<interpreter_size                                            ; 86df: a2 af       ..
     ldy #>interpreter_size                                            ; 86e1: a0 1f       ..
     jsr copyish_from_l000a_to_l000e                                   ; 86e3: 20 2b b4     +.
+; TODO: It looks like we now patch the relocated copy of the interpreter to fix up
+; absolute addresses.
 .c86e6
     ldy #0                                                            ; 86e6: a0 00       ..
     lda (l000e),y                                                     ; 86e8: b1 0e       ..
     beq c873d                                                         ; 86ea: f0 51       .Q
     cmp #&20 ; ' '                                                    ; 86ec: c9 20       .
-    beq c870e                                                         ; 86ee: f0 1e       ..
+    beq relocate_high_byte_of_operand                                 ; 86ee: f0 1e       ..
     cmp #&60 ; '`'                                                    ; 86f0: c9 60       .`
     beq c8730                                                         ; 86f2: f0 3c       .<
     cmp #&ff                                                          ; 86f4: c9 ff       ..
     beq c8745                                                         ; 86f6: f0 4d       .M
     and #&1f                                                          ; 86f8: 29 1f       ).
     cmp #&19                                                          ; 86fa: c9 19       ..
-    beq c870e                                                         ; 86fc: f0 10       ..
+    beq relocate_high_byte_of_operand                                 ; 86fc: f0 10       ..
     and #&0f                                                          ; 86fe: 29 0f       ).
     cmp #&0c                                                          ; 8700: c9 0c       ..
-    bcs c870e                                                         ; 8702: b0 0a       ..
+    bcs relocate_high_byte_of_operand                                 ; 8702: b0 0a       ..
     cmp #8                                                            ; 8704: c9 08       ..
     beq c8730                                                         ; 8706: f0 28       .(
     cmp #&0a                                                          ; 8708: c9 0a       ..
     beq c8730                                                         ; 870a: f0 24       .$
     bne c872c                                                         ; 870c: d0 1e       ..
-.c870e
+.relocate_high_byte_of_operand
     ldy #2                                                            ; 870e: a0 02       ..
     lda (l000e),y                                                     ; 8710: b1 0e       ..
     cmp #&80                                                          ; 8712: c9 80       ..
@@ -9823,7 +9825,6 @@ la951 = sub_ca94f+2
 ;     c8698
 ;     c869d
 ;     c86e6
-;     c870e
 ;     c8728
 ;     c872c
 ;     c8730
