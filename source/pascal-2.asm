@@ -7634,11 +7634,12 @@ la951 = sub_ca94f+2
     lda #osbyte_select_printer                                        ; b152: a9 05       ..
     jsr osbyte                                                        ; b154: 20 f4 ff     ..            ; Select printer destination based on X
     jsr osbyte                                                        ; b157: 20 f4 ff     ..
+; Do 'setup' OSBYTE calls
     ldx #4                                                            ; b15a: a2 04       ..
     ldy #0                                                            ; b15c: a0 00       ..
     jsr sub_cb17b                                                     ; b15e: 20 7b b1     {.
     ldx #&8a                                                          ; b161: a2 8a       ..
-.sub_cb163
+.set_tab_char_to_x_if_not_electron
     lda simplified_machine_type                                       ; b163: ad 17 04    ...
     cmp #1                                                            ; b166: c9 01       ..
     beq cb171                                                         ; b168: f0 07       ..
@@ -7648,15 +7649,15 @@ la951 = sub_ca94f+2
 .cb171
     rts                                                               ; b171: 60          `
 
-.sub_cb172
+.set_tab_char_to_9_if_not_electron_and_do_cleanup_osbyte_calls
     ldx #9                                                            ; b172: a2 09       ..
-    jsr sub_cb163                                                     ; b174: 20 63 b1     c.
+    jsr set_tab_char_to_x_if_not_electron                             ; b174: 20 63 b1     c.
     ldx #3                                                            ; b177: a2 03       ..
     ldy #4                                                            ; b179: a0 04       ..
 .sub_cb17b
     stx l0015                                                         ; b17b: 86 15       ..
     sty l0016                                                         ; b17d: 84 16       ..
-.loop_cb17f
+.do_x_osbyte_calls_from_table_starting_at_y
     ldy l0016                                                         ; b17f: a4 16       ..
     lda osbyte_a_table,y                                              ; b181: b9 93 b1    ...
     ldx osbyte_x_table,y                                              ; b184: be 9a b1    ...
@@ -7664,7 +7665,7 @@ la951 = sub_ca94f+2
     jsr osbyte                                                        ; b189: 20 f4 ff     ..
     inc l0016                                                         ; b18c: e6 16       ..
     dec l0015                                                         ; b18e: c6 15       ..
-    bne loop_cb17f                                                    ; b190: d0 ed       ..
+    bne do_x_osbyte_calls_from_table_starting_at_y                    ; b190: d0 ed       ..
     rts                                                               ; b192: 60          `
 
 .osbyte_a_table
@@ -7762,7 +7763,7 @@ la951 = sub_ca94f+2
     sta l0036                                                         ; b21a: 85 36       .6
     bpl cb225                                                         ; b21c: 10 07       ..
 .something_1b_handler
-    jsr sub_cb172                                                     ; b21e: 20 72 b1     r.
+    jsr set_tab_char_to_9_if_not_electron_and_do_cleanup_osbyte_calls ; b21e: 20 72 b1     r.
     lda #1                                                            ; b221: a9 01       ..
     sta l0035                                                         ; b223: 85 35       .5
 .cb225
@@ -8570,7 +8571,7 @@ la951 = sub_ca94f+2
 .something_01_handler
     lda #3                                                            ; b741: a9 03       ..
     sta l0416                                                         ; b743: 8d 16 04    ...
-    jsr sub_cb172                                                     ; b746: 20 72 b1     r.
+    jsr set_tab_char_to_9_if_not_electron_and_do_cleanup_osbyte_calls ; b746: 20 72 b1     r.
     jsr extra_fancy_print_nop_terminated_inlne                        ; b749: 20 70 b2     p.
     equs "Star", &0d                                                  ; b74c: 53 74 61... Sta
 
@@ -8591,7 +8592,7 @@ la951 = sub_ca94f+2
 .something_14_handler
     jsr sub_cb711                                                     ; b769: 20 11 b7     ..
     jsr sub_cb77e                                                     ; b76c: 20 7e b7     ~.
-    jsr sub_cb172                                                     ; b76f: 20 72 b1     r.
+    jsr set_tab_char_to_9_if_not_electron_and_do_cleanup_osbyte_calls ; b76f: 20 72 b1     r.
     jsr extra_fancy_print_nop_terminated_inlne                        ; b772: 20 70 b2     p.
     equs "Quit", &0d                                                  ; b775: 51 75 69... Qui
 
@@ -10618,7 +10619,6 @@ la951 = sub_ca94f+2
 ;     loop_caec7
 ;     loop_cb09a
 ;     loop_cb0ba
-;     loop_cb17f
 ;     loop_cb1bb
 ;     loop_cb200
 ;     loop_cb2c8
@@ -10810,8 +10810,6 @@ la951 = sub_ca94f+2
 ;     sub_cafd9
 ;     sub_caffc
 ;     sub_cb146
-;     sub_cb163
-;     sub_cb172
 ;     sub_cb17b
 ;     sub_cb1a1
 ;     sub_cb1aa

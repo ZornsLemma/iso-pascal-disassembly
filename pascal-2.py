@@ -261,4 +261,9 @@ entry(0xb634, "maybe_clear_part_of_screen")
 label(0xb193, "osbyte_a_table")
 label(0xb19a, "osbyte_x_table")
 
+entry(0xb163, "set_tab_char_to_x_if_not_electron")
+entry(0xb17f, "do_x_osbyte_calls_from_table_starting_at_y")
+entry(0xb172, "set_tab_char_to_9_if_not_electron_and_do_cleanup_osbyte_calls")
+comment(0xb15a, "Do 'setup' OSBYTE calls")
+
 go()
