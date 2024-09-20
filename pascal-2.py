@@ -288,6 +288,7 @@ word(0x9539)
 expr_label(0x953a, "oscli_ptr + 1")
 label(0xa746, "fx163_192_2")
 stringcr(0xa746)
+expr(0x9539, "fx163_192_2")
 
 # TODO: opcode_do_handler has some kind of jump table but it's not clear to me what X range is - ditto 7b_handler
 

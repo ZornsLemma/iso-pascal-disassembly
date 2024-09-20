@@ -3444,7 +3444,7 @@ oscli                           = &fff7
 
     equb &ad                                                          ; 9538: ad          .
 .oscli_ptr
-    equw &a746                                                        ; 9539: 46 a7       F.
+    equw fx163_192_2                                                  ; 9539: 46 a7       F.
 
 .bytecode_opcode_b1_handler
     lda l0653                                                         ; 953b: ad 53 06    .S.
@@ -11515,6 +11515,7 @@ la951 = sub_ca94f+2
     assert >string_false == &a7
     assert >string_true == &a7
     assert copyright - rom_header == &14
+    assert fx163_192_2 == &a746
     assert osbyte_163_192_x_minus_1_table - 1 == &8094
     assert osbyte_acknowledge_escape == &7e
     assert osbyte_enter_language == &8e
