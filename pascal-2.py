@@ -66,7 +66,7 @@ for i in range(18):
     pc = stringhi(pc, lambda x: True)
 
 comment(0x8235, "Set last break type to 0 and get old value in X")
-entry(0x82a7, "real_language_entry") # TODO: guess
+entry(0x82a7, "real_language_entry") # TODO: guess, this could probably be renamed for clarity - I suspect this is used for simple entry to the interpreter via *PASCAL and all the complexity is related to handling COMPILE and returning from it
 comment(0x823e, "Branch if b7 of original last break type clear")
 comment(0x8245, "Set output stream to saved value at &100 in I/O processor")
 comment(0x8252, "Branch if b6 of original last break type clear")
@@ -133,6 +133,8 @@ for i in range(256):
     byte(0xa60c+i)
     expr(0xa60c+i, make_hi(target_label))
 
+entry(0x855d, "set_himem") # TODO: here and elsewhere we may mean "himem_prime" (and rename himem_{low,high})
+entry(0x8562, "set_himem_to_yx")
 entry(0x85fc, "set_yx_to_himem_minus_2")
 
 tokens = [

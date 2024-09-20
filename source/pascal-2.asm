@@ -651,7 +651,7 @@ oscli                           = &fff7
     sty oshwm_high2                                                   ; 82e1: 8c 0d 04    ...
     stx oshwm_low3                                                    ; 82e4: 8e 05 04    ...
     sty oshwm_high3                                                   ; 82e7: 8c 08 04    ...
-    jsr c855d                                                         ; 82ea: 20 5d 85     ].
+    jsr set_himem                                                     ; 82ea: 20 5d 85     ].
     ldx #0                                                            ; 82ed: a2 00       ..
     stx l0418                                                         ; 82ef: 8e 18 04    ...
     jsr zero_misc_values                                              ; 82f2: 20 93 a4     ..
@@ -980,22 +980,22 @@ oscli                           = &fff7
     jsr oswrch                                                        ; 853c: 20 ee ff     ..            ; Write character
     lda simplified_machine_type                                       ; 853f: ad 17 04    ...
     cmp #1                                                            ; 8542: c9 01       ..
-    bne c855d                                                         ; 8544: d0 17       ..
+    bne set_himem                                                     ; 8544: d0 17       ..
     lda l0014                                                         ; 8546: a5 14       ..
     and #7                                                            ; 8548: 29 07       ).
     cmp #7                                                            ; 854a: c9 07       ..
-    bne c855d                                                         ; 854c: d0 0f       ..
+    bne set_himem                                                     ; 854c: d0 0f       ..
     jsr fancy_print_nop_terminated_inline                             ; 854e: 20 84 b2     ..
     equs &1c, 0, &18, "'", &10                                        ; 8551: 1c 00 18... ...
 
     nop                                                               ; 8556: ea          .
     ldx #0                                                            ; 8557: a2 00       ..
     ldy #&74 ; 't'                                                    ; 8559: a0 74       .t
-    bne c8562                                                         ; 855b: d0 05       ..
-.c855d
+    bne set_himem_to_yx                                               ; 855b: d0 05       ..
+.set_himem
     lda #osbyte_read_himem                                            ; 855d: a9 84       ..
     jsr osbyte                                                        ; 855f: 20 f4 ff     ..            ; Read top of user memory (HIMEM)
-.c8562
+.set_himem_to_yx
     stx himem_low                                                     ; 8562: 8e 02 04    ...            ; X and Y contain the address of HIMEM (low, high)
     sty himem_high                                                    ; 8565: 8c 03 04    ...
     rts                                                               ; 8568: 60          `
@@ -7279,7 +7279,7 @@ la951 = sub_ca94f+2
     rts                                                               ; af04: 60          `
 
 .command_edit_handler
-    jsr c855d                                                         ; af05: 20 5d 85     ].
+    jsr set_himem                                                     ; af05: 20 5d 85     ].
     lda #osbyte_read_vdu_variable                                     ; af08: a9 a0       ..
     ldx #9                                                            ; af0a: a2 09       ..
     jsr osbyte                                                        ; af0c: 20 f4 ff     ..            ; Read the text window bottom position (VDU variable X=9)
@@ -9804,8 +9804,6 @@ la951 = sub_ca94f+2
 ;     c84fc
 ;     c8514
 ;     c8535
-;     c855d
-;     c8562
 ;     c8569
 ;     c8574
 ;     c8576
