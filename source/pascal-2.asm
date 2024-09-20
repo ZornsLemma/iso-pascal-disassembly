@@ -6906,9 +6906,9 @@ la951 = sub_ca94f+2
     jsr sub_ca297                                                     ; a9f1: 20 97 a2     ..
     cpx #&d1                                                          ; a9f4: e0 d1       ..
     beq caa0d                                                         ; a9f6: f0 15       ..
-    lda #&16                                                          ; a9f8: a9 16       ..
+    lda #<something2                                                  ; a9f8: a9 16       ..
     sta l000a                                                         ; a9fa: 85 0a       ..
-    lda #&aa                                                          ; a9fc: a9 aa       ..
+    lda #>something2                                                  ; a9fc: a9 aa       ..
     sta l000b                                                         ; a9fe: 85 0b       ..
     lda l003e                                                         ; aa00: a5 3e       .>
     bmi caa0a                                                         ; aa02: 30 06       0.
@@ -6923,6 +6923,7 @@ la951 = sub_ca94f+2
     lda #1                                                            ; aa13: a9 01       ..
     rts                                                               ; aa15: 60          `
 
+.something2
     equb &80,   0,   0,   0,   0                                      ; aa16: 80 00 00... ...
 
 .sub_caa1b
@@ -11165,6 +11166,7 @@ la951 = sub_ca94f+2
     assert <input_buffer == &1a
     assert <interpreter_size == &af
     assert <interpreter_start == &a3
+    assert <something2 == &16
     assert <something_00_handler == &58
     assert <something_01_handler == &41
     assert <something_02_handler == &96
@@ -11477,6 +11479,7 @@ la951 = sub_ca94f+2
     assert >input_buffer == &05
     assert >interpreter_size == &1f
     assert >interpreter_start == &87
+    assert >something2 == &aa
     assert >something_00_handler == &b8
     assert >something_01_handler == &b7
     assert >something_02_handler == &b7

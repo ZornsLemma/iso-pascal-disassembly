@@ -181,6 +181,10 @@ entry(0x85fc, "set_yx_to_himem_minus_2")
 
 entry(0x9976, "escape")
 
+label(0xaa16, "something2")
+expr(0xa9f9, make_lo("something2"))
+expr(0xa9fd, make_hi("something2"))
+
 tokens = [
     "No ",
     "only",
