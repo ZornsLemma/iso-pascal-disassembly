@@ -58,6 +58,7 @@ l001f                           = &001f
 l0020                           = &0020
 l0021                           = &0021
 l0022                           = &0022
+l0023                           = &0023
 l0024                           = &0024
 l0025                           = &0025
 l0026                           = &0026
@@ -80,6 +81,8 @@ l0037                           = &0037
 l0038                           = &0038
 l0039                           = &0039
 l003a                           = &003a
+l003b                           = &003b
+l003c                           = &003c
 l003e                           = &003e
 l003f                           = &003f
 l0040                           = &0040
@@ -96,7 +99,16 @@ l004a                           = &004a
 l004b                           = &004b
 l004c                           = &004c
 l004d                           = &004d
+l004e                           = &004e
+l004f                           = &004f
+l0050                           = &0050
+l0051                           = &0051
+l0052                           = &0052
 l0053                           = &0053
+l0054                           = &0054
+l0055                           = &0055
+l0056                           = &0056
+l005e                           = &005e
 l0067                           = &0067
 l0069                           = &0069
 l006a                           = &006a
@@ -137,6 +149,7 @@ simplified_machine_type         = &0417
 l0418                           = &0418
 l0419                           = &0419
 l041a                           = &041a
+l041b                           = &041b
 l0420                           = &0420
 l0519                           = &0519
 l051a                           = &051a
@@ -159,9 +172,13 @@ l062f                           = &062f
 l0630                           = &0630
 l0631                           = &0631
 l0632                           = &0632
+l0634                           = &0634
 l063a                           = &063a
+l063c                           = &063c
 l0642                           = &0642
+l0644                           = &0644
 l064a                           = &064a
+l064e                           = &064e
 l0652                           = &0652
 l0653                           = &0653
 l0654                           = &0654
@@ -190,6 +207,7 @@ l0678                           = &0678
 lc001                           = &c001
 lc002                           = &c002
 lc003                           = &c003
+lea8f                           = &ea8f
 osfind                          = &ffce
 osbput                          = &ffd4
 osbget                          = &ffd7
@@ -338,7 +356,7 @@ oscli                           = &fff7
     ldy #0                                                            ; 80b6: a0 00       ..
     lda (l00fd),y                                                     ; 80b8: b1 fd       ..
     bne c80bf                                                         ; 80ba: d0 03       ..
-    jmp cb741                                                         ; 80bc: 4c 41 b7    LA.
+    jmp something_01_handler                                          ; 80bc: 4c 41 b7    LA.
 
 .c80bf
     jsr sub_cb1eb                                                     ; 80bf: 20 eb b1     ..
@@ -818,6 +836,7 @@ oscli                           = &fff7
     ldx oshwm_low2,y                                                  ; 842b: be 0a 04    ...
     lda oshwm_high2,y                                                 ; 842e: b9 0d 04    ...
     tay                                                               ; 8431: a8          .
+.sub_c8432
     stx l0628                                                         ; 8432: 8e 28 06    .(.
     sty l0629                                                         ; 8435: 8c 29 06    .).
     lda #0                                                            ; 8438: a9 00       ..
@@ -862,7 +881,8 @@ oscli                           = &fff7
     rts                                                               ; 8493: 60          `
 
 .probably_read_input_line_to_l051a
-    jsr sub_c996e                                                     ; 8494: 20 6e 99     n.
+    jsr c996e                                                         ; 8494: 20 6e 99     n.
+.c8497
     tya                                                               ; 8497: 98          .
     beq c84a4                                                         ; 8498: f0 0a       ..
 .loop_c849a
@@ -1117,12 +1137,25 @@ oscli                           = &fff7
     ldx #0                                                            ; 8655: a2 00       ..
     jmp c8576                                                         ; 8657: 4c 76 85    Lv.
 
-    equb &ad, &15,   4, &f0, &24, &a0,   0, &8c, &15,   4, &ad, &14   ; 865a: ad 15 04... ...
-    equb   4, &91,   4, &20, &fc, &85, &ec, &12,   4, &ed, &13,   4   ; 8666: 04 91 04... ...
-    equb &90,   6, &ae, &12,   4, &ac, &13,   4, &8e, &0b,   4, &8c   ; 8672: 90 06 ae... ...
-    equb &0e,   4, &4c, &74, &85                                      ; 867e: 0e 04 4c... ..L
+.sub_c865a
+    lda l0415                                                         ; 865a: ad 15 04    ...
+    beq c8683                                                         ; 865d: f0 24       .$
+    ldy #0                                                            ; 865f: a0 00       ..
+    sty l0415                                                         ; 8661: 8c 15 04    ...
+    lda l0414                                                         ; 8664: ad 14 04    ...
+    sta (oshwm_low_zp),y                                              ; 8667: 91 04       ..
+    jsr set_yx_to_himem_minus_2                                       ; 8669: 20 fc 85     ..
+    cpx l0412                                                         ; 866c: ec 12 04    ...
+    sbc l0413                                                         ; 866f: ed 13 04    ...
+    bcc c867a                                                         ; 8672: 90 06       ..
+    ldx l0412                                                         ; 8674: ae 12 04    ...
+    ldy l0413                                                         ; 8677: ac 13 04    ...
+.c867a
+    stx l040b                                                         ; 867a: 8e 0b 04    ...
+    sty l040e                                                         ; 867d: 8c 0e 04    ...
+    jmp c8574                                                         ; 8680: 4c 74 85    Lt.
 
-.loop_c8683
+.c8683
     brk                                                               ; 8683: 00          .
 
     equb   4, &80, &8a,   0                                           ; 8684: 04 80 8a... ...
@@ -1138,7 +1171,7 @@ oscli                           = &fff7
     bne c869d                                                         ; 8696: d0 05       ..
 .c8698
     ldx l0410                                                         ; 8698: ae 10 04    ...
-    beq loop_c8683                                                    ; 869b: f0 e6       ..
+    beq c8683                                                         ; 869b: f0 e6       ..
 .c869d
     stx l0410                                                         ; 869d: 8e 10 04    ...
     lda oshwm_low2,x                                                  ; 86a0: bd 0a 04    ...
@@ -4048,7 +4081,7 @@ oscli                           = &fff7
 .sub_c9958
     ldx l0017                                                         ; 9958: a6 17       ..
     bne c9961                                                         ; 995a: d0 05       ..
-    jsr sub_c996e                                                     ; 995c: 20 6e 99     n.
+    jsr c996e                                                         ; 995c: 20 6e 99     n.
     ldx #0                                                            ; 995f: a2 00       ..
 .c9961
     lda l051a,x                                                       ; 9961: bd 1a 05    ...
@@ -4060,7 +4093,7 @@ oscli                           = &fff7
     stx l0017                                                         ; 996b: 86 17       ..
     rts                                                               ; 996d: 60          `
 
-.sub_c996e
+.c996e
     jsr sub_c998c                                                     ; 996e: 20 8c 99     ..
 .c9971
     bit l00ff                                                         ; 9971: 24 ff       $.
@@ -4073,7 +4106,7 @@ oscli                           = &fff7
     lda l0416                                                         ; 997b: ad 16 04    ...
     cmp #2                                                            ; 997e: c9 02       ..
     bcc c9988                                                         ; 9980: 90 06       ..
-    jsr sub_cb7cc                                                     ; 9982: 20 cc b7     ..
+    jsr cb7cc                                                         ; 9982: 20 cc b7     ..
     jmp caf8d                                                         ; 9985: 4c 8d af    L..
 
 .c9988
@@ -7270,7 +7303,8 @@ la951 = sub_ca94f+2
     lda (l000c),y                                                     ; af2d: b1 0c       ..
     cmp #&0d                                                          ; af2f: c9 0d       ..
     beq caf39                                                         ; af31: f0 06       ..
-    jsr sub_cb842                                                     ; af33: 20 42 b8     B.
+    jsr cb842                                                         ; af33: 20 42 b8     B.
+.caf36
     jsr sub_c8571                                                     ; af36: 20 71 85     q.
 .caf39
     ldx l040b                                                         ; af39: ae 0b 04    ...
@@ -7322,7 +7356,9 @@ la951 = sub_ca94f+2
     sta l0416                                                         ; af95: 8d 16 04    ...
     lda #5                                                            ; af98: a9 05       ..
     sta l0031                                                         ; af9a: 85 31       .1
-.caf9c
+.something_13_handler
+.something_15_handler
+.something_1a_handler
     jsr sub_cb4c2                                                     ; af9c: 20 c2 b4     ..
     jsr cb2ef                                                         ; af9f: 20 ef b2     ..
     jsr sub_cb1e5                                                     ; afa2: 20 e5 b1     ..
@@ -7332,7 +7368,7 @@ la951 = sub_ca94f+2
     tax                                                               ; afac: aa          .
     bpl caff6                                                         ; afad: 10 47       .G
     cmp #&b0                                                          ; afaf: c9 b0       ..
-    bcs caf9c                                                         ; afb1: b0 e9       ..
+    bcs something_13_handler                                          ; afb1: b0 e9       ..
     ldy simplified_machine_type                                       ; afb3: ac 17 04    ...
     cpy #1                                                            ; afb6: c0 01       ..
     bne cafbe                                                         ; afb8: d0 04       ..
@@ -7343,15 +7379,15 @@ la951 = sub_ca94f+2
     bcc cafc9                                                         ; afc0: 90 07       ..
     sbc #&0c                                                          ; afc2: e9 0c       ..
     cmp #&a0                                                          ; afc4: c9 a0       ..
-    bcc caf9c                                                         ; afc6: 90 d4       ..
+    bcc something_13_handler                                          ; afc6: 90 d4       ..
     tax                                                               ; afc8: aa          .
 .cafc9
-    lda cb04e,x                                                       ; afc9: bd 4e b0    .N.
+    lda something_jump_table_low_minus_128-128,x                      ; afc9: bd 4e b0    .N.
     sta l0008                                                         ; afcc: 85 08       ..
-    lda lb072,x                                                       ; afce: bd 72 b0    .r.
+    lda something_jump_table_high_minus_128-128,x                     ; afce: bd 72 b0    .r.
     sta l0009                                                         ; afd1: 85 09       ..
     jsr jmp_indirect_via_l0008                                        ; afd3: 20 e2 87     ..
-    jmp caf9c                                                         ; afd6: 4c 9c af    L..
+    jmp something_13_handler                                          ; afd6: 4c 9c af    L..
 
 .sub_cafd9
     clc                                                               ; afd9: 18          .
@@ -7372,7 +7408,7 @@ la951 = sub_ca94f+2
 
 .caff6
     jsr sub_caffc                                                     ; aff6: 20 fc af     ..
-    jmp caf9c                                                         ; aff9: 4c 9c af    L..
+    jmp something_13_handler                                          ; aff9: 4c 9c af    L..
 
 .sub_caffc
     sta l0040                                                         ; affc: 85 40       .@
@@ -7397,7 +7433,7 @@ la951 = sub_ca94f+2
     lda l0040                                                         ; b022: a5 40       .@
     cmp #&0d                                                          ; b024: c9 0d       ..
     beq cb02e                                                         ; b026: f0 06       ..
-    jsr sub_cb6d2                                                     ; b028: 20 d2 b6     ..
+    jsr something_0d_handler                                          ; b028: 20 d2 b6     ..
     jmp cb03d                                                         ; b02b: 4c 3d b0    L=.
 
 .cb02e
@@ -7405,8 +7441,8 @@ la951 = sub_ca94f+2
     adc #0                                                            ; b030: 69 00       i.
     ldy l0025                                                         ; b032: a4 25       .%
     jsr cb636                                                         ; b034: 20 36 b6     6.
-    jsr sub_cb6fe                                                     ; b037: 20 fe b6     ..
-    jsr sub_cb6e5                                                     ; b03a: 20 e5 b6     ..
+    jsr something_1c_handler                                          ; b037: 20 fe b6     ..
+    jsr something_0e_handler                                          ; b03a: 20 e5 b6     ..
 .cb03d
     lda l0031                                                         ; b03d: a5 31       .1
     cmp #2                                                            ; b03f: c9 02       ..
@@ -7419,9 +7455,8 @@ la951 = sub_ca94f+2
 
 .cb04b
     jsr sub_cb49f                                                     ; b04b: 20 9f b4     ..
-.cb04e
     beq cb053                                                         ; b04e: f0 03       ..
-    jmp cb6a8                                                         ; b050: 4c a8 b6    L..
+    jmp something_0c_handler                                          ; b050: 4c a8 b6    L..
 
 .cb053
     lda l0024                                                         ; b053: a5 24       .$
@@ -7429,16 +7464,19 @@ la951 = sub_ca94f+2
     jsr sub_cb1a1                                                     ; b057: 20 a1 b1     ..
     bcs cb0cb                                                         ; b05a: b0 6f       .o
 .cb05c
-    jsr cb6a8                                                         ; b05c: 20 a8 b6     ..
+    jsr something_0c_handler                                          ; b05c: 20 a8 b6     ..
     cmp #3                                                            ; b05f: c9 03       ..
     bne cb077                                                         ; b061: d0 14       ..
     jsr sub_cb4c2                                                     ; b063: 20 c2 b4     ..
     jmp cb077                                                         ; b066: 4c 77 b0    Lw.
 
-    equb &20, &bf, &bd, &a5, &24, &c5, &3f, &90,   5                  ; b069: 20 bf bd...  ..
-.lb072
-    equb &20, &aa, &b1, &b0, &54                                      ; b072: 20 aa b1...  ..
-
+.something_0b_handler
+    jsr sub_cbdbf                                                     ; b069: 20 bf bd     ..
+    lda l0024                                                         ; b06c: a5 24       .$
+    cmp l003f                                                         ; b06e: c5 3f       .?
+    bcc cb077                                                         ; b070: 90 05       ..
+    jsr sub_cb1aa                                                     ; b072: 20 aa b1     ..
+    bcs cb0cb                                                         ; b075: b0 54       .T
 .cb077
     jsr sub_cb1b9                                                     ; b077: 20 b9 b1     ..
     cmp l0024                                                         ; b07a: c5 24       .$
@@ -7469,20 +7507,109 @@ la951 = sub_ca94f+2
     bpl loop_cb09a                                                    ; b09f: 10 f9       ..
     rts                                                               ; b0a1: 60          `
 
-    equb &a9,   1, &20, &b1, &b3, &f0, &22, &a0, &ff, &c8, &c4, &2c   ; b0a2: a9 01 20... ..
-    equb &f0, &19, &b1, &10, &c9, &0d, &f0, &15, &c9, &20, &d0, &f1   ; b0ae: f0 19 b1... ...
-    equb &d1, &10, &d0,   5, &c8, &c4, &2c, &90, &f7, &c4, &24, &f0   ; b0ba: d1 10 d0... ...
-    equb &e4, &90, &e2, &84, &24                                      ; b0c6: e4 90 e2... ...
-
+.something_0a_handler
+    lda #1                                                            ; b0a2: a9 01       ..
+    jsr sub_cb3b1                                                     ; b0a4: 20 b1 b3     ..
+    beq cb0cb                                                         ; b0a7: f0 22       ."
+    ldy #&ff                                                          ; b0a9: a0 ff       ..
+.cb0ab
+    iny                                                               ; b0ab: c8          .
+    cpy l002c                                                         ; b0ac: c4 2c       .,
+    beq cb0c9                                                         ; b0ae: f0 19       ..
+    lda (l0010),y                                                     ; b0b0: b1 10       ..
+    cmp #&0d                                                          ; b0b2: c9 0d       ..
+    beq cb0cb                                                         ; b0b4: f0 15       ..
+    cmp #&20 ; ' '                                                    ; b0b6: c9 20       .
+    bne cb0ab                                                         ; b0b8: d0 f1       ..
+.loop_cb0ba
+    cmp (l0010),y                                                     ; b0ba: d1 10       ..
+    bne cb0c3                                                         ; b0bc: d0 05       ..
+    iny                                                               ; b0be: c8          .
+    cpy l002c                                                         ; b0bf: c4 2c       .,
+    bcc loop_cb0ba                                                    ; b0c1: 90 f7       ..
+.cb0c3
+    cpy l0024                                                         ; b0c3: c4 24       .$
+    beq cb0ab                                                         ; b0c5: f0 e4       ..
+    bcc cb0ab                                                         ; b0c7: 90 e2       ..
+.cb0c9
+    sty l0024                                                         ; b0c9: 84 24       .$
 .cb0cb
     jmp cb708                                                         ; b0cb: 4c 08 b7    L..
 
-    equb &58, &41, &96, &a4, &82, &20, &86, &7e, &da, &3b, &a2, &69   ; b0ce: 58 41 96... XA.
-    equb &a8, &d2, &e5, &b9, &2e, &16, &e7, &9c, &69, &9c, &ff, &a5   ; b0da: a8 d2 e5... ...
-    equb &cb, &35, &9c, &1e, &fe,   4, &53, &fb, &fe,   4, &18, &0d   ; b0e6: cb 35 9c... .5.
-    equb &b8, &b7, &b7, &b7, &bc, &bd, &bd, &be, &b8, &b7, &b0, &b0   ; b0f2: b8 b7 b7... ...
-    equb &b6, &b6, &b6, &b6, &b7, &b2, &b7, &af, &b7, &af, &bd, &be   ; b0fe: b6 b6 b6... ...
-    equb &bd, &b7, &af, &b2, &b6, &b7, &b4, &b3, &b6, &b7, &b7, &b7   ; b10a: bd b7 af... ...
+.something_jump_table_low_minus_128
+    equb <something_00_handler                                        ; b0ce: 58          X
+    equb <something_01_handler                                        ; b0cf: 41          A
+    equb <something_02_handler                                        ; b0d0: 96          .
+    equb <something_03_handler                                        ; b0d1: a4          .
+    equb <something_04_handler                                        ; b0d2: 82          .
+    equb <something_05_handler                                        ; b0d3: 20
+    equb <something_06_handler                                        ; b0d4: 86          .
+    equb <something_07_handler                                        ; b0d5: 7e          ~
+    equb <something_08_handler                                        ; b0d6: da          .
+    equb <something_09_handler                                        ; b0d7: 3b          ;
+    equb <something_0a_handler                                        ; b0d8: a2          .
+    equb <something_0b_handler                                        ; b0d9: 69          i
+    equb <something_0c_handler                                        ; b0da: a8          .
+    equb <something_0d_handler                                        ; b0db: d2          .
+    equb <something_0e_handler                                        ; b0dc: e5          .
+    equb <something_0f_handler                                        ; b0dd: b9          .
+    equb <something_10_handler                                        ; b0de: 2e          .
+    equb <something_11_handler                                        ; b0df: 16          .
+    equb <something_12_handler                                        ; b0e0: e7          .
+    equb <something_13_handler                                        ; b0e1: 9c          .
+    equb <something_14_handler                                        ; b0e2: 69          i
+    equb <something_15_handler                                        ; b0e3: 9c          .
+    equb <something_16_handler                                        ; b0e4: ff          .
+    equb <something_17_handler                                        ; b0e5: a5          .
+    equb <something_18_handler                                        ; b0e6: cb          .
+    equb <something_19_handler                                        ; b0e7: 35          5
+    equb <something_1a_handler                                        ; b0e8: 9c          .
+    equb <something_1b_handler                                        ; b0e9: 1e          .
+    equb <something_1c_handler                                        ; b0ea: fe          .
+    equb <something_1d_handler                                        ; b0eb: 04          .
+    equb <something_1e_handler                                        ; b0ec: 53          S
+    equb <something_1f_handler                                        ; b0ed: fb          .
+    equb <something_20_handler                                        ; b0ee: fe          .
+    equb <something_21_handler                                        ; b0ef: 04          .
+    equb <something_22_handler                                        ; b0f0: 18          .
+    equb <something_23_handler                                        ; b0f1: 0d          .
+.something_jump_table_high_minus_128
+    equb >something_00_handler                                        ; b0f2: b8          .
+    equb >something_01_handler                                        ; b0f3: b7          .
+    equb >something_02_handler                                        ; b0f4: b7          .
+    equb >something_03_handler                                        ; b0f5: b7          .
+    equb >something_04_handler                                        ; b0f6: bc          .
+    equb >something_05_handler                                        ; b0f7: bd          .
+    equb >something_06_handler                                        ; b0f8: bd          .
+    equb >something_07_handler                                        ; b0f9: be          .
+    equb >something_08_handler                                        ; b0fa: b8          .
+    equb >something_09_handler                                        ; b0fb: b7          .
+    equb >something_0a_handler                                        ; b0fc: b0          .
+    equb >something_0b_handler                                        ; b0fd: b0          .
+    equb >something_0c_handler                                        ; b0fe: b6          .
+    equb >something_0d_handler                                        ; b0ff: b6          .
+    equb >something_0e_handler                                        ; b100: b6          .
+    equb >something_0f_handler                                        ; b101: b6          .
+    equb >something_10_handler                                        ; b102: b7          .
+    equb >something_11_handler                                        ; b103: b2          .
+    equb >something_12_handler                                        ; b104: b7          .
+    equb >something_13_handler                                        ; b105: af          .
+    equb >something_14_handler                                        ; b106: b7          .
+    equb >something_15_handler                                        ; b107: af          .
+    equb >something_16_handler                                        ; b108: bd          .
+    equb >something_17_handler                                        ; b109: be          .
+    equb >something_18_handler                                        ; b10a: bd          .
+    equb >something_19_handler                                        ; b10b: b7          .
+    equb >something_1a_handler                                        ; b10c: af          .
+    equb >something_1b_handler                                        ; b10d: b2          .
+    equb >something_1c_handler                                        ; b10e: b6          .
+    equb >something_1d_handler                                        ; b10f: b7          .
+    equb >something_1e_handler                                        ; b110: b4          .
+    equb >something_1f_handler                                        ; b111: b3          .
+    equb >something_20_handler                                        ; b112: b6          .
+    equb >something_21_handler                                        ; b113: b7          .
+    equb >something_22_handler                                        ; b114: b7          .
+    equb >something_23_handler                                        ; b115: b7          .
     equb &99, &90, &91, &92, &a0, &94, &a0, &96, &97, &98, &a0, &8b   ; b116: 99 90 91... ...
     equb &8c, &8d, &8e, &8f, &8a, &a0, &a0, &a0, &82, &a0, &a0, &a0   ; b122: 8c 8d 8e... ...
     equb &87, &a0, &a0, &a0, &9e, &9f, &88, &89, &80, &83, &a0, &84   ; b12e: 87 a0 a0... ...
@@ -7620,10 +7747,19 @@ la951 = sub_ca94f+2
     jsr osrdch                                                        ; b210: 20 e0 ff     ..            ; Read a character from the current input stream
     jmp c9971                                                         ; b213: 4c 71 99    Lq.
 
-    equb &a5, &36, &49,   1, &85, &36, &10,   7, &20, &72, &b1, &a9   ; b216: a5 36 49... .6I
-    equb   1, &85, &35, &a9,   0, &85, &31                            ; b222: 01 85 35... ..5
-
-.sub_cb229
+.something_11_handler
+    lda l0036                                                         ; b216: a5 36       .6
+    eor #1                                                            ; b218: 49 01       I.
+    sta l0036                                                         ; b21a: 85 36       .6
+    bpl cb225                                                         ; b21c: 10 07       ..
+.something_1b_handler
+    jsr sub_cb172                                                     ; b21e: 20 72 b1     r.
+    lda #1                                                            ; b221: a9 01       ..
+    sta l0035                                                         ; b223: 85 35       .5
+.cb225
+    lda #0                                                            ; b225: a9 00       ..
+    sta l0031                                                         ; b227: 85 31       .1
+.cb229
     jsr sub_cb1eb                                                     ; b229: 20 eb b1     ..
     jsr sub_cb2f5                                                     ; b22c: 20 f5 b2     ..
     lda l0036                                                         ; b22f: a5 36       .6
@@ -7667,6 +7803,7 @@ la951 = sub_ca94f+2
     jsr sub_cb2f5                                                     ; b275: 20 f5 b2     ..
     lda #&23 ; '#'                                                    ; b278: a9 23       .#
     jsr oswrch                                                        ; b27a: 20 ee ff     ..            ; Write character 35
+.sub_cb27d
     ldy l0030                                                         ; b27d: a4 30       .0
     lda l002c                                                         ; b27f: a5 2c       .,
     sta l0658,y                                                       ; b281: 99 58 06    .X.
@@ -7679,9 +7816,14 @@ la951 = sub_ca94f+2
     jsr fancy_print_at_yx_with_terminator_a                           ; b28a: 20 7a 81     z.
     jmp (l0006)                                                       ; b28d: 6c 06 00    l..
 
-    equb &20, &96, &b2, &4c, &97, &84, &a9,   5, &85                  ; b290: 20 96 b2...  ..
-    equs "1Ln"                                                        ; b299: 31 4c 6e    1Ln
-    equb &99                                                          ; b29c: 99          .
+.sub_cb290
+    jsr sub_cb296                                                     ; b290: 20 96 b2     ..
+    jmp c8497                                                         ; b293: 4c 97 84    L..
+
+.sub_cb296
+    lda #5                                                            ; b296: a9 05       ..
+    sta l0031                                                         ; b298: 85 31       .1
+    jmp c996e                                                         ; b29a: 4c 6e 99    Ln.
 
 .sub_cb29d
     jsr sub_cb49f                                                     ; b29d: 20 9f b4     ..
@@ -7732,6 +7874,7 @@ la951 = sub_ca94f+2
     bpl cb2ff                                                         ; b2f3: 10 0a       ..
 .sub_cb2f5
     ldx #0                                                            ; b2f5: a2 00       ..
+.sub_cb2f7
     ldy l0030                                                         ; b2f7: a4 30       .0
     bpl cb2ff                                                         ; b2f9: 10 04       ..
 .sub_cb2fb
@@ -7820,6 +7963,7 @@ la951 = sub_ca94f+2
     ldy l0001                                                         ; b376: a4 01       ..
     stx l0010                                                         ; b378: 86 10       ..
     sty l0011                                                         ; b37a: 84 11       ..
+.sub_cb37c
     tax                                                               ; b37c: aa          .
     stx l0015                                                         ; b37d: 86 15       ..
     beq cb39a                                                         ; b37f: f0 19       ..
@@ -7903,8 +8047,8 @@ la951 = sub_ca94f+2
 .cb3fa
     rts                                                               ; b3fa: 60          `
 
-    equb &a5, &30                                                     ; b3fb: a5 30       .0
-
+.something_1f_handler
+    lda l0030                                                         ; b3fb: a5 30       .0
 .sub_cb3fd
     jsr sub_cb3b1                                                     ; b3fd: 20 b1 b3     ..
     ldx l0010                                                         ; b400: a6 10       ..
@@ -7934,6 +8078,7 @@ la951 = sub_ca94f+2
 .sub_cb42b
     stx l0012                                                         ; b42b: 86 12       ..
     sty l0013                                                         ; b42d: 84 13       ..
+.sub_cb42f
     ldx l0013                                                         ; b42f: a6 13       ..
     clc                                                               ; b431: 18          .
     txa                                                               ; b432: 8a          .
@@ -7960,10 +8105,11 @@ la951 = sub_ca94f+2
 .cb452
     rts                                                               ; b452: 60          `
 
-    equb &a5, &30                                                     ; b453: a5 30       .0
-
+.something_1e_handler
+    lda l0030                                                         ; b453: a5 30       .0
 .sub_cb455
     jsr something_to_do_with_finding_cr                               ; b455: 20 74 b3     t.
+.cb458
     ldx l0010                                                         ; b458: a6 10       ..
     ldy l0011                                                         ; b45a: a4 11       ..
 .bulk_copy_from_l0000_to_l0002
@@ -7993,8 +8139,21 @@ la951 = sub_ca94f+2
     sta l0003                                                         ; b482: 85 03       ..
     jmp some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes    ; b484: 4c d5 89    L..
 
-    equb &20, &9d, &b2, &20, &b9, &b1, &c5, &24, &90,   2, &a5, &24   ; b487: 20 9d b2...  ..
-    equb &18, &65,   0, &aa, &a9,   0, &65,   1, &a8, &4c, &5c, &b4   ; b493: 18 65 00... .e.
+.sub_cb487
+    jsr sub_cb29d                                                     ; b487: 20 9d b2     ..
+.sub_cb48a
+    jsr sub_cb1b9                                                     ; b48a: 20 b9 b1     ..
+    cmp l0024                                                         ; b48d: c5 24       .$
+    bcc cb493                                                         ; b48f: 90 02       ..
+    lda l0024                                                         ; b491: a5 24       .$
+.cb493
+    clc                                                               ; b493: 18          .
+    adc l0000                                                         ; b494: 65 00       e.
+    tax                                                               ; b496: aa          .
+    lda #0                                                            ; b497: a9 00       ..
+    adc l0001                                                         ; b499: 65 01       e.
+    tay                                                               ; b49b: a8          .
+    jmp bulk_copy_from_l0000_to_l0002                                 ; b49c: 4c 5c b4    L\.
 
 .sub_cb49f
     sec                                                               ; b49f: 38          8
@@ -8038,7 +8197,7 @@ la951 = sub_ca94f+2
     bpl loop_cb4d9                                                    ; b4dd: 10 fa       ..
     lda #0                                                            ; b4df: a9 00       ..
     sta l0032                                                         ; b4e1: 85 32       .2
-    jsr sub_cb229                                                     ; b4e3: 20 29 b2     ).
+    jsr cb229                                                         ; b4e3: 20 29 b2     ).
     lda #4                                                            ; b4e6: a9 04       ..
     sta l0031                                                         ; b4e8: 85 31       .1
 .cb4ea
@@ -8098,7 +8257,7 @@ la951 = sub_ca94f+2
     bne loop_cb540                                                    ; b549: d0 f5       ..
     lda #0                                                            ; b54b: a9 00       ..
     sta l0658,y                                                       ; b54d: 99 58 06    .X.
-    jsr sub_cb229                                                     ; b550: 20 29 b2     ).
+    jsr cb229                                                         ; b550: 20 29 b2     ).
     ldy l002d                                                         ; b553: a4 2d       .-
     lda l0015                                                         ; b555: a5 15       ..
     beq cb585                                                         ; b557: f0 2c       .,
@@ -8124,7 +8283,7 @@ la951 = sub_ca94f+2
     dey                                                               ; b57a: 88          .
     bne loop_cb574                                                    ; b57b: d0 f7       ..
     sty l0658                                                         ; b57d: 8c 58 06    .X.
-    jsr sub_cb229                                                     ; b580: 20 29 b2     ).
+    jsr cb229                                                         ; b580: 20 29 b2     ).
     ldy #0                                                            ; b583: a0 00       ..
 .cb585
     tya                                                               ; b585: 98          .
@@ -8297,7 +8456,7 @@ la951 = sub_ca94f+2
 .lb6a0
     equb   7, &11, &80, &11,   0, &11, &87, &11                       ; b6a0: 07 11 80... ...
 
-.cb6a8
+.something_0c_handler
     jsr sub_cb1a1                                                     ; b6a8: 20 a1 b1     ..
     bcc cb6b1                                                         ; b6ab: 90 04       ..
     lda l0024                                                         ; b6ad: a5 24       .$
@@ -8307,6 +8466,7 @@ la951 = sub_ca94f+2
     bpl cb708                                                         ; b6b3: 10 53       .S
     lda l002c                                                         ; b6b5: a5 2c       .,
     sta l0024                                                         ; b6b7: 85 24       .$
+.something_0f_handler
     jsr sub_cb1a1                                                     ; b6b9: 20 a1 b1     ..
     bcs cb708                                                         ; b6bc: b0 4a       .J
     lda #1                                                            ; b6be: a9 01       ..
@@ -8321,7 +8481,7 @@ la951 = sub_ca94f+2
     sta l0031                                                         ; b6cf: 85 31       .1
     rts                                                               ; b6d1: 60          `
 
-.sub_cb6d2
+.something_0d_handler
     lda l0024                                                         ; b6d2: a5 24       .$
     cmp l002c                                                         ; b6d4: c5 2c       .,
     beq cb6dc                                                         ; b6d6: f0 04       ..
@@ -8332,7 +8492,7 @@ la951 = sub_ca94f+2
     bcs cb708                                                         ; b6df: b0 27       .'
     lda #0                                                            ; b6e1: a9 00       ..
     sta l0024                                                         ; b6e3: 85 24       .$
-.sub_cb6e5
+.something_0e_handler
     jsr sub_cb1aa                                                     ; b6e5: 20 aa b1     ..
     bcs cb708                                                         ; b6e8: b0 1e       ..
     lda #1                                                            ; b6ea: a9 01       ..
@@ -8347,10 +8507,13 @@ la951 = sub_ca94f+2
     sta l0031                                                         ; b6fb: 85 31       .1
     rts                                                               ; b6fd: 60          `
 
-.sub_cb6fe
+.something_1c_handler
+.something_20_handler
     lda #0                                                            ; b6fe: a9 00       ..
     sta l0024                                                         ; b700: 85 24       .$
     beq cb708                                                         ; b702: f0 04       ..
+.something_1d_handler
+.something_21_handler
     lda l003f                                                         ; b704: a5 3f       .?
     sta l0024                                                         ; b706: 85 24       .$
 .cb708
@@ -8358,26 +8521,44 @@ la951 = sub_ca94f+2
     sta l0031                                                         ; b70a: 85 31       .1
     rts                                                               ; b70c: 60          `
 
-    equb &a9,   0, &85, &24                                           ; b70d: a9 00 85... ...
-
+.something_23_handler
+    lda #0                                                            ; b70d: a9 00       ..
+    sta l0024                                                         ; b70f: 85 24       .$
 .sub_cb711
     ldx l0027                                                         ; b711: a6 27       .'
     ldy l0028                                                         ; b713: a4 28       .(
     jmp cb404                                                         ; b715: 4c 04 b4    L..
 
-    equb &20, &27, &b7, &a5, &2f, &85, &25, &20, &cc, &b7, &a5, &14   ; b718: 20 27 b7...  '.
-    equb &85, &24, &60                                                ; b724: 85 24 60    .$`
+.something_22_handler
+    jsr sub_cb727                                                     ; b718: 20 27 b7     '.
+    lda l002f                                                         ; b71b: a5 2f       ./
+    sta l0025                                                         ; b71d: 85 25       .%
+.cb71f
+    jsr cb7cc                                                         ; b71f: 20 cc b7     ..
+    lda l0014                                                         ; b722: a5 14       ..
+    sta l0024                                                         ; b724: 85 24       .$
+    rts                                                               ; b726: 60          `
 
 .sub_cb727
     ldx l0029                                                         ; b727: a6 29       .)
     ldy l002a                                                         ; b729: a4 2a       .*
     jmp bulk_copy_from_l0000_to_l0002                                 ; b72b: 4c 5c b4    L\.
 
-    equb &a5, &33, &49,   1, &85                                      ; b72e: a5 33 49... .3I
-    equs "3` "                                                        ; b733: 33 60 20    3`
-    equb &0a, &86, &4c, &39, &af, &20, &5a, &86, &4c, &39, &af        ; b736: 0a 86 4c... ..L
+.something_10_handler
+    lda l0033                                                         ; b72e: a5 33       .3
+    eor #1                                                            ; b730: 49 01       I.
+    sta l0033                                                         ; b732: 85 33       .3
+    rts                                                               ; b734: 60          `
 
-.cb741
+.something_19_handler
+    jsr set_up_for_cold_start                                         ; b735: 20 0a 86     ..
+    jmp caf39                                                         ; b738: 4c 39 af    L9.
+
+.something_09_handler
+    jsr sub_c865a                                                     ; b73b: 20 5a 86     Z.
+    jmp caf39                                                         ; b73e: 4c 39 af    L9.
+
+.something_01_handler
     lda #3                                                            ; b741: a9 03       ..
     sta l0416                                                         ; b743: 8d 16 04    ...
     jsr sub_cb172                                                     ; b746: 20 72 b1     r.
@@ -8398,9 +8579,15 @@ la951 = sub_ca94f+2
 .cb766
     jmp caf8d                                                         ; b766: 4c 8d af    L..
 
-    equb &20, &11, &b7, &20, &7e, &b7, &20, &72, &b1, &20, &70, &b2   ; b769: 20 11 b7...  ..
-    equs "Quit"                                                       ; b775: 51 75 69... Qui
-    equb &0d, &ea, &4c, &44, &83                                      ; b779: 0d ea 4c... ..L
+.something_14_handler
+    jsr sub_cb711                                                     ; b769: 20 11 b7     ..
+    jsr sub_cb77e                                                     ; b76c: 20 7e b7     ~.
+    jsr sub_cb172                                                     ; b76f: 20 72 b1     r.
+    jsr extra_fancy_print_nop_terminated_inlne                        ; b772: 20 70 b2     p.
+    equs "Quit", &0d                                                  ; b775: 51 75 69... Qui
+
+    nop                                                               ; b77a: ea          .
+    jmp language_entry_common                                         ; b77b: 4c 44 83    LD.
 
 .sub_cb77e
     lda oshwm_low_zp                                                  ; b77e: a5 04       ..
@@ -8414,18 +8601,34 @@ la951 = sub_ca94f+2
     sta l040e                                                         ; b790: 8d 0e 04    ...
     jmp c8574                                                         ; b793: 4c 74 85    Lt.
 
-    equb &20, &70, &b2                                                ; b796: 20 70 b2     p.
+.something_02_handler
+    jsr extra_fancy_print_nop_terminated_inlne                        ; b796: 20 70 b2     p.
     equs "Loa"                                                        ; b799: 4c 6f 61    Loa
-    equb &e4, &ea, &20, &10, &b8, &4c, &36, &af, &20, &c4, &bd, &20   ; b79c: e4 ea 20... ..
-    equb &70, &b2                                                     ; b7a8: 70 b2       p.
-    equs "Sav"                                                        ; b7aa: 53 61 76    Sav
-    equb &e5, &ea, &20, &10, &b8, &20, &3c, &be, &a5,   0, &8d, &24   ; b7ad: e5 ea 20... ..
-    equb   6, &a5,   1, &8d, &25,   6, &20, &32, &84, &20, &11, &b7   ; b7b9: 06 a5 01... ...
-    equb &a6, &4c, &a4                                                ; b7c5: a6 4c a4    .L.
-    equs "M \"                                                        ; b7c8: 4d 20 5c    M \
-    equb &b4                                                          ; b7cb: b4          .
+    equb 128 + ('d')                                                  ; b79c: e4          .              ; "d "
 
-.sub_cb7cc
+    nop                                                               ; b79d: ea          .
+    jsr sub_cb810                                                     ; b79e: 20 10 b8     ..
+    jmp caf36                                                         ; b7a1: 4c 36 af    L6.
+
+.something_03_handler
+    jsr sub_cbdc4                                                     ; b7a4: 20 c4 bd     ..
+    jsr extra_fancy_print_nop_terminated_inlne                        ; b7a7: 20 70 b2     p.
+    equs "Sav"                                                        ; b7aa: 53 61 76    Sav
+    equb 128 + ('e')                                                  ; b7ad: e5          .              ; "e "
+
+    nop                                                               ; b7ae: ea          .
+    jsr sub_cb810                                                     ; b7af: 20 10 b8     ..
+    jsr sub_cbe3c                                                     ; b7b2: 20 3c be     <.
+    lda l0000                                                         ; b7b5: a5 00       ..
+    sta l0624                                                         ; b7b7: 8d 24 06    .$.
+    lda l0001                                                         ; b7ba: a5 01       ..
+    sta l0625                                                         ; b7bc: 8d 25 06    .%.
+    jsr sub_c8432                                                     ; b7bf: 20 32 84     2.
+    jsr sub_cb711                                                     ; b7c2: 20 11 b7     ..
+    ldx l004c                                                         ; b7c5: a6 4c       .L
+    ldy l004d                                                         ; b7c7: a4 4d       .M
+    jsr bulk_copy_from_l0000_to_l0002                                 ; b7c9: 20 5c b4     \.
+.cb7cc
     lda l0002                                                         ; b7cc: a5 02       ..
     sta l000c                                                         ; b7ce: 85 0c       ..
     lda l0003                                                         ; b7d0: a5 03       ..
@@ -8441,16 +8644,59 @@ la951 = sub_ca94f+2
     tay                                                               ; b7e3: a8          .
     jmp cb404                                                         ; b7e4: 4c 04 b4    L..
 
-    equb &20, &bf, &bd, &20, &70, &b2, &91, &ea, &20, &10, &b8, &20   ; b7e7: 20 bf bd...  ..
-    equb &87, &b4, &a5,   2, &85,   8, &a5,   3, &a6,   0, &a4,   1   ; b7f3: 87 b4 a5... ...
-    equb &20, &9b, &85, &86,   2, &84,   3, &a6,   8, &a4,   9, &20   ; b7ff: 20 9b 85...  ..
-    equb   4, &b4, &4c, &cc, &b7, &20, &84, &b2, &5b, &ea, &a5, &34   ; b80b: 04 b4 4c... ..L
-    equb &f0, &0f, &a0,   0, &b9, &78,   6, &c9, &0d, &f0,   6, &20   ; b817: f0 0f a0... ...
-    equb &ee, &ff, &c8, &d0, &f3, &20, &84, &b2, &5d, &ba, &ea, &20   ; b823: ee ff c8... ...
-    equb &90, &b2, &d0, &0f, &a5, &34, &f0, &0b, &b9, &78,   6, &99   ; b82f: 90 b2 d0... ...
-    equb &1a,   5, &c8, &c9, &0d, &d0, &f5                            ; b83b: 1a 05 c8... ...
+.something_12_handler
+    jsr sub_cbdbf                                                     ; b7e7: 20 bf bd     ..
+    jsr extra_fancy_print_nop_terminated_inlne                        ; b7ea: 20 70 b2     p.
+    equb 128 + 17                                                     ; b7ed: 91          .              ; "Insert " (token 17)
 
-.sub_cb842
+    nop                                                               ; b7ee: ea          .
+    jsr sub_cb810                                                     ; b7ef: 20 10 b8     ..
+    jsr sub_cb487                                                     ; b7f2: 20 87 b4     ..
+    lda l0002                                                         ; b7f5: a5 02       ..
+    sta l0008                                                         ; b7f7: 85 08       ..
+    lda l0003                                                         ; b7f9: a5 03       ..
+    ldx l0000                                                         ; b7fb: a6 00       ..
+    ldy l0001                                                         ; b7fd: a4 01       ..
+    jsr sub_c859b                                                     ; b7ff: 20 9b 85     ..
+    stx l0002                                                         ; b802: 86 02       ..
+    sty l0003                                                         ; b804: 84 03       ..
+    ldx l0008                                                         ; b806: a6 08       ..
+    ldy l0009                                                         ; b808: a4 09       ..
+    jsr cb404                                                         ; b80a: 20 04 b4     ..
+    jmp cb7cc                                                         ; b80d: 4c cc b7    L..
+
+.sub_cb810
+    jsr fancy_print_nop_terminated_inline                             ; b810: 20 84 b2     ..
+    equs "["                                                          ; b813: 5b          [
+
+    nop                                                               ; b814: ea          .
+    lda l0034                                                         ; b815: a5 34       .4
+    beq cb828                                                         ; b817: f0 0f       ..
+    ldy #0                                                            ; b819: a0 00       ..
+.loop_cb81b
+    lda l0678,y                                                       ; b81b: b9 78 06    .x.
+    cmp #&0d                                                          ; b81e: c9 0d       ..
+    beq cb828                                                         ; b820: f0 06       ..
+    jsr oswrch                                                        ; b822: 20 ee ff     ..            ; Write character
+    iny                                                               ; b825: c8          .
+    bne loop_cb81b                                                    ; b826: d0 f3       ..
+.cb828
+    jsr fancy_print_nop_terminated_inline                             ; b828: 20 84 b2     ..
+    equs "]"                                                          ; b82b: 5d          ]
+    equb 128 + (':')                                                  ; b82c: ba          .              ; ": "
+
+    nop                                                               ; b82d: ea          .
+    jsr sub_cb290                                                     ; b82e: 20 90 b2     ..
+    bne cb842                                                         ; b831: d0 0f       ..
+    lda l0034                                                         ; b833: a5 34       .4
+    beq cb842                                                         ; b835: f0 0b       ..
+.loop_cb837
+    lda l0678,y                                                       ; b837: b9 78 06    .x.
+    sta l051a,y                                                       ; b83a: 99 1a 05    ...
+    iny                                                               ; b83d: c8          .
+    cmp #&0d                                                          ; b83e: c9 0d       ..
+    bne loop_cb837                                                    ; b840: d0 f5       ..
+.cb842
     ldx l0017                                                         ; b842: a6 17       ..
     ldy #0                                                            ; b844: a0 00       ..
 .loop_cb846
@@ -8463,147 +8709,791 @@ la951 = sub_ca94f+2
     inc l0034                                                         ; b852: e6 34       .4
     rts                                                               ; b854: 60          `
 
-    equb &4c, &58, &9e, &20, &70, &b2                                 ; b855: 4c 58 9e... LX.
+.cb855
+    jmp c9e58                                                         ; b855: 4c 58 9e    LX.
+
+.something_00_handler
+    jsr extra_fancy_print_nop_terminated_inlne                        ; b858: 20 70 b2     p.
     equs "Line"                                                       ; b85b: 4c 69 6e... Lin
-    equb &ba, &ea, &20, &90, &b2, &f0, &ef, &84, &16, &84, &46, &84   ; b85f: ba ea 20... ..
-    equb &47, &a4, &16, &b1, &0c, &c9, &0d, &f0, &31, &c9, &3a, &b0   ; b86b: 47 a4 16... G..
-    equb &dd, &e9, &2f, &90, &d9, &85, &14, &a9, &0a, &85, &15, &a2   ; b877: dd e9 2f... ../
-    equb   0, &a0,   0, &18, &8a, &65, &46, &aa, &98, &65, &47, &a8   ; b883: 00 a0 00... ...
-    equb &b0, &c4, &c6, &15, &d0, &f2, &8a, &65, &14, &85, &46, &90   ; b88f: b0 c4 c6... ...
-    equb   3, &c8, &f0, &b6, &84, &47, &e6, &16, &d0, &c7, &a5, &46   ; b89b: 03 c8 f0... ...
-    equb   5, &47, &f0, &aa, &20, &0d, &b7, &20, &4d, &b3, &a5, &46   ; b8a7: 05 47 f0... .G.
-    equb &d0,   2, &c6, &47, &c6, &46, &d0,   4, &a5, &47, &f0, &0f   ; b8b3: d0 02 c6... ...
-    equb &a9,   1, &20, &7c, &b3, &b0, &0f, &a5, &14, &c9, &0d, &d0   ; b8bf: a9 01 20... ..
-    equb &f3, &f0, &e3, &a5, &2f, &85                                 ; b8cb: f3 f0 e3... ...
-    equs "%LX"                                                        ; b8d1: 25 4c 58    %LX
-    equb &b4,   0,   5, &8b, &8f,   0, &20, &70, &b2                  ; b8d4: b4 00 05... ...
-    equs "Print"                                                      ; b8dd: 50 72 69... Pri
-    equb &0d, &ea, &20, &0d, &b7, &20, &4d, &b3, &a9,   2, &20, &ee   ; b8e2: 0d ea 20... ..
-    equb &ff, &20, &71, &99, &a0,   0, &b1, &10, &20, &e3, &ff, &98   ; b8ee: ff 20 71... . q
-    equb &20, &9b, &b3, &90, &f0, &4c, &8d, &af, &c9, &7e, &d0, &10   ; b8fa: 20 9b b3...  ..
-    equb &a2, &81, &20, &f2, &b9, &a4, &41, &b9, &1a,   5, &85, &14   ; b906: a2 81 20... ..
-    equb &e6, &41, &c9, &0d, &60, &a0,   0, &84, &41, &84, &42, &84   ; b912: e6 41 c9... .A.
-    equb &4a, &84, &54, &84, &43, &84, &44, &20, &0b, &b9, &a5, &14   ; b91e: 4a 84 54... J.T
-    equb &c9, &0d, &f0,   6, &c9, &2f, &d0, &10, &e6, &4a, &20, &f0   ; b92a: c9 0d f0... ...
-    equb &b9, &a5, &42, &85, &3c, &a5, &4a, &f0, &d7, &4c, &b7, &b9   ; b936: b9 a5 42... ..B
-    equb &a6, &42, &86, &3b, &c9, &2a, &d0,   5, &a2, &80, &20,   8   ; b942: a6 42 86... .B.
-    equb &b9, &20,   2, &b9, &c9, &5b, &d0, &1f, &a2, &86, &20, &f2   ; b94e: b9 20 02... . .
-    equb &b9, &84, &45, &20,   8, &b9, &20, &65, &ba, &a5, &14, &c9   ; b95a: b9 84 45... ..E
-    equb &5d, &d0, &f7, &20, &0b, &b9, &a4, &45, &a5, &42, &99, &1b   ; b966: 5d d0 f7... ]..
-    equb   4, &d0,   3, &20, &65, &ba, &a4, &3b, &b9, &1a,   4, &10   ; b972: 04 d0 03... ...
-    equb &1d, &c9, &89, &f0, &19, &a6, &54, &e0, &0a, &b0, &9f, &e6   ; b97e: 1d c9 89... ...
-    equb &54, &a5, &44, &9d, &44,   6, &b9, &1a,   4, &c9, &80, &f0   ; b98a: 54 a5 44... T.D
-    equb   9, &a5, &43, &9d, &4e,   6, &e6, &44, &d0, &11, &e6, &43   ; b996: 09 a5 43... ..C
-    equb &a5, &43, &c9,   7, &b0, &31,   9, &80, &9d, &4e,   6, &a0   ; b9a2: a5 43 c9... .C.
-    equb   0, &84                                                     ; b9ae: 00 84       ..
-    equs "DL("                                                        ; b9b0: 44 4c 28    DL(
-    equb &b9, &20, &f2, &b9, &20, &0b, &b9, &f0, &34, &a2, &88, &c9   ; b9b3: b9 20 f2... . .
-    equb &26, &f0, &f2, &c9, &25, &d0, &21, &a2, &87, &20,   8, &b9   ; b9bf: 26 f0 f2... &..
-    equb &38, &e9, &30, &90,   5, &aa, &e4, &54, &90, &df,   0,   8   ; b9cb: 38 e9 30... 8.0
-    equb &89, &8c,   0,   7                                           ; b9d7: 89 8c 00... ...
+    equb 128 + (':')                                                  ; b85f: ba          .              ; ": "
+
+    nop                                                               ; b860: ea          .
+    jsr sub_cb290                                                     ; b861: 20 90 b2     ..
+    beq cb855                                                         ; b864: f0 ef       ..
+    sty l0016                                                         ; b866: 84 16       ..
+    sty l0046                                                         ; b868: 84 46       .F
+    sty l0047                                                         ; b86a: 84 47       .G
+.cb86c
+    ldy l0016                                                         ; b86c: a4 16       ..
+    lda (l000c),y                                                     ; b86e: b1 0c       ..
+    cmp #&0d                                                          ; b870: c9 0d       ..
+    beq cb8a5                                                         ; b872: f0 31       .1
+    cmp #&3a ; ':'                                                    ; b874: c9 3a       .:
+    bcs cb855                                                         ; b876: b0 dd       ..
+    sbc #&2f ; '/'                                                    ; b878: e9 2f       ./
+    bcc cb855                                                         ; b87a: 90 d9       ..
+    sta l0014                                                         ; b87c: 85 14       ..
+    lda #&0a                                                          ; b87e: a9 0a       ..
+    sta l0015                                                         ; b880: 85 15       ..
+    ldx #0                                                            ; b882: a2 00       ..
+    ldy #0                                                            ; b884: a0 00       ..
+    clc                                                               ; b886: 18          .
+.loop_cb887
+    txa                                                               ; b887: 8a          .
+    adc l0046                                                         ; b888: 65 46       eF
+    tax                                                               ; b88a: aa          .
+    tya                                                               ; b88b: 98          .
+    adc l0047                                                         ; b88c: 65 47       eG
+    tay                                                               ; b88e: a8          .
+    bcs cb855                                                         ; b88f: b0 c4       ..
+    dec l0015                                                         ; b891: c6 15       ..
+    bne loop_cb887                                                    ; b893: d0 f2       ..
+    txa                                                               ; b895: 8a          .
+    adc l0014                                                         ; b896: 65 14       e.
+    sta l0046                                                         ; b898: 85 46       .F
+    bcc cb89f                                                         ; b89a: 90 03       ..
+    iny                                                               ; b89c: c8          .
+    beq cb855                                                         ; b89d: f0 b6       ..
+.cb89f
+    sty l0047                                                         ; b89f: 84 47       .G
+    inc l0016                                                         ; b8a1: e6 16       ..
+    bne cb86c                                                         ; b8a3: d0 c7       ..
+.cb8a5
+    lda l0046                                                         ; b8a5: a5 46       .F
+    ora l0047                                                         ; b8a7: 05 47       .G
+    beq cb855                                                         ; b8a9: f0 aa       ..
+    jsr something_23_handler                                          ; b8ab: 20 0d b7     ..
+    jsr sub_cb34d                                                     ; b8ae: 20 4d b3     M.
+.loop_cb8b1
+    lda l0046                                                         ; b8b1: a5 46       .F
+    bne cb8b7                                                         ; b8b3: d0 02       ..
+    dec l0047                                                         ; b8b5: c6 47       .G
+.cb8b7
+    dec l0046                                                         ; b8b7: c6 46       .F
+    bne cb8bf                                                         ; b8b9: d0 04       ..
+    lda l0047                                                         ; b8bb: a5 47       .G
+    beq cb8ce                                                         ; b8bd: f0 0f       ..
+.cb8bf
+    lda #1                                                            ; b8bf: a9 01       ..
+    jsr sub_cb37c                                                     ; b8c1: 20 7c b3     |.
+    bcs cb8d5                                                         ; b8c4: b0 0f       ..
+    lda l0014                                                         ; b8c6: a5 14       ..
+    cmp #&0d                                                          ; b8c8: c9 0d       ..
+    bne cb8bf                                                         ; b8ca: d0 f3       ..
+    beq loop_cb8b1                                                    ; b8cc: f0 e3       ..
+.cb8ce
+    lda l002f                                                         ; b8ce: a5 2f       ./
+    sta l0025                                                         ; b8d0: 85 25       .%
+    jmp cb458                                                         ; b8d2: 4c 58 b4    LX.
+
+.cb8d5
+    brk                                                               ; b8d5: 00          .
+
+    equb   5, &8b, &8f,   0                                           ; b8d6: 05 8b 8f... ...
+
+.something_08_handler
+    jsr extra_fancy_print_nop_terminated_inlne                        ; b8da: 20 70 b2     p.
+    equs "Print", &0d                                                 ; b8dd: 50 72 69... Pri
+
+    nop                                                               ; b8e3: ea          .
+    jsr something_23_handler                                          ; b8e4: 20 0d b7     ..
+    jsr sub_cb34d                                                     ; b8e7: 20 4d b3     M.
+    lda #2                                                            ; b8ea: a9 02       ..
+    jsr oswrch                                                        ; b8ec: 20 ee ff     ..            ; Write character 2
+.loop_cb8ef
+    jsr c9971                                                         ; b8ef: 20 71 99     q.
+    ldy #0                                                            ; b8f2: a0 00       ..
+    lda (l0010),y                                                     ; b8f4: b1 10       ..
+    jsr osasci                                                        ; b8f6: 20 e3 ff     ..            ; Write character
+    tya                                                               ; b8f9: 98          .
+    jsr sub_cb39b                                                     ; b8fa: 20 9b b3     ..
+    bcc loop_cb8ef                                                    ; b8fd: 90 f0       ..
+    jmp caf8d                                                         ; b8ff: 4c 8d af    L..
+
+.sub_cb902
+    cmp #&7e ; '~'                                                    ; b902: c9 7e       .~
+    bne cb916                                                         ; b904: d0 10       ..
+    ldx #&81                                                          ; b906: a2 81       ..
+.cb908
+    jsr cb9f2                                                         ; b908: 20 f2 b9     ..
+.sub_cb90b
+    ldy l0041                                                         ; b90b: a4 41       .A
+    lda l051a,y                                                       ; b90d: b9 1a 05    ...
+    sta l0014                                                         ; b910: 85 14       ..
+    inc l0041                                                         ; b912: e6 41       .A
+    cmp #&0d                                                          ; b914: c9 0d       ..
+.cb916
+    rts                                                               ; b916: 60          `
+
+.sub_cb917
+    ldy #0                                                            ; b917: a0 00       ..
+    sty l0041                                                         ; b919: 84 41       .A
+    sty l0042                                                         ; b91b: 84 42       .B
+    sty l004a                                                         ; b91d: 84 4a       .J
+    sty l0054                                                         ; b91f: 84 54       .T
+    sty l0043                                                         ; b921: 84 43       .C
+    sty l0044                                                         ; b923: 84 44       .D
+    jsr sub_cb90b                                                     ; b925: 20 0b b9     ..
+.cb928
+    lda l0014                                                         ; b928: a5 14       ..
+    cmp #&0d                                                          ; b92a: c9 0d       ..
+    beq cb934                                                         ; b92c: f0 06       ..
+    cmp #&2f ; '/'                                                    ; b92e: c9 2f       ./
+    bne cb942                                                         ; b930: d0 10       ..
+    inc l004a                                                         ; b932: e6 4a       .J
+.cb934
+    jsr cb9f0                                                         ; b934: 20 f0 b9     ..
+    lda l0042                                                         ; b937: a5 42       .B
+    sta l003c                                                         ; b939: 85 3c       .<
+    lda l004a                                                         ; b93b: a5 4a       .J
+    beq cb916                                                         ; b93d: f0 d7       ..
+    jmp cb9b7                                                         ; b93f: 4c b7 b9    L..
+
+.cb942
+    ldx l0042                                                         ; b942: a6 42       .B
+    stx l003b                                                         ; b944: 86 3b       .;
+    cmp #&2a ; '*'                                                    ; b946: c9 2a       .*
+    bne cb94f                                                         ; b948: d0 05       ..
+    ldx #&80                                                          ; b94a: a2 80       ..
+    jsr cb908                                                         ; b94c: 20 08 b9     ..
+.cb94f
+    jsr sub_cb902                                                     ; b94f: 20 02 b9     ..
+    cmp #&5b ; '['                                                    ; b952: c9 5b       .[
+    bne cb975                                                         ; b954: d0 1f       ..
+    ldx #&86                                                          ; b956: a2 86       ..
+    jsr cb9f2                                                         ; b958: 20 f2 b9     ..
+    sty l0045                                                         ; b95b: 84 45       .E
+    jsr cb908                                                         ; b95d: 20 08 b9     ..
+.loop_cb960
+    jsr sub_cba65                                                     ; b960: 20 65 ba     e.
+    lda l0014                                                         ; b963: a5 14       ..
+    cmp #&5d ; ']'                                                    ; b965: c9 5d       .]
+    bne loop_cb960                                                    ; b967: d0 f7       ..
+    jsr sub_cb90b                                                     ; b969: 20 0b b9     ..
+    ldy l0045                                                         ; b96c: a4 45       .E
+    lda l0042                                                         ; b96e: a5 42       .B
+    sta l041b,y                                                       ; b970: 99 1b 04    ...
+    bne cb978                                                         ; b973: d0 03       ..
+.cb975
+    jsr sub_cba65                                                     ; b975: 20 65 ba     e.
+.cb978
+    ldy l003b                                                         ; b978: a4 3b       .;
+    lda l041a,y                                                       ; b97a: b9 1a 04    ...
+    bpl cb99c                                                         ; b97d: 10 1d       ..
+    cmp #&89                                                          ; b97f: c9 89       ..
+    beq cb99c                                                         ; b981: f0 19       ..
+    ldx l0054                                                         ; b983: a6 54       .T
+    cpx #&0a                                                          ; b985: e0 0a       ..
+    bcs cb928                                                         ; b987: b0 9f       ..
+    inc l0054                                                         ; b989: e6 54       .T
+    lda l0044                                                         ; b98b: a5 44       .D
+    sta l0644,x                                                       ; b98d: 9d 44 06    .D.
+    lda l041a,y                                                       ; b990: b9 1a 04    ...
+    cmp #&80                                                          ; b993: c9 80       ..
+    beq cb9a0                                                         ; b995: f0 09       ..
+    lda l0043                                                         ; b997: a5 43       .C
+    sta l064e,x                                                       ; b999: 9d 4e 06    .N.
+.cb99c
+    inc l0044                                                         ; b99c: e6 44       .D
+    bne cb9b1                                                         ; b99e: d0 11       ..
+.cb9a0
+    inc l0043                                                         ; b9a0: e6 43       .C
+    lda l0043                                                         ; b9a2: a5 43       .C
+    cmp #7                                                            ; b9a4: c9 07       ..
+    bcs cb9d9                                                         ; b9a6: b0 31       .1
+    ora #&80                                                          ; b9a8: 09 80       ..
+    sta l064e,x                                                       ; b9aa: 9d 4e 06    .N.
+    ldy #0                                                            ; b9ad: a0 00       ..
+    sty l0044                                                         ; b9af: 84 44       .D
+.cb9b1
+    jmp cb928                                                         ; b9b1: 4c 28 b9    L(.
+
+.cb9b4
+    jsr cb9f2                                                         ; b9b4: 20 f2 b9     ..
+.cb9b7
+    jsr sub_cb90b                                                     ; b9b7: 20 0b b9     ..
+    beq cb9f0                                                         ; b9ba: f0 34       .4
+    ldx #&88                                                          ; b9bc: a2 88       ..
+    cmp #&26 ; '&'                                                    ; b9be: c9 26       .&
+    beq cb9b4                                                         ; b9c0: f0 f2       ..
+    cmp #&25 ; '%'                                                    ; b9c2: c9 25       .%
+    bne cb9e7                                                         ; b9c4: d0 21       .!
+    ldx #&87                                                          ; b9c6: a2 87       ..
+    jsr cb908                                                         ; b9c8: 20 08 b9     ..
+    sec                                                               ; b9cb: 38          8
+    sbc #&30 ; '0'                                                    ; b9cc: e9 30       .0
+    bcc cb9d5                                                         ; b9ce: 90 05       ..
+    tax                                                               ; b9d0: aa          .
+    cpx l0054                                                         ; b9d1: e4 54       .T
+    bcc cb9b4                                                         ; b9d3: 90 df       ..
+.cb9d5
+    brk                                                               ; b9d5: 00          .
+
+    equb   8, &89, &8c                                                ; b9d6: 08 89 8c    ...
+
+.cb9d9
+    brk                                                               ; b9d9: 00          .
+
+    equb 7                                                            ; b9da: 07          .
     equs "Too complex"                                                ; b9db: 54 6f 6f... Too
-    equb   0, &20, &fd, &b9, &20, &95, &ba, &4c, &b7, &b9, &a2, &8a   ; b9e6: 00 20 fd... . .
-    equb &8a, &a4, &42, &99, &1a,   4, &e6, &42, &f0, &dd, &60, &a2   ; b9f2: 8a a4 42... ..B
-    equb   0, &86, &4b, &c9, &7c, &d0, &0e, &20, &0b, &b9, &f0, &31   ; b9fe: 00 86 4b... ..K
-    equb &c9, &21, &d0, &0e                                           ; ba0a: c9 21 d0... .!.
-    equs "fK "                                                        ; ba0e: 66 4b 20    fK
-    equb &0b, &b9, &c9, &7c, &d0, &15, &20, &0b, &b9, &f0, &1f, &a2   ; ba11: 0b b9 c9... ...
-    equb &7f, &c9, &3f, &f0, &32, &c9, &40, &90, &2d, &29, &df, &e9   ; ba1d: 7f c9 3f... ..?
-    equb &40, &b0, &27, &a2, &0d, &c9, &24, &f0, &22, &c9, &5c, &d0   ; ba29: 40 b0 27... @.'
-    equb &13, &20, &0b, &b9, &d0, &18,   0,   6                       ; ba35: 13 20 0b... . .
+    equb 0                                                            ; b9e6: 00          .
+
+.cb9e7
+    jsr sub_cb9fd                                                     ; b9e7: 20 fd b9     ..
+    jsr cba95                                                         ; b9ea: 20 95 ba     ..
+    jmp cb9b7                                                         ; b9ed: 4c b7 b9    L..
+
+.cb9f0
+    ldx #&8a                                                          ; b9f0: a2 8a       ..
+.cb9f2
+    txa                                                               ; b9f2: 8a          .
+.sub_cb9f3
+    ldy l0042                                                         ; b9f3: a4 42       .B
+    sta l041a,y                                                       ; b9f5: 99 1a 04    ...
+    inc l0042                                                         ; b9f8: e6 42       .B
+    beq cb9d9                                                         ; b9fa: f0 dd       ..
+    rts                                                               ; b9fc: 60          `
+
+.sub_cb9fd
+    ldx #0                                                            ; b9fd: a2 00       ..
+    stx l004b                                                         ; b9ff: 86 4b       .K
+    cmp #&7c ; '|'                                                    ; ba01: c9 7c       .|
+    bne cba13                                                         ; ba03: d0 0e       ..
+    jsr sub_cb90b                                                     ; ba05: 20 0b b9     ..
+    beq cba3b                                                         ; ba08: f0 31       .1
+    cmp #&21 ; '!'                                                    ; ba0a: c9 21       .!
+    bne cba1c                                                         ; ba0c: d0 0e       ..
+    ror l004b                                                         ; ba0e: 66 4b       fK
+    jsr sub_cb90b                                                     ; ba10: 20 0b b9     ..
+.cba13
+    cmp #&7c ; '|'                                                    ; ba13: c9 7c       .|
+    bne cba2c                                                         ; ba15: d0 15       ..
+    jsr sub_cb90b                                                     ; ba17: 20 0b b9     ..
+    beq cba3b                                                         ; ba1a: f0 1f       ..
+.cba1c
+    ldx #&7f                                                          ; ba1c: a2 7f       ..
+    cmp #&3f ; '?'                                                    ; ba1e: c9 3f       .?
+    beq cba54                                                         ; ba20: f0 32       .2
+    cmp #&40 ; '@'                                                    ; ba22: c9 40       .@
+    bcc cba53                                                         ; ba24: 90 2d       .-
+    and #&df                                                          ; ba26: 29 df       ).
+    sbc #&40 ; '@'                                                    ; ba28: e9 40       .@
+    bcs cba53                                                         ; ba2a: b0 27       .'
+.cba2c
+    ldx #&0d                                                          ; ba2c: a2 0d       ..
+    cmp #&24 ; '$'                                                    ; ba2e: c9 24       .$
+    beq cba54                                                         ; ba30: f0 22       ."
+    cmp #&5c ; '\'                                                    ; ba32: c9 5c       .\
+    bne cba49                                                         ; ba34: d0 13       ..
+    jsr sub_cb90b                                                     ; ba36: 20 0b b9     ..
+    bne cba53                                                         ; ba39: d0 18       ..
+.cba3b
+    brk                                                               ; ba3b: 00          .
+
+    equb 6                                                            ; ba3c: 06          .
     equs "Synta"                                                      ; ba3d: 53 79 6e... Syn
     equb &f8                                                          ; ba42: f8          .
     equs "error"                                                      ; ba43: 65 72 72... err
-    equb   0, &a0, &0b, &d9, &59, &ba, &f0, &eb, &88, &10, &f8, &aa   ; ba48: 00 a0 0b... ...
-    equb &8a,   5, &4b, &aa                                           ; ba54: 8a 05 4b... ..K
-    equs "`~*[]-.@#&%/"                                               ; ba58: 60 7e 2a... `~*
-    equb &0d, &20,   2, &b9, &a2, &82, &c9, &2e, &f0, &0c, &a2, &83   ; ba64: 0d 20 02... . .
-    equb &c9, &40, &f0,   6, &a2, &84, &c9, &23, &d0,   3, &4c,   8   ; ba70: c9 40 f0... .@.
-    equb &b9, &20, &fd, &b9, &20, &0b, &b9, &c9, &2d, &d0, &0e, &a9   ; ba7c: b9 20 fd... . .
-    equb &85, &20, &f3, &b9, &20,   8, &b9, &20, &fd, &b9, &4c,   8   ; ba88: 85 20 f3... . .
-    equb &b9, &8a, &10,   8, &48, &a2, &89, &20, &f2, &b9, &68, &aa   ; ba94: b9 8a 10... ...
-    equb &4c, &f2, &b9, &20, &71, &99, &a0,   0, &84, &55, &a5, &18   ; baa0: 4c f2 b9... L..
-    equb &85, &1a, &c5, &4c, &a5, &19, &85, &1b, &e5, &4d, &90, &3a   ; baac: 85 1a c5... ...
-    equb &a5, &52, &d0, &19, &20, &7b, &bc, &a5,   2, &85, &50, &a5   ; bab8: a5 52 d0... .R.
-    equb   3, &85, &51, &a5, &4e, &85, &4c, &a5, &4f, &85, &4d, &e6   ; bac4: 03 85 51... ..Q
-    equb &52, &a0,   0, &f0, &1d, &60, &e6, &55, &a6, &55, &c8, &98   ; bad0: 52 a0 00... R..
-    equb &9d, &2c,   6, &a5, &1a, &95, &56, &a5, &1b, &95, &5e, &a9   ; badc: 9d 2c 06... .,.
-    equb   0, &9d, &34,   6, &9d, &3c,   6, &20, &56, &bb, &b9, &1a   ; bae8: 00 9d 34... ..4
-    equb   4, &c9, &8a, &f0, &43, &c9, &80, &f0, &d9, &20, &56, &bb   ; baf4: 04 c9 8a... ...
-    equb &d0, &0a, &e6, &1a, &d0, &ec, &e6, &1b, &d0, &e8, &c6, &55   ; bb00: d0 0a e6... ...
-    equb &a6, &55, &d0,   8, &e6, &18, &d0, &8f, &e6, &19, &d0, &8b   ; bb0c: a6 55 d0... .U.
-    equb &18, &b5                                                     ; bb18: 18 b5       ..
-    equs "V}4"                                                        ; bb1a: 56 7d 34    V}4
-    equb   6, &85, &1a, &b5                                           ; bb1d: 06 85 1a... ...
-    equs "^}<"                                                        ; bb21: 5e 7d 3c    ^}<
-    equb   6, &85, &1b, &bd, &2c,   6, &a8, &20, &56, &bb, &d0, &da   ; bb24: 06 85 1b... ...
-    equb &a6, &55, &fe, &34,   6, &d0, &cb, &fe, &3c,   6, &d0, &c6   ; bb30: a6 55 fe... .U.
-    equb &a5, &18, &85, &56, &a5, &19, &85, &5e, &a5, &1a, &e5, &18   ; bb3c: a5 18 85... ...
-    equb &8d, &34,   6, &a5, &1b, &e5, &19, &8d, &3c,   6, &18        ; bb48: 8d 34 06... .4.
-    equs "`*`"                                                        ; bb53: 60 2a 60    `*`
-    equb &a5, &1a, &c5, &4e, &d0,   6, &a5, &1b, &c5, &4f, &f0, &f2   ; bb56: a5 1a c5... ...
-    equb &a2,   0, &b9, &1a,   4, &c9, &81,   8, &d0,   1, &c8, &c8   ; bb62: a2 00 b9... ...
-    equb &b9, &19,   4, &30,   6, &c1, &1a, &d0, &5b, &f0, &5d, &c9   ; bb6e: b9 19 04... ...
-    equb &82, &f0, &59, &c9, &83, &f0, &24, &c9, &84, &f0, &32, &c9   ; bb7a: 82 f0 59... ..Y
-    equb &85, &f0, &0a, &c9, &89, &d0, &36, &c8, &b9, &19,   4, &b0   ; bb86: 85 f0 0a... ...
-    equb &e0, &c8, &c8, &a1, &1a, &d9, &18,   4, &90, &36, &d9, &19   ; bb92: e0 c8 c8... ...
-    equb   4, &90, &35, &d0, &2f, &f0, &31, &a1, &1a, &c9, &5f, &f0   ; bb9e: 04 90 35... ..5
-    equb &2b, &c9, &41, &90, &0a, &29, &df, &c9, &5b, &90, &21, &b0   ; bbaa: 2b c9 41... +.A
-    equb &1b, &a1, &1a, &c9, &30, &90, &15, &c9, &3a, &b0, &11, &90   ; bbb6: 1b a1 1a... ...
-    equb &13, &b9, &1a,   4, &85, &45, &c8, &20, &56, &bb, &f0,   6   ; bbc2: 13 b9 1a... ...
-    equb &c4, &45, &d0, &f7, &28, &60, &a4                            ; bbce: c4 45 d0... .E.
-    equs "Eh)"                                                        ; bbd5: 45 68 29    Eh)
-    equb   2, &60, &4c, &16, &98, &20, &7b, &bc, &a5, &1a, &85,   0   ; bbd8: 02 60 4c... .`L
-    equb &a5, &1b, &85,   1, &a5, &3c, &85, &17, &a5,   2, &c5, &18   ; bbe4: a5 1b 85... ...
-    equb &a5,   3, &e5, &19, &b0, &e4, &a4, &17, &e6, &17, &b9, &1a   ; bbf0: a5 03 e5... ...
-    equb   4, &10, &44, &c9, &8a, &f0, &d6, &c9, &87, &f0, &0f, &c9   ; bbfc: 04 10 44... ..D
-    equb &89, &d0,   7, &e6, &17, &b9, &1b,   4, &b0, &31, &a0,   0   ; bc08: 89 d0 07... ...
-    equb &f0, &3c, &e6, &17, &b9, &1b,   4, &aa, &bd, &4e,   6, &30   ; bc14: f0 3c e6... .<.
-    equb &2e, &a8, &f0, &11, &18, &b9, &56,   0, &79, &34,   6, &85   ; bc20: 2e a8 f0... ...
-    equb &0c, &b9, &5e,   0, &79, &3c,   6, &d0,   6, &a5, &18, &85   ; bc2c: 0c b9 5e... ..^
-    equb &0c, &a5, &19, &85, &0d, &bd, &44,   6, &a8, &b1, &0c, &a2   ; bc38: 0c a5 19... ...
-    equb   0, &81,   2, &e6,   2, &d0, &a1, &e6,   3, &d0, &9d, &29   ; bc44: 00 81 02... ...
-    equb &7f, &a8, &b9, &56,   0, &85, &0a, &b9, &5e,   0, &85, &0b   ; bc50: 7f a8 b9... ...
-    equb &a5,   2, &85, &0e, &a5,   3, &85, &0f, &18, &b9, &34,   6   ; bc5c: a5 02 85... ...
-    equb &aa, &65,   2, &85,   2, &b9, &3c,   6, &a8, &65,   3, &85   ; bc68: aa 65 02... .e.
-    equb   3, &20, &d5, &89, &4c, &ec, &bb, &a6, &18, &a4, &19, &4c   ; bc74: 03 20 d5... . .
-    equb &5c, &b4, &20, &70, &b2                                      ; bc80: 5c b4 20... \.
-    equs "Fin"                                                        ; bc85: 46 69 6e    Fin
-    equb &e4, &61, &6e, &e4, &72, &90, &ba, &ea, &20, &96, &b2, &20   ; bc88: e4 61 6e... .an
-    equb &17, &b9, &20, &8a, &b4, &a5, &29, &85, &4c, &85, &4e, &a5   ; bc94: 17 b9 20... ..
-    equb &2a, &85, &4d, &85, &4f, &85, &52, &a6,   0, &a4,   1, &86   ; bca0: 2a 85 4d... *.M
-    equb &18, &84, &19, &20, &a3, &ba, &b0                            ; bcac: 18 84 19... ...
-    equs "i {"                                                        ; bcb3: 69 20 7b    i {
-    equb &bc, &a5, &2f, &85, &25, &20, &1f, &b7, &20, &c2, &b4, &a9   ; bcb6: bc a5 2f... ../
-    equb   4, &85                                                     ; bcc2: 04 85       ..
-    equs "1 p"                                                        ; bcc4: 31 20 70    1 p
-    equb &b2, &52, &28, &90, &29, &ac                                 ; bcc7: b2 52 28... .R(
-    equs "C(ontinue"                                                  ; bccd: 43 28 6f... C(o
-    equb &a9, &6f, &f2, &8e, &ea, &20, &ef, &b2, &20, &e5, &b1, &20   ; bcd6: a9 6f f2... .o.
-    equb   7, &b2,   9, &20, &c9, &63, &d0, &0a, &a6, &18, &a4, &19   ; bce2: 07 b2 09... ...
-    equb &e8, &d0, &ba, &c8, &d0, &b7, &c9, &72, &d0, &e9, &20, &bf   ; bcee: e8 d0 ba... ...
-    equb &bd, &a5, &4a, &d0, &18, &20, &70, &b2, &52, &90             ; bcfa: bd a5 4a... ..J
-    equs " by"                                                        ; bd04: 20 62 79     by
-    equb &ba, &ea, &20, &96, &b2, &a0,   0, &85, &41, &a4, &3c, &84   ; bd07: ba ea 20... ..
-    equb &42, &20, &b7, &b9, &20, &dd, &bb, &4c, &a7, &bc, &4c, &d5   ; bd13: 42 20 b7... B .
-    equb &b8, &20, &c4, &bd, &20, &70, &b2                            ; bd1f: b8 20 c4... . .
-    equs "Globa"                                                      ; bd26: 47 6c 6f... Glo
-    equb &ec, &72, &90, &ba, &ea, &20, &96, &b2, &20, &17, &b9, &20   ; bd2b: ec 72 90... .r.
-    equb &3c, &be, &a9,   0, &85, &52, &85, &46, &85, &47, &a6,   0   ; bd37: 3c be a9... <..
-    equb &a4,   1, &86, &18, &84, &19, &20, &a3, &ba, &b0, &16, &e6   ; bd43: a4 01 86... ...
-    equb &46, &d0,   2, &e6, &47, &a5, &4a, &d0,   6, &a6, &1a, &a4   ; bd4f: 46 d0 02... F..
-    equb &1b, &d0, &e7, &20, &dd, &bb, &4c, &41, &bd, &a6, &50, &a4   ; bd5b: 1b d0 e7... ...
-    equb &51, &20,   4, &b4, &20, &cc, &b7, &20, &c2, &b4, &a2, &15   ; bd67: 51 20 04... Q .
-    equb &20, &f7, &b2, &a6, &46, &a4, &47, &20, &0c, &b3, &20, &7d   ; bd73: 20 f7 b2...  ..
-    equb &b2, &20, &8f, &ea, &4c,   8, &b7, &20, &87, &b4, &a6, &39   ; bd7f: b2 20 8f... . .
-    equb &f0, &13, &e0,   1, &d0, &23, &a5, &1c, &85, &1d, &c5,   0   ; bd8b: f0 13 e0... ...
-    equb &a5, &1e, &85, &1f, &e5,   1, &90,   1, &ca, &a5,   0, &95   ; bd97: a5 1e 85... ...
-    equb &1c, &a5,   1, &95, &1e, &20, &1f, &b7, &e6, &39, &a9,   1   ; bda3: 1c a5 01... ...
-    equb &85                                                          ; bdaf: 85          .
-    equs "1L)"                                                        ; bdb0: 31 4c 29    1L)
-    equb &b2                                                          ; bdb3: b2          .
+    equb 0                                                            ; ba48: 00          .
 
-.loop_cbdb4
+.cba49
+    ldy #&0b                                                          ; ba49: a0 0b       ..
+.loop_cba4b
+    cmp lba59,y                                                       ; ba4b: d9 59 ba    .Y.
+    beq cba3b                                                         ; ba4e: f0 eb       ..
+    dey                                                               ; ba50: 88          .
+    bpl loop_cba4b                                                    ; ba51: 10 f8       ..
+.cba53
+    tax                                                               ; ba53: aa          .
+.cba54
+    txa                                                               ; ba54: 8a          .
+    ora l004b                                                         ; ba55: 05 4b       .K
+    tax                                                               ; ba57: aa          .
+    rts                                                               ; ba58: 60          `
+
+.lba59
+    equs "~*[]-.@#&%/"                                                ; ba59: 7e 2a 5b... ~*[
+    equb &0d                                                          ; ba64: 0d          .
+
+.sub_cba65
+    jsr sub_cb902                                                     ; ba65: 20 02 b9     ..
+    ldx #&82                                                          ; ba68: a2 82       ..
+    cmp #&2e ; '.'                                                    ; ba6a: c9 2e       ..
+    beq cba7a                                                         ; ba6c: f0 0c       ..
+    ldx #&83                                                          ; ba6e: a2 83       ..
+    cmp #&40 ; '@'                                                    ; ba70: c9 40       .@
+    beq cba7a                                                         ; ba72: f0 06       ..
+    ldx #&84                                                          ; ba74: a2 84       ..
+    cmp #&23 ; '#'                                                    ; ba76: c9 23       .#
+    bne cba7d                                                         ; ba78: d0 03       ..
+.cba7a
+    jmp cb908                                                         ; ba7a: 4c 08 b9    L..
+
+.cba7d
+    jsr sub_cb9fd                                                     ; ba7d: 20 fd b9     ..
+    jsr sub_cb90b                                                     ; ba80: 20 0b b9     ..
+    cmp #&2d ; '-'                                                    ; ba83: c9 2d       .-
+    bne cba95                                                         ; ba85: d0 0e       ..
+    lda #&85                                                          ; ba87: a9 85       ..
+    jsr sub_cb9f3                                                     ; ba89: 20 f3 b9     ..
+    jsr cb908                                                         ; ba8c: 20 08 b9     ..
+    jsr sub_cb9fd                                                     ; ba8f: 20 fd b9     ..
+    jmp cb908                                                         ; ba92: 4c 08 b9    L..
+
+.cba95
+    txa                                                               ; ba95: 8a          .
+    bpl cbaa0                                                         ; ba96: 10 08       ..
+    pha                                                               ; ba98: 48          H
+    ldx #&89                                                          ; ba99: a2 89       ..
+    jsr cb9f2                                                         ; ba9b: 20 f2 b9     ..
+    pla                                                               ; ba9e: 68          h
+    tax                                                               ; ba9f: aa          .
+.cbaa0
+    jmp cb9f2                                                         ; baa0: 4c f2 b9    L..
+
+.cbaa3
+    jsr c9971                                                         ; baa3: 20 71 99     q.
+    ldy #0                                                            ; baa6: a0 00       ..
+    sty l0055                                                         ; baa8: 84 55       .U
+    lda l0018                                                         ; baaa: a5 18       ..
+    sta l001a                                                         ; baac: 85 1a       ..
+    cmp l004c                                                         ; baae: c5 4c       .L
+    lda l0019                                                         ; bab0: a5 19       ..
+    sta l001b                                                         ; bab2: 85 1b       ..
+    sbc l004d                                                         ; bab4: e5 4d       .M
+    bcc cbaf2                                                         ; bab6: 90 3a       .:
+    lda l0052                                                         ; bab8: a5 52       .R
+    bne cbad5                                                         ; baba: d0 19       ..
+    jsr sub_cbc7b                                                     ; babc: 20 7b bc     {.
+    lda l0002                                                         ; babf: a5 02       ..
+    sta l0050                                                         ; bac1: 85 50       .P
+    lda l0003                                                         ; bac3: a5 03       ..
+    sta l0051                                                         ; bac5: 85 51       .Q
+    lda l004e                                                         ; bac7: a5 4e       .N
+    sta l004c                                                         ; bac9: 85 4c       .L
+    lda l004f                                                         ; bacb: a5 4f       .O
+    sta l004d                                                         ; bacd: 85 4d       .M
+    inc l0052                                                         ; bacf: e6 52       .R
+    ldy #0                                                            ; bad1: a0 00       ..
+    beq cbaf2                                                         ; bad3: f0 1d       ..
+.cbad5
+    rts                                                               ; bad5: 60          `
+
+.cbad6
+    inc l0055                                                         ; bad6: e6 55       .U
+    ldx l0055                                                         ; bad8: a6 55       .U
+    iny                                                               ; bada: c8          .
+    tya                                                               ; badb: 98          .
+    sta l062c,x                                                       ; badc: 9d 2c 06    .,.
+    lda l001a                                                         ; badf: a5 1a       ..
+    sta l0056,x                                                       ; bae1: 95 56       .V
+    lda l001b                                                         ; bae3: a5 1b       ..
+    sta l005e,x                                                       ; bae5: 95 5e       .^
+    lda #0                                                            ; bae7: a9 00       ..
+    sta l0634,x                                                       ; bae9: 9d 34 06    .4.
+    sta l063c,x                                                       ; baec: 9d 3c 06    .<.
+    jsr sub_cbb56                                                     ; baef: 20 56 bb     V.
+.cbaf2
+    lda l041a,y                                                       ; baf2: b9 1a 04    ...
+    cmp #&8a                                                          ; baf5: c9 8a       ..
+    beq cbb3c                                                         ; baf7: f0 43       .C
+    cmp #&80                                                          ; baf9: c9 80       ..
+    beq cbad6                                                         ; bafb: f0 d9       ..
+    jsr sub_cbb56                                                     ; bafd: 20 56 bb     V.
+    bne cbb0c                                                         ; bb00: d0 0a       ..
+.cbb02
+    inc l001a                                                         ; bb02: e6 1a       ..
+    bne cbaf2                                                         ; bb04: d0 ec       ..
+    inc l001b                                                         ; bb06: e6 1b       ..
+    bne cbaf2                                                         ; bb08: d0 e8       ..
+.cbb0a
+    dec l0055                                                         ; bb0a: c6 55       .U
+.cbb0c
+    ldx l0055                                                         ; bb0c: a6 55       .U
+    bne cbb18                                                         ; bb0e: d0 08       ..
+    inc l0018                                                         ; bb10: e6 18       ..
+    bne cbaa3                                                         ; bb12: d0 8f       ..
+    inc l0019                                                         ; bb14: e6 19       ..
+    bne cbaa3                                                         ; bb16: d0 8b       ..
+.cbb18
+    clc                                                               ; bb18: 18          .
+    lda l0056,x                                                       ; bb19: b5 56       .V
+    adc l0634,x                                                       ; bb1b: 7d 34 06    }4.
+    sta l001a                                                         ; bb1e: 85 1a       ..
+    lda l005e,x                                                       ; bb20: b5 5e       .^
+    adc l063c,x                                                       ; bb22: 7d 3c 06    }<.
+    sta l001b                                                         ; bb25: 85 1b       ..
+    lda l062c,x                                                       ; bb27: bd 2c 06    .,.
+    tay                                                               ; bb2a: a8          .
+    jsr sub_cbb56                                                     ; bb2b: 20 56 bb     V.
+    bne cbb0a                                                         ; bb2e: d0 da       ..
+    ldx l0055                                                         ; bb30: a6 55       .U
+    inc l0634,x                                                       ; bb32: fe 34 06    .4.
+    bne cbb02                                                         ; bb35: d0 cb       ..
+    inc l063c,x                                                       ; bb37: fe 3c 06    .<.
+    bne cbb02                                                         ; bb3a: d0 c6       ..
+.cbb3c
+    lda l0018                                                         ; bb3c: a5 18       ..
+    sta l0056                                                         ; bb3e: 85 56       .V
+    lda l0019                                                         ; bb40: a5 19       ..
+    sta l005e                                                         ; bb42: 85 5e       .^
+    lda l001a                                                         ; bb44: a5 1a       ..
+    sbc l0018                                                         ; bb46: e5 18       ..
+    sta l0634                                                         ; bb48: 8d 34 06    .4.
+    lda l001b                                                         ; bb4b: a5 1b       ..
+    sbc l0019                                                         ; bb4d: e5 19       ..
+    sta l063c                                                         ; bb4f: 8d 3c 06    .<.
+    clc                                                               ; bb52: 18          .
+    rts                                                               ; bb53: 60          `
+
+.loop_cbb54
+    rol a                                                             ; bb54: 2a          *
+    rts                                                               ; bb55: 60          `
+
+.sub_cbb56
+    lda l001a                                                         ; bb56: a5 1a       ..
+    cmp l004e                                                         ; bb58: c5 4e       .N
+    bne cbb62                                                         ; bb5a: d0 06       ..
+    lda l001b                                                         ; bb5c: a5 1b       ..
+    cmp l004f                                                         ; bb5e: c5 4f       .O
+    beq loop_cbb54                                                    ; bb60: f0 f2       ..
+.cbb62
+    ldx #0                                                            ; bb62: a2 00       ..
+    lda l041a,y                                                       ; bb64: b9 1a 04    ...
+    cmp #&81                                                          ; bb67: c9 81       ..
+    php                                                               ; bb69: 08          .
+    bne cbb6d                                                         ; bb6a: d0 01       ..
+    iny                                                               ; bb6c: c8          .
+.cbb6d
+    iny                                                               ; bb6d: c8          .
+    lda l0419,y                                                       ; bb6e: b9 19 04    ...
+    bmi cbb79                                                         ; bb71: 30 06       0.
+.loop_cbb73
+    cmp (l001a,x)                                                     ; bb73: c1 1a       ..
+    bne cbbd2                                                         ; bb75: d0 5b       .[
+    beq cbbd6                                                         ; bb77: f0 5d       .]
+.cbb79
+    cmp #&82                                                          ; bb79: c9 82       ..
+    beq cbbd6                                                         ; bb7b: f0 59       .Y
+    cmp #&83                                                          ; bb7d: c9 83       ..
+    beq cbba5                                                         ; bb7f: f0 24       .$
+    cmp #&84                                                          ; bb81: c9 84       ..
+    beq cbbb7                                                         ; bb83: f0 32       .2
+    cmp #&85                                                          ; bb85: c9 85       ..
+    beq cbb93                                                         ; bb87: f0 0a       ..
+    cmp #&89                                                          ; bb89: c9 89       ..
+    bne cbbc3                                                         ; bb8b: d0 36       .6
+    iny                                                               ; bb8d: c8          .
+    lda l0419,y                                                       ; bb8e: b9 19 04    ...
+    bcs loop_cbb73                                                    ; bb91: b0 e0       ..
+.cbb93
+    iny                                                               ; bb93: c8          .
+    iny                                                               ; bb94: c8          .
+    lda (l001a,x)                                                     ; bb95: a1 1a       ..
+    cmp l0418,y                                                       ; bb97: d9 18 04    ...
+    bcc cbbd2                                                         ; bb9a: 90 36       .6
+    cmp l0419,y                                                       ; bb9c: d9 19 04    ...
+    bcc cbbd6                                                         ; bb9f: 90 35       .5
+    bne cbbd2                                                         ; bba1: d0 2f       ./
+    beq cbbd6                                                         ; bba3: f0 31       .1
+.cbba5
+    lda (l001a,x)                                                     ; bba5: a1 1a       ..
+    cmp #&5f ; '_'                                                    ; bba7: c9 5f       ._
+    beq cbbd6                                                         ; bba9: f0 2b       .+
+    cmp #&41 ; 'A'                                                    ; bbab: c9 41       .A
+    bcc cbbb9                                                         ; bbad: 90 0a       ..
+    and #&df                                                          ; bbaf: 29 df       ).
+    cmp #&5b ; '['                                                    ; bbb1: c9 5b       .[
+    bcc cbbd6                                                         ; bbb3: 90 21       .!
+    bcs cbbd2                                                         ; bbb5: b0 1b       ..
+.cbbb7
+    lda (l001a,x)                                                     ; bbb7: a1 1a       ..
+.cbbb9
+    cmp #&30 ; '0'                                                    ; bbb9: c9 30       .0
+    bcc cbbd2                                                         ; bbbb: 90 15       ..
+    cmp #&3a ; ':'                                                    ; bbbd: c9 3a       .:
+    bcs cbbd2                                                         ; bbbf: b0 11       ..
+    bcc cbbd6                                                         ; bbc1: 90 13       ..
+.cbbc3
+    lda l041a,y                                                       ; bbc3: b9 1a 04    ...
+    sta l0045                                                         ; bbc6: 85 45       .E
+    iny                                                               ; bbc8: c8          .
+.loop_cbbc9
+    jsr sub_cbb56                                                     ; bbc9: 20 56 bb     V.
+    beq cbbd4                                                         ; bbcc: f0 06       ..
+    cpy l0045                                                         ; bbce: c4 45       .E
+    bne loop_cbbc9                                                    ; bbd0: d0 f7       ..
+.cbbd2
+    plp                                                               ; bbd2: 28          (
+    rts                                                               ; bbd3: 60          `
+
+.cbbd4
+    ldy l0045                                                         ; bbd4: a4 45       .E
+.cbbd6
+    pla                                                               ; bbd6: 68          h
+    and #2                                                            ; bbd7: 29 02       ).
+.cbbd9
+    rts                                                               ; bbd9: 60          `
+
+.loop_cbbda
+    jmp c9816                                                         ; bbda: 4c 16 98    L..
+
+.sub_cbbdd
+    jsr sub_cbc7b                                                     ; bbdd: 20 7b bc     {.
+    lda l001a                                                         ; bbe0: a5 1a       ..
+    sta l0000                                                         ; bbe2: 85 00       ..
+    lda l001b                                                         ; bbe4: a5 1b       ..
+    sta l0001                                                         ; bbe6: 85 01       ..
+    lda l003c                                                         ; bbe8: a5 3c       .<
+    sta l0017                                                         ; bbea: 85 17       ..
+.cbbec
+    lda l0002                                                         ; bbec: a5 02       ..
+    cmp l0018                                                         ; bbee: c5 18       ..
+    lda l0003                                                         ; bbf0: a5 03       ..
+    sbc l0019                                                         ; bbf2: e5 19       ..
+    bcs loop_cbbda                                                    ; bbf4: b0 e4       ..
+    ldy l0017                                                         ; bbf6: a4 17       ..
+    inc l0017                                                         ; bbf8: e6 17       ..
+    lda l041a,y                                                       ; bbfa: b9 1a 04    ...
+    bpl cbc43                                                         ; bbfd: 10 44       .D
+    cmp #&8a                                                          ; bbff: c9 8a       ..
+    beq cbbd9                                                         ; bc01: f0 d6       ..
+    cmp #&87                                                          ; bc03: c9 87       ..
+    beq cbc16                                                         ; bc05: f0 0f       ..
+    cmp #&89                                                          ; bc07: c9 89       ..
+    bne cbc12                                                         ; bc09: d0 07       ..
+    inc l0017                                                         ; bc0b: e6 17       ..
+    lda l041b,y                                                       ; bc0d: b9 1b 04    ...
+    bcs cbc43                                                         ; bc10: b0 31       .1
+.cbc12
+    ldy #0                                                            ; bc12: a0 00       ..
+    beq cbc52                                                         ; bc14: f0 3c       .<
+.cbc16
+    inc l0017                                                         ; bc16: e6 17       ..
+    lda l041b,y                                                       ; bc18: b9 1b 04    ...
+    tax                                                               ; bc1b: aa          .
+    lda l064e,x                                                       ; bc1c: bd 4e 06    .N.
+    bmi cbc4f                                                         ; bc1f: 30 2e       0.
+    tay                                                               ; bc21: a8          .
+    beq cbc35                                                         ; bc22: f0 11       ..
+    clc                                                               ; bc24: 18          .
+    lda l0056,y                                                       ; bc25: b9 56 00    .V.
+    adc l0634,y                                                       ; bc28: 79 34 06    y4.
+    sta l000c                                                         ; bc2b: 85 0c       ..
+    lda l005e,y                                                       ; bc2d: b9 5e 00    .^.
+    adc l063c,y                                                       ; bc30: 79 3c 06    y<.
+    bne cbc3b                                                         ; bc33: d0 06       ..
+.cbc35
+    lda l0018                                                         ; bc35: a5 18       ..
+    sta l000c                                                         ; bc37: 85 0c       ..
+    lda l0019                                                         ; bc39: a5 19       ..
+.cbc3b
+    sta l000d                                                         ; bc3b: 85 0d       ..
+    lda l0644,x                                                       ; bc3d: bd 44 06    .D.
+    tay                                                               ; bc40: a8          .
+    lda (l000c),y                                                     ; bc41: b1 0c       ..
+.cbc43
+    ldx #0                                                            ; bc43: a2 00       ..
+    sta (l0002,x)                                                     ; bc45: 81 02       ..
+    inc l0002                                                         ; bc47: e6 02       ..
+    bne cbbec                                                         ; bc49: d0 a1       ..
+    inc l0003                                                         ; bc4b: e6 03       ..
+    bne cbbec                                                         ; bc4d: d0 9d       ..
+.cbc4f
+    and #&7f                                                          ; bc4f: 29 7f       ).
+    tay                                                               ; bc51: a8          .
+.cbc52
+    lda l0056,y                                                       ; bc52: b9 56 00    .V.
+    sta l000a                                                         ; bc55: 85 0a       ..
+    lda l005e,y                                                       ; bc57: b9 5e 00    .^.
+    sta l000b                                                         ; bc5a: 85 0b       ..
+    lda l0002                                                         ; bc5c: a5 02       ..
+    sta l000e                                                         ; bc5e: 85 0e       ..
+    lda l0003                                                         ; bc60: a5 03       ..
+    sta l000f                                                         ; bc62: 85 0f       ..
+    clc                                                               ; bc64: 18          .
+    lda l0634,y                                                       ; bc65: b9 34 06    .4.
+    tax                                                               ; bc68: aa          .
+    adc l0002                                                         ; bc69: 65 02       e.
+    sta l0002                                                         ; bc6b: 85 02       ..
+    lda l063c,y                                                       ; bc6d: b9 3c 06    .<.
+    tay                                                               ; bc70: a8          .
+    adc l0003                                                         ; bc71: 65 03       e.
+    sta l0003                                                         ; bc73: 85 03       ..
+    jsr some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes    ; bc75: 20 d5 89     ..
+    jmp cbbec                                                         ; bc78: 4c ec bb    L..
+
+.sub_cbc7b
+    ldx l0018                                                         ; bc7b: a6 18       ..
+    ldy l0019                                                         ; bc7d: a4 19       ..
+    jmp bulk_copy_from_l0000_to_l0002                                 ; bc7f: 4c 5c b4    L\.
+
+.something_04_handler
+    jsr extra_fancy_print_nop_terminated_inlne                        ; bc82: 20 70 b2     p.
+    equs "Fin"                                                        ; bc85: 46 69 6e    Fin
+    equb 128 + ('d')                                                  ; bc88: e4          .              ; "d "
+    equs "an"                                                         ; bc89: 61 6e       an
+    equb 128 + ('d')                                                  ; bc8b: e4          .              ; "d "
+    equs "r"                                                          ; bc8c: 72          r
+    equb 128 + 16                                                     ; bc8d: 90          .              ; "eplace" (token 16)
+    equb 128 + (':')                                                  ; bc8e: ba          .              ; ": "
+
+    nop                                                               ; bc8f: ea          .
+    jsr sub_cb296                                                     ; bc90: 20 96 b2     ..
+    jsr sub_cb917                                                     ; bc93: 20 17 b9     ..
+    jsr sub_cb48a                                                     ; bc96: 20 8a b4     ..
+    lda l0029                                                         ; bc99: a5 29       .)
+    sta l004c                                                         ; bc9b: 85 4c       .L
+    sta l004e                                                         ; bc9d: 85 4e       .N
+    lda l002a                                                         ; bc9f: a5 2a       .*
+    sta l004d                                                         ; bca1: 85 4d       .M
+    sta l004f                                                         ; bca3: 85 4f       .O
+    sta l0052                                                         ; bca5: 85 52       .R
+.cbca7
+    ldx l0000                                                         ; bca7: a6 00       ..
+    ldy l0001                                                         ; bca9: a4 01       ..
+.cbcab
+    stx l0018                                                         ; bcab: 86 18       ..
+    sty l0019                                                         ; bcad: 84 19       ..
+    jsr cbaa3                                                         ; bcaf: 20 a3 ba     ..
+    bcs cbd1d                                                         ; bcb2: b0 69       .i
+    jsr sub_cbc7b                                                     ; bcb4: 20 7b bc     {.
+    lda l002f                                                         ; bcb7: a5 2f       ./
+    sta l0025                                                         ; bcb9: 85 25       .%
+    jsr cb71f                                                         ; bcbb: 20 1f b7     ..
+    jsr sub_cb4c2                                                     ; bcbe: 20 c2 b4     ..
+    lda #4                                                            ; bcc1: a9 04       ..
+    sta l0031                                                         ; bcc3: 85 31       .1
+    jsr extra_fancy_print_nop_terminated_inlne                        ; bcc5: 20 70 b2     p.
+    equs "R("                                                         ; bcc8: 52 28       R(
+    equb 128 + 16                                                     ; bcca: 90          .              ; "eplace" (token 16)
+    equs ")"                                                          ; bccb: 29          )
+    equb 128 + (',')                                                  ; bccc: ac          .              ; ", "
+    equs "C(ontinue"                                                  ; bccd: 43 28 6f... C(o
+    equb 128 + (')')                                                  ; bcd6: a9          .              ; ") "
+    equs "o"                                                          ; bcd7: 6f          o
+    equb 128 + ('r')                                                  ; bcd8: f2          .              ; "r "
+    equb 128 + 14                                                     ; bcd9: 8e          .              ; "Escape" (token 14)
+
+    nop                                                               ; bcda: ea          .
+    jsr cb2ef                                                         ; bcdb: 20 ef b2     ..
+    jsr sub_cb1e5                                                     ; bcde: 20 e5 b1     ..
+.loop_cbce1
+    jsr sub_cb207                                                     ; bce1: 20 07 b2     ..
+    ora #&20 ; ' '                                                    ; bce4: 09 20       .
+    cmp #&63 ; 'c'                                                    ; bce6: c9 63       .c
+    bne cbcf4                                                         ; bce8: d0 0a       ..
+    ldx l0018                                                         ; bcea: a6 18       ..
+    ldy l0019                                                         ; bcec: a4 19       ..
+    inx                                                               ; bcee: e8          .
+    bne cbcab                                                         ; bcef: d0 ba       ..
+    iny                                                               ; bcf1: c8          .
+    bne cbcab                                                         ; bcf2: d0 b7       ..
+.cbcf4
+    cmp #&72 ; 'r'                                                    ; bcf4: c9 72       .r
+    bne loop_cbce1                                                    ; bcf6: d0 e9       ..
+    jsr sub_cbdbf                                                     ; bcf8: 20 bf bd     ..
+    lda l004a                                                         ; bcfb: a5 4a       .J
+    bne cbd17                                                         ; bcfd: d0 18       ..
+    jsr extra_fancy_print_nop_terminated_inlne                        ; bcff: 20 70 b2     p.
+    equs "R"                                                          ; bd02: 52          R
+    equb 128 + 16                                                     ; bd03: 90          .              ; "eplace" (token 16)
+    equs " by"                                                        ; bd04: 20 62 79     by
+    equb 128 + (':')                                                  ; bd07: ba          .              ; ": "
+
+    nop                                                               ; bd08: ea          .
+    jsr sub_cb296                                                     ; bd09: 20 96 b2     ..
+    ldy #0                                                            ; bd0c: a0 00       ..
+    sta l0041                                                         ; bd0e: 85 41       .A
+    ldy l003c                                                         ; bd10: a4 3c       .<
+    sty l0042                                                         ; bd12: 84 42       .B
+    jsr cb9b7                                                         ; bd14: 20 b7 b9     ..
+.cbd17
+    jsr sub_cbbdd                                                     ; bd17: 20 dd bb     ..
+    jmp cbca7                                                         ; bd1a: 4c a7 bc    L..
+
+.cbd1d
+    jmp cb8d5                                                         ; bd1d: 4c d5 b8    L..
+
+.something_05_handler
+    jsr sub_cbdc4                                                     ; bd20: 20 c4 bd     ..
+    jsr extra_fancy_print_nop_terminated_inlne                        ; bd23: 20 70 b2     p.
+    equs "Globa"                                                      ; bd26: 47 6c 6f... Glo
+    equb 128 + ('l')                                                  ; bd2b: ec          .              ; "l "
+    equs "r"                                                          ; bd2c: 72          r
+    equb 128 + 16                                                     ; bd2d: 90          .              ; "eplace" (token 16)
+    equb 128 + (':')                                                  ; bd2e: ba          .              ; ": "
+
+    nop                                                               ; bd2f: ea          .
+    jsr sub_cb296                                                     ; bd30: 20 96 b2     ..
+    jsr sub_cb917                                                     ; bd33: 20 17 b9     ..
+    jsr sub_cbe3c                                                     ; bd36: 20 3c be     <.
+    lda #0                                                            ; bd39: a9 00       ..
+    sta l0052                                                         ; bd3b: 85 52       .R
+    sta l0046                                                         ; bd3d: 85 46       .F
+    sta l0047                                                         ; bd3f: 85 47       .G
+.cbd41
+    ldx l0000                                                         ; bd41: a6 00       ..
+    ldy l0001                                                         ; bd43: a4 01       ..
+.loop_cbd45
+    stx l0018                                                         ; bd45: 86 18       ..
+    sty l0019                                                         ; bd47: 84 19       ..
+    jsr cbaa3                                                         ; bd49: 20 a3 ba     ..
+    bcs cbd64                                                         ; bd4c: b0 16       ..
+    inc l0046                                                         ; bd4e: e6 46       .F
+    bne cbd54                                                         ; bd50: d0 02       ..
+    inc l0047                                                         ; bd52: e6 47       .G
+.cbd54
+    lda l004a                                                         ; bd54: a5 4a       .J
+    bne cbd5e                                                         ; bd56: d0 06       ..
+    ldx l001a                                                         ; bd58: a6 1a       ..
+    ldy l001b                                                         ; bd5a: a4 1b       ..
+    bne loop_cbd45                                                    ; bd5c: d0 e7       ..
+.cbd5e
+    jsr sub_cbbdd                                                     ; bd5e: 20 dd bb     ..
+    jmp cbd41                                                         ; bd61: 4c 41 bd    LA.
+
+.cbd64
+    ldx l0050                                                         ; bd64: a6 50       .P
+    ldy l0051                                                         ; bd66: a4 51       .Q
+    jsr cb404                                                         ; bd68: 20 04 b4     ..
+    jsr cb7cc                                                         ; bd6b: 20 cc b7     ..
+    jsr sub_cb4c2                                                     ; bd6e: 20 c2 b4     ..
+    ldx #&15                                                          ; bd71: a2 15       ..
+    jsr sub_cb2f7                                                     ; bd73: 20 f7 b2     ..
+    ldx l0046                                                         ; bd76: a6 46       .F
+    ldy l0047                                                         ; bd78: a4 47       .G
+    jsr print_yx_as_decimal                                           ; bd7a: 20 0c b3     ..
+    jsr sub_cb27d                                                     ; bd7d: 20 7d b2     }.
+    jsr lea8f                                                         ; bd80: 20 8f ea     ..
+    jmp cb708                                                         ; bd83: 4c 08 b7    L..
+
+.something_06_handler
+    jsr sub_cb487                                                     ; bd86: 20 87 b4     ..
+    ldx l0039                                                         ; bd89: a6 39       .9
+    beq cbda0                                                         ; bd8b: f0 13       ..
+    cpx #1                                                            ; bd8d: e0 01       ..
+    bne cbdb4                                                         ; bd8f: d0 23       .#
+    lda l001c                                                         ; bd91: a5 1c       ..
+    sta l001d                                                         ; bd93: 85 1d       ..
+    cmp l0000                                                         ; bd95: c5 00       ..
+    lda l001e                                                         ; bd97: a5 1e       ..
+    sta l001f                                                         ; bd99: 85 1f       ..
+    sbc l0001                                                         ; bd9b: e5 01       ..
+    bcc cbda0                                                         ; bd9d: 90 01       ..
+    dex                                                               ; bd9f: ca          .
+.cbda0
+    lda l0000                                                         ; bda0: a5 00       ..
+    sta l001c,x                                                       ; bda2: 95 1c       ..
+    lda l0001                                                         ; bda4: a5 01       ..
+    sta l001e,x                                                       ; bda6: 95 1e       ..
+    jsr cb71f                                                         ; bda8: 20 1f b7     ..
+    inc l0039                                                         ; bdab: e6 39       .9
+    lda #1                                                            ; bdad: a9 01       ..
+    sta l0031                                                         ; bdaf: 85 31       .1
+    jmp cb229                                                         ; bdb1: 4c 29 b2    L).
+
+.cbdb4
     brk                                                               ; bdb4: 00          .
 
     equb   9, &82                                                     ; bdb5: 09 82       ..
@@ -8612,17 +9502,46 @@ la951 = sub_ca94f+2
 
 .sub_cbdbf
     lda l0039                                                         ; bdbf: a5 39       .9
-    bne loop_cbdb4                                                    ; bdc1: d0 f1       ..
+    bne cbdb4                                                         ; bdc1: d0 f1       ..
     rts                                                               ; bdc3: 60          `
 
-    equb &a5, &39, &c9,   2, &f0, &ea, &60, &a5, &39, &c9,   1, &d0   ; bdc4: a5 39 c9... .9.
-    equb &e3, &20, &3c, &be, &86,   0, &84,   1, &4c, &1f, &b7, &a5   ; bdd0: e3 20 3c... . <
-    equb &39, &c9,   2, &d0, &d3, &20, &87, &b4, &20,   6, &be, &a5   ; bddc: 39 c9 02... 9..
-    equb &53, &c9,   1, &d0, &12, &a5,   0, &c5, &21, &a5,   1, &e5   ; bde8: 53 c9 01... S..
-    equb &23, &90, &bd, &a5,   2, &85, &21, &a5,   3, &85, &23, &a9   ; bdf4: 23 90 bd... #..
-    equb   0, &85                                                     ; be00: 00 85       ..
-    equs "9L)"                                                        ; be02: 39 4c 29    9L)
-    equb &b2                                                          ; be05: b2          .
+.sub_cbdc4
+    lda l0039                                                         ; bdc4: a5 39       .9
+    cmp #2                                                            ; bdc6: c9 02       ..
+    beq cbdb4                                                         ; bdc8: f0 ea       ..
+    rts                                                               ; bdca: 60          `
+
+.something_18_handler
+    lda l0039                                                         ; bdcb: a5 39       .9
+    cmp #1                                                            ; bdcd: c9 01       ..
+    bne cbdb4                                                         ; bdcf: d0 e3       ..
+    jsr sub_cbe3c                                                     ; bdd1: 20 3c be     <.
+    stx l0000                                                         ; bdd4: 86 00       ..
+    sty l0001                                                         ; bdd6: 84 01       ..
+    jmp cb71f                                                         ; bdd8: 4c 1f b7    L..
+
+.sub_cbddb
+    lda l0039                                                         ; bddb: a5 39       .9
+    cmp #2                                                            ; bddd: c9 02       ..
+    bne cbdb4                                                         ; bddf: d0 d3       ..
+    jsr sub_cb487                                                     ; bde1: 20 87 b4     ..
+    jsr sub_cbe06                                                     ; bde4: 20 06 be     ..
+    lda l0053                                                         ; bde7: a5 53       .S
+    cmp #1                                                            ; bde9: c9 01       ..
+    bne something_16_handler                                          ; bdeb: d0 12       ..
+    lda l0000                                                         ; bded: a5 00       ..
+    cmp l0021                                                         ; bdef: c5 21       .!
+    lda l0001                                                         ; bdf1: a5 01       ..
+    sbc l0023                                                         ; bdf3: e5 23       .#
+    bcc cbdb4                                                         ; bdf5: 90 bd       ..
+    lda l0002                                                         ; bdf7: a5 02       ..
+    sta l0021                                                         ; bdf9: 85 21       .!
+    lda l0003                                                         ; bdfb: a5 03       ..
+    sta l0023                                                         ; bdfd: 85 23       .#
+.something_16_handler
+    lda #0                                                            ; bdff: a9 00       ..
+    sta l0039                                                         ; be01: 85 39       .9
+    jmp cb229                                                         ; be03: 4c 29 b2    L).
 
 .sub_cbe06
     sec                                                               ; be06: 38          8
@@ -8660,38 +9579,175 @@ la951 = sub_ca94f+2
 .cbe3b
     rts                                                               ; be3b: 60          `
 
-    equb &a5, &39, &f0,   6, &20, &9d, &b2, &20, &f5, &b2, &20, &8a   ; be3c: a5 39 f0... .9.
-    equb &b4, &a5,   0, &85, &4c, &a5,   1, &85, &4d, &a5, &39, &f0   ; be48: b4 a5 00... ...
-    equb &1d, &20,   6, &be, &20, &ff, &bd, &a6, &20, &a4, &22, &a5   ; be54: 1d 20 06... . .
-    equb &53, &f0, &16, &a5,   1, &48, &a5,   0, &48, &20,   4, &b4   ; be60: 53 f0 16... S..
-    equb &68, &aa, &68, &a8, &d0,   7, &20, &11, &b7, &a6, &29, &a4   ; be6c: 68 aa 68... h.h
-    equb &2a, &86, &4e, &84                                           ; be78: 2a 86 4e... *.N
-    equs "O` "                                                        ; be7c: 4f 60 20    O`
-    equb &db, &bd, &38, &a5, &21, &e5, &20, &aa, &a5, &23, &e5, &22   ; be7f: db bd 38... ..8
-    equb &a8, &20, &c8, &b1, &a5, &20, &85, &0a, &a5, &22, &85, &0b   ; be8b: a8 20 c8... . .
-    equb &86,   0, &86, &0e, &84,   1, &84, &0f, &20, &2f, &b4, &4c   ; be97: 86 00 86... ...
-    equb &1f, &b7, &20, &db, &bd, &a6, &20, &a4, &22, &a5, &53, &f0   ; bea3: 1f b7 20... ..
-    equb &12, &86, &0a, &84, &0b, &a5, &21, &85, &0e, &a5, &23, &85   ; beaf: 12 86 0a... ...
-    equb &0f, &a6,   2, &a4,   3, &d0, &10, &86, &0e, &84, &0f, &a5   ; bebb: 0f a6 02... ...
-    equb   0, &85, &0a, &a5,   1, &85, &0b, &a6, &21, &a4, &23, &86   ; bec7: 00 85 0a... ...
-    equb &4e, &84, &4f, &38, &a5, &0e, &e5, &0a, &85, &12, &a5, &0f   ; bed3: 4e 84 4f... N.O
-    equb &e5, &0b, &85, &13, &a5, &4e, &e5, &0e, &aa, &a5, &4f, &e5   ; bedf: e5 0b 85... ...
-    equb &0f, &a8, &e4, &12, &e5, &13, &b0,   4, &86, &12, &84, &13   ; beeb: 0f a8 e4... ...
-    equb &a5, &12,   5, &13, &f0, &a5, &b0, &15, &a6, &0e, &a4, &0f   ; bef7: a5 12 05... ...
-    equb &20, &28, &bf, &18, &98, &65, &0c, &85, &0a, &a9,   0, &65   ; bf03: 20 28 bf...  (.
-    equb &0d, &85, &0b, &90, &c2, &38, &a5, &4e, &e5, &12, &85, &4e   ; bf0f: 0d 85 0b... ...
-    equb &aa, &a5, &4f, &e5, &13, &85, &4f, &a8, &20, &28, &bf, &f0   ; bf1b: aa a5 4f... ..O
-    equb &ae, &a5, &0a, &85, &0c, &a5, &0b, &85, &0d, &86,   8, &84   ; bf27: ae a5 0a... ...
-    equb   9, &e6, &13, &a0,   0, &f0, &11, &b1, &0c, &aa, &b1,   8   ; bf33: 09 e6 13... ...
-    equb &91, &0c, &8a, &91,   8, &c8, &d0,   4, &e6, &0d, &e6,   9   ; bf3f: 91 0c 8a... ...
-    equb &c4, &12, &d0, &eb, &c6, &13, &d0, &e7, &60, &7a, &12, &38   ; bf4b: c4 12 d0... ...
-    equb &a5, &0b, &88, &79, &0e, &9f, &f3, &7c, &2a, &ac, &3f, &b5   ; bf57: a5 0b 88... ...
-    equb &86, &34,   1, &a2, &7a, &7f, &63, &8e, &37, &ec, &82, &3f   ; bf63: 86 34 01... .4.
-    equb &ff, &ff, &ca, &7f, &ff, &ff, &ff, &ff, &85, &a3, &59, &e8   ; bf6f: ff ff ca... ...
-    equb &67, &80, &1c, &9d,   7, &36, &80, &57, &bb, &78, &df, &80   ; bf7b: 67 80 1c... g..
-    equb &ca, &9a, &0e, &83, &84, &8c, &bb, &ca, &6e, &81, &95, &96   ; bf87: ca 9a 0e... ...
-    equb   6, &de, &81, &0a, &c7, &6c, &52, &7f, &7d, &ad, &90, &a1   ; bf93: 06 de 81... ...
-    equb &82, &fb                                                     ; bf9f: 82 fb       ..
+.sub_cbe3c
+    lda l0039                                                         ; be3c: a5 39       .9
+    beq cbe46                                                         ; be3e: f0 06       ..
+    jsr sub_cb29d                                                     ; be40: 20 9d b2     ..
+    jsr sub_cb2f5                                                     ; be43: 20 f5 b2     ..
+.cbe46
+    jsr sub_cb48a                                                     ; be46: 20 8a b4     ..
+    lda l0000                                                         ; be49: a5 00       ..
+    sta l004c                                                         ; be4b: 85 4c       .L
+    lda l0001                                                         ; be4d: a5 01       ..
+    sta l004d                                                         ; be4f: 85 4d       .M
+    lda l0039                                                         ; be51: a5 39       .9
+    beq cbe72                                                         ; be53: f0 1d       ..
+    jsr sub_cbe06                                                     ; be55: 20 06 be     ..
+    jsr something_16_handler                                          ; be58: 20 ff bd     ..
+    ldx l0020                                                         ; be5b: a6 20       .
+    ldy l0022                                                         ; be5d: a4 22       ."
+    lda l0053                                                         ; be5f: a5 53       .S
+    beq cbe79                                                         ; be61: f0 16       ..
+    lda l0001                                                         ; be63: a5 01       ..
+    pha                                                               ; be65: 48          H
+    lda l0000                                                         ; be66: a5 00       ..
+    pha                                                               ; be68: 48          H
+    jsr cb404                                                         ; be69: 20 04 b4     ..
+    pla                                                               ; be6c: 68          h
+    tax                                                               ; be6d: aa          .
+    pla                                                               ; be6e: 68          h
+    tay                                                               ; be6f: a8          .
+    bne cbe79                                                         ; be70: d0 07       ..
+.cbe72
+    jsr sub_cb711                                                     ; be72: 20 11 b7     ..
+    ldx l0029                                                         ; be75: a6 29       .)
+    ldy l002a                                                         ; be77: a4 2a       .*
+.cbe79
+    stx l004e                                                         ; be79: 86 4e       .N
+    sty l004f                                                         ; be7b: 84 4f       .O
+    rts                                                               ; be7d: 60          `
+
+.something_07_handler
+    jsr sub_cbddb                                                     ; be7e: 20 db bd     ..
+    sec                                                               ; be81: 38          8
+    lda l0021                                                         ; be82: a5 21       .!
+    sbc l0020                                                         ; be84: e5 20       .
+    tax                                                               ; be86: aa          .
+    lda l0023                                                         ; be87: a5 23       .#
+    sbc l0022                                                         ; be89: e5 22       ."
+    tay                                                               ; be8b: a8          .
+    jsr sub_cb1c8                                                     ; be8c: 20 c8 b1     ..
+    lda l0020                                                         ; be8f: a5 20       .
+    sta l000a                                                         ; be91: 85 0a       ..
+    lda l0022                                                         ; be93: a5 22       ."
+    sta l000b                                                         ; be95: 85 0b       ..
+    stx l0000                                                         ; be97: 86 00       ..
+    stx l000e                                                         ; be99: 86 0e       ..
+    sty l0001                                                         ; be9b: 84 01       ..
+    sty l000f                                                         ; be9d: 84 0f       ..
+    jsr sub_cb42f                                                     ; be9f: 20 2f b4     /.
+.cbea2
+    jmp cb71f                                                         ; bea2: 4c 1f b7    L..
+
+.something_17_handler
+    jsr sub_cbddb                                                     ; bea5: 20 db bd     ..
+    ldx l0020                                                         ; bea8: a6 20       .
+    ldy l0022                                                         ; beaa: a4 22       ."
+    lda l0053                                                         ; beac: a5 53       .S
+    beq cbec2                                                         ; beae: f0 12       ..
+    stx l000a                                                         ; beb0: 86 0a       ..
+    sty l000b                                                         ; beb2: 84 0b       ..
+    lda l0021                                                         ; beb4: a5 21       .!
+    sta l000e                                                         ; beb6: 85 0e       ..
+    lda l0023                                                         ; beb8: a5 23       .#
+    sta l000f                                                         ; beba: 85 0f       ..
+    ldx l0002                                                         ; bebc: a6 02       ..
+    ldy l0003                                                         ; bebe: a4 03       ..
+    bne cbed2                                                         ; bec0: d0 10       ..
+.cbec2
+    stx l000e                                                         ; bec2: 86 0e       ..
+    sty l000f                                                         ; bec4: 84 0f       ..
+    lda l0000                                                         ; bec6: a5 00       ..
+    sta l000a                                                         ; bec8: 85 0a       ..
+    lda l0001                                                         ; beca: a5 01       ..
+    sta l000b                                                         ; becc: 85 0b       ..
+    ldx l0021                                                         ; bece: a6 21       .!
+    ldy l0023                                                         ; bed0: a4 23       .#
+.cbed2
+    stx l004e                                                         ; bed2: 86 4e       .N
+    sty l004f                                                         ; bed4: 84 4f       .O
+.cbed6
+    sec                                                               ; bed6: 38          8
+    lda l000e                                                         ; bed7: a5 0e       ..
+    sbc l000a                                                         ; bed9: e5 0a       ..
+    sta l0012                                                         ; bedb: 85 12       ..
+    lda l000f                                                         ; bedd: a5 0f       ..
+    sbc l000b                                                         ; bedf: e5 0b       ..
+    sta l0013                                                         ; bee1: 85 13       ..
+    lda l004e                                                         ; bee3: a5 4e       .N
+    sbc l000e                                                         ; bee5: e5 0e       ..
+    tax                                                               ; bee7: aa          .
+    lda l004f                                                         ; bee8: a5 4f       .O
+    sbc l000f                                                         ; beea: e5 0f       ..
+    tay                                                               ; beec: a8          .
+    cpx l0012                                                         ; beed: e4 12       ..
+    sbc l0013                                                         ; beef: e5 13       ..
+    bcs cbef7                                                         ; bef1: b0 04       ..
+    stx l0012                                                         ; bef3: 86 12       ..
+    sty l0013                                                         ; bef5: 84 13       ..
+.cbef7
+    lda l0012                                                         ; bef7: a5 12       ..
+    ora l0013                                                         ; bef9: 05 13       ..
+    beq cbea2                                                         ; befb: f0 a5       ..
+    bcs cbf14                                                         ; befd: b0 15       ..
+    ldx l000e                                                         ; beff: a6 0e       ..
+    ldy l000f                                                         ; bf01: a4 0f       ..
+    jsr sub_cbf28                                                     ; bf03: 20 28 bf     (.
+    clc                                                               ; bf06: 18          .
+    tya                                                               ; bf07: 98          .
+    adc l000c                                                         ; bf08: 65 0c       e.
+    sta l000a                                                         ; bf0a: 85 0a       ..
+    lda #0                                                            ; bf0c: a9 00       ..
+    adc l000d                                                         ; bf0e: 65 0d       e.
+    sta l000b                                                         ; bf10: 85 0b       ..
+    bcc cbed6                                                         ; bf12: 90 c2       ..
+.cbf14
+    sec                                                               ; bf14: 38          8
+    lda l004e                                                         ; bf15: a5 4e       .N
+    sbc l0012                                                         ; bf17: e5 12       ..
+    sta l004e                                                         ; bf19: 85 4e       .N
+    tax                                                               ; bf1b: aa          .
+    lda l004f                                                         ; bf1c: a5 4f       .O
+    sbc l0013                                                         ; bf1e: e5 13       ..
+    sta l004f                                                         ; bf20: 85 4f       .O
+    tay                                                               ; bf22: a8          .
+    jsr sub_cbf28                                                     ; bf23: 20 28 bf     (.
+    beq cbed6                                                         ; bf26: f0 ae       ..
+.sub_cbf28
+    lda l000a                                                         ; bf28: a5 0a       ..
+    sta l000c                                                         ; bf2a: 85 0c       ..
+    lda l000b                                                         ; bf2c: a5 0b       ..
+    sta l000d                                                         ; bf2e: 85 0d       ..
+    stx l0008                                                         ; bf30: 86 08       ..
+    sty l0009                                                         ; bf32: 84 09       ..
+    inc l0013                                                         ; bf34: e6 13       ..
+    ldy #0                                                            ; bf36: a0 00       ..
+    beq cbf4b                                                         ; bf38: f0 11       ..
+.cbf3a
+    lda (l000c),y                                                     ; bf3a: b1 0c       ..
+    tax                                                               ; bf3c: aa          .
+    lda (l0008),y                                                     ; bf3d: b1 08       ..
+    sta (l000c),y                                                     ; bf3f: 91 0c       ..
+    txa                                                               ; bf41: 8a          .
+    sta (l0008),y                                                     ; bf42: 91 08       ..
+    iny                                                               ; bf44: c8          .
+    bne cbf4b                                                         ; bf45: d0 04       ..
+    inc l000d                                                         ; bf47: e6 0d       ..
+    inc l0009                                                         ; bf49: e6 09       ..
+.cbf4b
+    cpy l0012                                                         ; bf4b: c4 12       ..
+    bne cbf3a                                                         ; bf4d: d0 eb       ..
+    dec l0013                                                         ; bf4f: c6 13       ..
+    bne cbf3a                                                         ; bf51: d0 e7       ..
+    rts                                                               ; bf53: 60          `
+
+    equb &7a, &12, &38, &a5, &0b, &88, &79, &0e, &9f, &f3, &7c, &2a   ; bf54: 7a 12 38... z.8
+    equb &ac, &3f, &b5, &86, &34,   1, &a2, &7a, &7f, &63, &8e, &37   ; bf60: ac 3f b5... .?.
+    equb &ec, &82, &3f, &ff, &ff, &ca, &7f, &ff, &ff, &ff, &ff, &85   ; bf6c: ec 82 3f... ..?
+    equb &a3, &59, &e8, &67, &80, &1c, &9d,   7, &36, &80, &57, &bb   ; bf78: a3 59 e8... .Y.
+    equb &78, &df, &80, &ca, &9a, &0e, &83, &84, &8c, &bb, &ca, &6e   ; bf84: 78 df 80... x..
+    equb &81, &95, &96,   6, &de, &81, &0a, &c7, &6c, &52, &7f, &7d   ; bf90: 81 95 96... ...
+    equb &ad, &90, &a1, &82, &fb                                      ; bf9c: ad 90 a1... ...
     equs "bW/"                                                        ; bfa1: 62 57 2f    bW/
     equb &80                                                          ; bfa4: 80          .
     equs "mc8,"                                                       ; bfa5: 6d 63 38... mc8
@@ -8740,6 +9796,7 @@ la951 = sub_ca94f+2
 ;     c83df
 ;     c8412
 ;     c8491
+;     c8497
 ;     c84a4
 ;     c84bb
 ;     c84c4
@@ -8758,6 +9815,8 @@ la951 = sub_ca94f+2
 ;     c8633
 ;     c8639
 ;     c8655
+;     c867a
+;     c8683
 ;     c8698
 ;     c869d
 ;     c86e6
@@ -8912,6 +9971,7 @@ la951 = sub_ca94f+2
 ;     c9955
 ;     c9961
 ;     c996b
+;     c996e
 ;     c9971
 ;     c9976
 ;     c9988
@@ -9075,11 +10135,11 @@ la951 = sub_ca94f+2
 ;     cae92
 ;     caf00
 ;     caf16
+;     caf36
 ;     caf39
 ;     caf48
 ;     caf7a
 ;     caf8d
-;     caf9c
 ;     cafbe
 ;     cafc9
 ;     caff6
@@ -9089,7 +10149,6 @@ la951 = sub_ca94f+2
 ;     cb03d
 ;     cb046
 ;     cb04b
-;     cb04e
 ;     cb053
 ;     cb05c
 ;     cb077
@@ -9097,12 +10156,17 @@ la951 = sub_ca94f+2
 ;     cb08f
 ;     cb096
 ;     cb09e
+;     cb0ab
+;     cb0c3
+;     cb0c9
 ;     cb0cb
 ;     cb171
 ;     cb1c6
 ;     cb1e2
 ;     cb1ef
 ;     cb210
+;     cb225
+;     cb229
 ;     cb241
 ;     cb247
 ;     cb2d0
@@ -9127,6 +10191,8 @@ la951 = sub_ca94f+2
 ;     cb441
 ;     cb449
 ;     cb452
+;     cb458
+;     cb493
 ;     cb4a8
 ;     cb4ea
 ;     cb4f2
@@ -9155,18 +10221,108 @@ la951 = sub_ca94f+2
 ;     cb680
 ;     cb68b
 ;     cb69c
-;     cb6a8
 ;     cb6b1
 ;     cb6cd
 ;     cb6dc
 ;     cb6f9
 ;     cb708
-;     cb741
+;     cb71f
 ;     cb752
 ;     cb766
+;     cb7cc
+;     cb828
+;     cb842
+;     cb855
+;     cb86c
+;     cb89f
+;     cb8a5
+;     cb8b7
+;     cb8bf
+;     cb8ce
+;     cb8d5
+;     cb908
+;     cb916
+;     cb928
+;     cb934
+;     cb942
+;     cb94f
+;     cb975
+;     cb978
+;     cb99c
+;     cb9a0
+;     cb9b1
+;     cb9b4
+;     cb9b7
+;     cb9d5
+;     cb9d9
+;     cb9e7
+;     cb9f0
+;     cb9f2
+;     cba13
+;     cba1c
+;     cba2c
+;     cba3b
+;     cba49
+;     cba53
+;     cba54
+;     cba7a
+;     cba7d
+;     cba95
+;     cbaa0
+;     cbaa3
+;     cbad5
+;     cbad6
+;     cbaf2
+;     cbb02
+;     cbb0a
+;     cbb0c
+;     cbb18
+;     cbb3c
+;     cbb62
+;     cbb6d
+;     cbb79
+;     cbb93
+;     cbba5
+;     cbbb7
+;     cbbb9
+;     cbbc3
+;     cbbd2
+;     cbbd4
+;     cbbd6
+;     cbbd9
+;     cbbec
+;     cbc12
+;     cbc16
+;     cbc35
+;     cbc3b
+;     cbc43
+;     cbc4f
+;     cbc52
+;     cbca7
+;     cbcab
+;     cbcf4
+;     cbd17
+;     cbd1d
+;     cbd41
+;     cbd54
+;     cbd5e
+;     cbd64
+;     cbda0
+;     cbdb4
 ;     cbe19
 ;     cbe33
 ;     cbe3b
+;     cbe46
+;     cbe72
+;     cbe79
+;     cbea2
+;     cbec2
+;     cbed2
+;     cbed6
+;     cbef7
+;     cbf14
+;     cbf3a
+;     cbf4b
 ;     l0000
 ;     l0001
 ;     l0002
@@ -9200,6 +10356,7 @@ la951 = sub_ca94f+2
 ;     l0020
 ;     l0021
 ;     l0022
+;     l0023
 ;     l0024
 ;     l0025
 ;     l0026
@@ -9222,6 +10379,8 @@ la951 = sub_ca94f+2
 ;     l0038
 ;     l0039
 ;     l003a
+;     l003b
+;     l003c
 ;     l003e
 ;     l003f
 ;     l0040
@@ -9238,7 +10397,16 @@ la951 = sub_ca94f+2
 ;     l004b
 ;     l004c
 ;     l004d
+;     l004e
+;     l004f
+;     l0050
+;     l0051
+;     l0052
 ;     l0053
+;     l0054
+;     l0055
+;     l0056
+;     l005e
 ;     l0067
 ;     l0069
 ;     l006a
@@ -9262,6 +10430,7 @@ la951 = sub_ca94f+2
 ;     l0418
 ;     l0419
 ;     l041a
+;     l041b
 ;     l0420
 ;     l0519
 ;     l051a
@@ -9284,9 +10453,13 @@ la951 = sub_ca94f+2
 ;     l0630
 ;     l0631
 ;     l0632
+;     l0634
 ;     l063a
+;     l063c
 ;     l0642
+;     l0644
 ;     l064a
+;     l064e
 ;     l0652
 ;     l0653
 ;     l0654
@@ -9347,16 +10520,17 @@ la951 = sub_ca94f+2
 ;     la920
 ;     la951
 ;     laf70
-;     lb072
 ;     lb193
 ;     lb19a
 ;     lb26e
 ;     lb343
 ;     lb348
 ;     lb6a0
+;     lba59
 ;     lc001
 ;     lc002
 ;     lc003
+;     lea8f
 ;     loop_c8028
 ;     loop_c8047
 ;     loop_c80d6
@@ -9366,7 +10540,6 @@ la951 = sub_ca94f+2
 ;     loop_c83cc
 ;     loop_c849a
 ;     loop_c85f5
-;     loop_c8683
 ;     loop_c87be
 ;     loop_c88c8
 ;     loop_c88d3
@@ -9452,6 +10625,7 @@ la951 = sub_ca94f+2
 ;     loop_caeb7
 ;     loop_caec7
 ;     loop_cb09a
+;     loop_cb0ba
 ;     loop_cb17f
 ;     loop_cb1bb
 ;     loop_cb200
@@ -9465,9 +10639,22 @@ la951 = sub_ca94f+2
 ;     loop_cb574
 ;     loop_cb5a8
 ;     loop_cb68e
+;     loop_cb81b
+;     loop_cb837
 ;     loop_cb846
-;     loop_cbdb4
+;     loop_cb887
+;     loop_cb8b1
+;     loop_cb8ef
+;     loop_cb960
+;     loop_cba4b
+;     loop_cbb54
+;     loop_cbb73
+;     loop_cbbc9
+;     loop_cbbda
+;     loop_cbce1
+;     loop_cbd45
 ;     sub_c8104
+;     sub_c8432
 ;     sub_c84b3
 ;     sub_c8520
 ;     sub_c8571
@@ -9475,6 +10662,7 @@ la951 = sub_ca94f+2
 ;     sub_c859b
 ;     sub_c85ca
 ;     sub_c85f1
+;     sub_c865a
 ;     sub_c87e5
 ;     sub_c87e7
 ;     sub_c87eb
@@ -9536,7 +10724,6 @@ la951 = sub_ca94f+2
 ;     sub_c9918
 ;     sub_c9940
 ;     sub_c9958
-;     sub_c996e
 ;     sub_c998c
 ;     sub_c999a
 ;     sub_c99ac
@@ -9641,34 +10828,50 @@ la951 = sub_ca94f+2
 ;     sub_cb1e5
 ;     sub_cb1eb
 ;     sub_cb207
-;     sub_cb229
+;     sub_cb27d
+;     sub_cb290
+;     sub_cb296
 ;     sub_cb29d
 ;     sub_cb2f5
+;     sub_cb2f7
 ;     sub_cb2fb
 ;     sub_cb2fd
 ;     sub_cb34d
 ;     sub_cb359
+;     sub_cb37c
 ;     sub_cb39b
 ;     sub_cb3b1
 ;     sub_cb3fd
 ;     sub_cb42b
+;     sub_cb42f
 ;     sub_cb455
+;     sub_cb487
+;     sub_cb48a
 ;     sub_cb49f
 ;     sub_cb4a9
 ;     sub_cb4c2
 ;     sub_cb586
 ;     sub_cb61e
 ;     sub_cb665
-;     sub_cb6d2
-;     sub_cb6e5
-;     sub_cb6fe
 ;     sub_cb711
 ;     sub_cb727
 ;     sub_cb77e
-;     sub_cb7cc
-;     sub_cb842
+;     sub_cb810
+;     sub_cb902
+;     sub_cb90b
+;     sub_cb917
+;     sub_cb9f3
+;     sub_cb9fd
+;     sub_cba65
+;     sub_cbb56
+;     sub_cbbdd
+;     sub_cbc7b
 ;     sub_cbdbf
+;     sub_cbdc4
+;     sub_cbddb
 ;     sub_cbe06
+;     sub_cbe3c
+;     sub_cbf28
     assert &80+' ' == &a0
     assert &80+'*' == &aa
     assert &80+'d' == &e4
@@ -9680,13 +10883,19 @@ la951 = sub_ca94f+2
     assert &80+'y' == &f9
     assert 128 + (' ') == &a0
     assert 128 + (')') == &a9
+    assert 128 + (',') == &ac
+    assert 128 + (':') == &ba
     assert 128 + (']') == &dd
+    assert 128 + ('d') == &e4
     assert 128 + ('e') == &e5
+    assert 128 + ('l') == &ec
     assert 128 + ('n') == &ee
     assert 128 + ('o') == &ef
+    assert 128 + ('r') == &f2
     assert 128 + ('t') == &f4
     assert 128 + 13 == &8d
     assert 128 + 14 == &8e
+    assert 128 + 16 == &90
     assert 128 + 17 == &91
     assert <(l003e) == &3e
     assert <(l051a) == &1a
@@ -9959,6 +11168,42 @@ la951 = sub_ca94f+2
     assert <command_save_handler == &1a
     assert <command_table == &40
     assert <command_trace_handler == &ff
+    assert <something_00_handler == &58
+    assert <something_01_handler == &41
+    assert <something_02_handler == &96
+    assert <something_03_handler == &a4
+    assert <something_04_handler == &82
+    assert <something_05_handler == &20
+    assert <something_06_handler == &86
+    assert <something_07_handler == &7e
+    assert <something_08_handler == &da
+    assert <something_09_handler == &3b
+    assert <something_0a_handler == &a2
+    assert <something_0b_handler == &69
+    assert <something_0c_handler == &a8
+    assert <something_0d_handler == &d2
+    assert <something_0e_handler == &e5
+    assert <something_0f_handler == &b9
+    assert <something_10_handler == &2e
+    assert <something_11_handler == &16
+    assert <something_12_handler == &e7
+    assert <something_13_handler == &9c
+    assert <something_14_handler == &69
+    assert <something_15_handler == &9c
+    assert <something_16_handler == &ff
+    assert <something_17_handler == &a5
+    assert <something_18_handler == &cb
+    assert <something_19_handler == &35
+    assert <something_1a_handler == &9c
+    assert <something_1b_handler == &1e
+    assert <something_1c_handler == &fe
+    assert <something_1d_handler == &04
+    assert <something_1e_handler == &53
+    assert <something_1f_handler == &fb
+    assert <something_20_handler == &fe
+    assert <something_21_handler == &04
+    assert <something_22_handler == &18
+    assert <something_23_handler == &0d
     assert >(l003e) == &00
     assert >(l051a) == &05
     assert >(l8797) == &87
@@ -10230,6 +11475,42 @@ la951 = sub_ca94f+2
     assert >command_save_handler == &84
     assert >command_table == &84
     assert >command_trace_handler == &84
+    assert >something_00_handler == &b8
+    assert >something_01_handler == &b7
+    assert >something_02_handler == &b7
+    assert >something_03_handler == &b7
+    assert >something_04_handler == &bc
+    assert >something_05_handler == &bd
+    assert >something_06_handler == &bd
+    assert >something_07_handler == &be
+    assert >something_08_handler == &b8
+    assert >something_09_handler == &b7
+    assert >something_0a_handler == &b0
+    assert >something_0b_handler == &b0
+    assert >something_0c_handler == &b6
+    assert >something_0d_handler == &b6
+    assert >something_0e_handler == &b6
+    assert >something_0f_handler == &b6
+    assert >something_10_handler == &b7
+    assert >something_11_handler == &b2
+    assert >something_12_handler == &b7
+    assert >something_13_handler == &af
+    assert >something_14_handler == &b7
+    assert >something_15_handler == &af
+    assert >something_16_handler == &bd
+    assert >something_17_handler == &be
+    assert >something_18_handler == &bd
+    assert >something_19_handler == &b7
+    assert >something_1a_handler == &af
+    assert >something_1b_handler == &b2
+    assert >something_1c_handler == &b6
+    assert >something_1d_handler == &b7
+    assert >something_1e_handler == &b4
+    assert >something_1f_handler == &b3
+    assert >something_20_handler == &b6
+    assert >something_21_handler == &b7
+    assert >something_22_handler == &b7
+    assert >something_23_handler == &b7
     assert copyright - rom_header == &14
     assert osbyte_163_192_x_minus_1_table - 1 == &8094
     assert osbyte_acknowledge_escape == &7e
@@ -10254,5 +11535,7 @@ la951 = sub_ca94f+2
     assert osword_read_line == &00
     assert our_osbyte_a == &a3
     assert our_osbyte_x == &c0
+    assert something_jump_table_high_minus_128-128 == &b072
+    assert something_jump_table_low_minus_128-128 == &b04e
 
 save pydis_start, pydis_end

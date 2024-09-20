@@ -187,6 +187,19 @@ def fpnti_hook(target, addr):
 hook_subroutine(0xb284, "fancy_print_nop_terminated_inline", fpnti_hook)
 hook_subroutine(0xb270, "extra_fancy_print_nop_terminated_inlne", fpnti_hook)
 
+# TODO: I suspect my "minus" terminology is screwy here, at least in part
+label(0xb04e+128, "something_jump_table_low_minus_128")
+label(0xb072+128, "something_jump_table_high_minus_128")
+expr(0xafca, "something_jump_table_low_minus_128-128")
+expr(0xafcf, "something_jump_table_high_minus_128-128")
+for i in range(36):
+    target = get_u8_binary(0xb04e+128+i) + (get_u8_binary(0xb072+128+i) << 8)
+    target_label = entry(target, "something_%02x_handler" % i)
+    byte(0xb04e+128+i)
+    expr(0xb04e+128+i, make_lo(target_label))
+    byte(0xb072+128+i)
+    expr(0xb072+128+i, make_hi(target_label))
+
 entry(0xb30c, "print_yx_as_decimal")
 entry(0xb374, "something_to_do_with_finding_cr")
 entry(0xb45c, "bulk_copy_from_l0000_to_l0002")
