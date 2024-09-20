@@ -331,6 +331,12 @@ expr(0x9419, make_subtract("opcode_91_92_table", 0x91))
 label(0xa6a5+0x6c, "opcode_6c_to_71_table")
 expr(0x8ed2, make_subtract("opcode_6c_to_71_table", 0x6c))
 
+label(0xa6a9+0x68, "opcode_68_69_table")
+expr(0x8e6d, make_subtract("opcode_68_69_table", 0x68))
+
+label(0xa6af+0x62, "opcode_62_to_67_table")
+expr(0xa962, make_subtract("opcode_62_to_67_table", 0x62))
+
 nonentry(0xa882)
 
 # TODO: The "stray" labels inside the high opcode handler table probably indicate subtables offset by opcodes
