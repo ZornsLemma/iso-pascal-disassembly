@@ -2513,7 +2513,7 @@ oscli                           = &fff7
 .bytecode_opcode_5f_handler
 .bytecode_opcode_60_handler
 .bytecode_opcode_61_handler
-    lda la6b5,x                                                       ; 8ea0: bd b5 a6    ...
+    lda opcode_5c_to_61_table - 92,x                                  ; 8ea0: bd b5 a6    ...
     sta l0663                                                         ; 8ea3: 8d 63 06    .c.
     jsr sub_c9a68                                                     ; 8ea6: 20 68 9a     h.
     jsr c9a8a                                                         ; 8ea9: 20 8a 9a     ..
@@ -6526,7 +6526,6 @@ oscli                           = &fff7
     equb >bytecode_opcode_a6_handler                                  ; a6b2: 90          .
     equb >bytecode_opcode_a7_handler                                  ; a6b3: 90          .
     equb >bytecode_opcode_a8_handler                                  ; a6b4: 9d          .
-.la6b5
     equb >bytecode_opcode_a9_handler                                  ; a6b5: 8b          .
     equb >bytecode_opcode_aa_handler                                  ; a6b6: 90          .
 .la6b7
@@ -6629,6 +6628,7 @@ oscli                           = &fff7
 .opcode_6c_to_71_table
 .opcode_68_69_table
 .opcode_62_to_67_table
+.opcode_5c_to_61_table
     equb 2, 5                                                         ; a711: 02 05       ..
 .la713
     equb 6, 3, 4, 1                                                   ; a713: 06 03 04... ...
@@ -11113,7 +11113,6 @@ oscli                           = &fff7
 ;     l803c
 ;     l9998
 ;     l9999
-;     la6b5
 ;     la6b7
 ;     la6bd
 ;     la6f4
@@ -12209,6 +12208,7 @@ oscli                           = &fff7
     assert copyright - rom_header == &14
     assert fx163_192_2 == &a746
     assert opcode_26_27_table - 38 == &a70e
+    assert opcode_5c_to_61_table - 92 == &a6b5
     assert opcode_62_to_67_table - 98 == &a6af
     assert opcode_68_69_table - 104 == &a6a9
     assert opcode_6c_to_71_table - 108 == &a6a5
