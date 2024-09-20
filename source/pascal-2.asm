@@ -776,7 +776,7 @@ oscli                           = &fff7
 .c83b9
     brk                                                               ; 83b9: 00          .
 
-    equb 1                                                            ; 83ba: 01          .              ; OS error code
+    equb 1                                                            ; 83ba: 01          .              ; error code
     equb 128 + 2                                                      ; 83bb: 82          .              ; "Bad " (token 2)
     equs "command"                                                    ; 83bc: 63 6f 6d... com
     equb 0                                                            ; 83c3: 00          .
@@ -824,7 +824,8 @@ oscli                           = &fff7
 .c8412
     brk                                                               ; 8412: 00          .
 
-    equb   3, &80                                                     ; 8413: 03 80       ..
+    equb 3                                                            ; 8413: 03          .              ; error code
+    equb 128 + 0                                                      ; 8414: 80          .              ; "No " (token 0)
     equs "code"                                                       ; 8415: 63 6f 64... cod
     equb 0                                                            ; 8419: 00          .
 
@@ -1005,7 +1006,8 @@ oscli                           = &fff7
 .c8569
     brk                                                               ; 8569: 00          .
 
-    equb   2, &82                                                     ; 856a: 02 82       ..
+    equb 2                                                            ; 856a: 02          .              ; error code
+    equb 128 + 2                                                      ; 856b: 82          .              ; "Bad " (token 2)
     equs "mode"                                                       ; 856c: 6d 6f 64... mod
     equb 0                                                            ; 8570: 00          .
 
@@ -1160,7 +1162,10 @@ oscli                           = &fff7
 .c8683
     brk                                                               ; 8683: 00          .
 
-    equb   4, &80, &8a,   0                                           ; 8684: 04 80 8a... ...
+    equb 4                                                            ; 8684: 04          .              ; error code
+    equb 128 + 0                                                      ; 8685: 80          .              ; "No " (token 0)
+    equb 128 + 10                                                     ; 8686: 8a          .              ; "text" (token 10)
+    equb 0                                                            ; 8687: 00          .
 
 .command_compile_handler
     ldx #0                                                            ; 8688: a2 00       ..
@@ -1405,7 +1410,7 @@ oscli                           = &fff7
 .c8830
     brk                                                               ; 8830: 00          .
 
-    equb &0c                                                          ; 8831: 0c          .
+    equb &0c                                                          ; 8831: 0c          .              ; error code
     equs "Pointer"                                                    ; 8832: 50 6f 69... Poi
     equb 0                                                            ; 8839: 00          .
 
@@ -1466,7 +1471,10 @@ oscli                           = &fff7
     bpl c8877                                                         ; 8880: 10 f5       ..
     brk                                                               ; 8882: 00          .
 
-    equb &12, &84, &83,   0                                           ; 8883: 12 84 83... ...
+    equb &12                                                          ; 8883: 12          .              ; error code
+    equb 128 + 4                                                      ; 8884: 84          .              ; "Undefined " (token 4)
+    equb 128 + 3                                                      ; 8885: 83          .              ; "variable" (token 3)
+    equb 0                                                            ; 8886: 00          .
 
 .c8887
     ldy l004c                                                         ; 8887: a4 4c       .L
@@ -1829,9 +1837,12 @@ oscli                           = &fff7
 .c8a96
     brk                                                               ; 8a96: 00          .
 
-    equb &14, &84                                                     ; 8a97: 14 84       ..
+    equb &14                                                          ; 8a97: 14          .              ; error code
+    equb 128 + 4                                                      ; 8a98: 84          .              ; "Undefined " (token 4)
     equs "buffe"                                                      ; 8a99: 62 75 66... buf
-    equb &f2, &83,   0                                                ; 8a9e: f2 83 00    ...
+    equb 128 + ('r')                                                  ; 8a9e: f2          .              ; "r "
+    equb 128 + 3                                                      ; 8a9f: 83          .              ; "variable" (token 3)
+    equb 0                                                            ; 8aa0: 00          .
 
 .bytecode_opcode_f0_handler
     jsr sub_c9ae2                                                     ; 8aa1: 20 e2 9a     ..
@@ -2023,9 +2034,11 @@ oscli                           = &fff7
 .c8bc5
     brk                                                               ; 8bc5: 00          .
 
-    equb &15                                                          ; 8bc6: 15          .
+    equb &15                                                          ; 8bc6: 15          .              ; error code
     equs "Divisio"                                                    ; 8bc7: 44 69 76... Div
-    equb &ee, &62, &f9                                                ; 8bce: ee 62 f9    .b.
+    equb 128 + ('n')                                                  ; 8bce: ee          .              ; "n "
+    equs "b"                                                          ; 8bcf: 62          b
+    equb 128 + ('y')                                                  ; 8bd0: f9          .              ; "y "
     equs "zero"                                                       ; 8bd1: 7a 65 72... zer
     equb 0                                                            ; 8bd5: 00          .
 
@@ -2110,7 +2123,8 @@ oscli                           = &fff7
 .loop_c8c56
     brk                                                               ; 8c56: 00          .
 
-    equb &17, &82                                                     ; 8c57: 17 82       ..
+    equb &17                                                          ; 8c57: 17          .              ; error code
+    equb 128 + 2                                                      ; 8c58: 82          .              ; "Bad " (token 2)
     equs "MOD"                                                        ; 8c59: 4d 4f 44    MOD
     equb 0                                                            ; 8c5c: 00          .
 
@@ -2172,9 +2186,11 @@ oscli                           = &fff7
 .c8cbb
     brk                                                               ; 8cbb: 00          .
 
-    equb &0f                                                          ; 8cbc: 0f          .
+    equb &0f                                                          ; 8cbc: 0f          .              ; error code
     equs "Intege"                                                     ; 8cbd: 49 6e 74... Int
-    equb &f2, &85,   0                                                ; 8cc3: f2 85 00    ...
+    equb 128 + ('r')                                                  ; 8cc3: f2          .              ; "r "
+    equb 128 + 5                                                      ; 8cc4: 85          .              ; "overflow" (token 5)
+    equb 0                                                            ; 8cc5: 00          .
 
 .c8cc6
     ldx la727,y                                                       ; 8cc6: be 27 a7    .'.
@@ -2354,9 +2370,10 @@ oscli                           = &fff7
 .c8dd8
     brk                                                               ; 8dd8: 00          .
 
-    equb &0d                                                          ; 8dd9: 0d          .
+    equb &0d                                                          ; 8dd9: 0d          .              ; error code
     equs "Sub"                                                        ; 8dda: 53 75 62    Sub
-    equb &87,   0                                                     ; 8ddd: 87 00       ..
+    equb 128 + 7                                                      ; 8ddd: 87          .              ; "range" (token 7)
+    equb 0                                                            ; 8dde: 00          .
 
 .bytecode_opcode_c0_handler
     tya                                                               ; 8ddf: 98          .
@@ -2380,7 +2397,11 @@ oscli                           = &fff7
 .c8dfa
     brk                                                               ; 8dfa: 00          .
 
-    equb &16, &43, &48, &d2, &87,   0                                 ; 8dfb: 16 43 48... .CH
+    equb &16                                                          ; 8dfb: 16          .              ; error code
+    equs "CH"                                                         ; 8dfc: 43 48       CH
+    equb 128 + ('R')                                                  ; 8dfe: d2          .              ; "R "
+    equb 128 + 7                                                      ; 8dff: 87          .              ; "range" (token 7)
+    equb 0                                                            ; 8e00: 00          .
 
 .bytecode_opcode_be_handler
     jsr sub_c9a19                                                     ; 8e01: 20 19 9a     ..
@@ -2582,7 +2603,9 @@ oscli                           = &fff7
 .c8f2c
     brk                                                               ; 8f2c: 00          .
 
-    equb &0e, &53, &65, &f4                                           ; 8f2d: 0e 53 65... .Se
+    equb &0e                                                          ; 8f2d: 0e          .              ; error code
+    equs "Se"                                                         ; 8f2e: 53 65       Se
+    equb 128 + ('t')                                                  ; 8f30: f4          .              ; "t "
     equs "value"                                                      ; 8f31: 76 61 6c... val
     equb 0                                                            ; 8f36: 00          .
 
@@ -2703,9 +2726,13 @@ oscli                           = &fff7
 .c8fe5
     brk                                                               ; 8fe5: 00          .
 
-    equb &1c                                                          ; 8fe6: 1c          .
+    equb &1c                                                          ; 8fe6: 1c          .              ; error code
     equs "Fil"                                                        ; 8fe7: 46 69 6c    Fil
-    equb &e5, &6e, &6f, &f4, &8f,   0                                 ; 8fea: e5 6e 6f... .no
+    equb 128 + ('e')                                                  ; 8fea: e5          .              ; "e "
+    equs "no"                                                         ; 8feb: 6e 6f       no
+    equb 128 + ('t')                                                  ; 8fed: f4          .              ; "t "
+    equb 128 + 15                                                     ; 8fee: 8f          .              ; "found" (token 15)
+    equb 0                                                            ; 8fef: 00          .
 
 .sub_c8ff0
     jsr sub_c9052                                                     ; 8ff0: 20 52 90     R.
@@ -2758,9 +2785,13 @@ oscli                           = &fff7
 .c9047
     brk                                                               ; 9047: 00          .
 
-    equb &1d, &54, &6f, &ef                                           ; 9048: 1d 54 6f... .To
+    equb &1d                                                          ; 9048: 1d          .              ; error code
+    equs "To"                                                         ; 9049: 54 6f       To
+    equb 128 + ('o')                                                  ; 904b: ef          .              ; "o "
     equs "man"                                                        ; 904c: 6d 61 6e    man
-    equb &f9, &88,   0                                                ; 904f: f9 88 00    ...
+    equb 128 + ('y')                                                  ; 904f: f9          .              ; "y "
+    equb 128 + 8                                                      ; 9050: 88          .              ; "open" (token 8)
+    equb 0                                                            ; 9051: 00          .
 
 .sub_c9052
     sty l0047                                                         ; 9052: 84 47       .G
@@ -2929,7 +2960,10 @@ oscli                           = &fff7
 .c916b
     brk                                                               ; 916b: 00          .
 
-    equb &1e, &8b, &8a,   0                                           ; 916c: 1e 8b 8a... ...
+    equb &1e                                                          ; 916c: 1e          .              ; error code
+    equb 128 + 11                                                     ; 916d: 8b          .              ; "Not " (token 11)
+    equb 128 + 10                                                     ; 916e: 8a          .              ; "text" (token 10)
+    equb 0                                                            ; 916f: 00          .
 
 .sub_c9170
     ldx #&2f ; '/'                                                    ; 9170: a2 2f       ./
@@ -2990,14 +3024,18 @@ oscli                           = &fff7
 .c91c0
     brk                                                               ; 91c0: 00          .
 
-    equs "!EOF"                                                       ; 91c1: 21 45 4f... !EO
+    equb &21                                                          ; 91c1: 21          !              ; error code
+    equs "EOF"                                                        ; 91c2: 45 4f 46    EOF
     equb 0                                                            ; 91c5: 00          .
 
 .c91c6
     brk                                                               ; 91c6: 00          .
 
-    equs " Writ"                                                      ; 91c7: 20 57 72...  Wr
-    equb &e5, &81,   0                                                ; 91cc: e5 81 00    ...
+    equb &20                                                          ; 91c7: 20                         ; error code
+    equs "Writ"                                                       ; 91c8: 57 72 69... Wri
+    equb 128 + ('e')                                                  ; 91cc: e5          .              ; "e "
+    equb 128 + 1                                                      ; 91cd: 81          .              ; "only" (token 1)
+    equb 0                                                            ; 91ce: 00          .
 
 .sub_c91cf
     jsr sub_c919a                                                     ; 91cf: 20 9a 91     ..
@@ -3024,14 +3062,19 @@ oscli                           = &fff7
 .c91f0
     brk                                                               ; 91f0: 00          .
 
-    equb &1f                                                          ; 91f1: 1f          .
+    equb &1f                                                          ; 91f1: 1f          .              ; error code
     equs "Rea"                                                        ; 91f2: 52 65 61    Rea
-    equb &e4, &81,   0                                                ; 91f5: e4 81 00    ...
+    equb 128 + ('d')                                                  ; 91f5: e4          .              ; "d "
+    equb 128 + 1                                                      ; 91f6: 81          .              ; "only" (token 1)
+    equb 0                                                            ; 91f7: 00          .
 
 .c91f8
     brk                                                               ; 91f8: 00          .
 
-    equb &13, &84, &86,   0                                           ; 91f9: 13 84 86... ...
+    equb &13                                                          ; 91f9: 13          .              ; error code
+    equb 128 + 4                                                      ; 91fa: 84          .              ; "Undefined " (token 4)
+    equb 128 + 6                                                      ; 91fb: 86          .              ; "file" (token 6)
+    equb 0                                                            ; 91fc: 00          .
 
 .bytecode_opcode_9b_handler
     jsr sub_c9213                                                     ; 91fd: 20 13 92     ..
@@ -3056,7 +3099,8 @@ oscli                           = &fff7
 .c921b
     brk                                                               ; 921b: 00          .
 
-    equb &22, &89                                                     ; 921c: 22 89       ".
+    equb &22                                                          ; 921c: 22          "              ; error code
+    equb 128 + 9                                                      ; 921d: 89          .              ; "Field " (token 9)
     equs "width"                                                      ; 921e: 77 69 64... wid
     equb 0                                                            ; 9223: 00          .
 
@@ -3981,7 +4025,8 @@ oscli                           = &fff7
 .c9816
     brk                                                               ; 9816: 00          .
 
-    equb &0a, &80                                                     ; 9817: 0a 80       ..
+    equb &0a                                                          ; 9817: 0a          .              ; error code
+    equb 128 + 0                                                      ; 9818: 80          .              ; "No " (token 0)
     equs "room"                                                       ; 9819: 72 6f 6f... roo
     equb 0                                                            ; 981d: 00          .
 
@@ -4204,7 +4249,9 @@ oscli                           = &fff7
 .c9988
     brk                                                               ; 9988: 00          .
 
-    equb &11, &8e,   0                                                ; 9989: 11 8e 00    ...
+    equb &11                                                          ; 9989: 11          .              ; error code
+    equb 128 + 14                                                     ; 998a: 8e          .              ; "Escape" (token 14)
+    equb 0                                                            ; 998b: 00          .
 
 .sub_c998c
     lda #osword_read_line                                             ; 998c: a9 00       ..
@@ -4706,9 +4753,9 @@ oscli                           = &fff7
 .c9c48
     brk                                                               ; 9c48: 00          .
 
-    equb &0b                                                          ; 9c49: 0b          .
+    equb &0b                                                          ; 9c49: 0b          .              ; error code
     equs "Cas"                                                        ; 9c4a: 43 61 73    Cas
-    equb &e5                                                          ; 9c4d: e5          .
+    equb 128 + ('e')                                                  ; 9c4d: e5          .              ; "e "
     equs "index"                                                      ; 9c4e: 69 6e 64... ind
     equb 0                                                            ; 9c53: 00          .
 
@@ -5019,14 +5066,19 @@ oscli                           = &fff7
 .c9e50
     brk                                                               ; 9e50: 00          .
 
-    equb &10                                                          ; 9e51: 10          .
+    equb &10                                                          ; 9e51: 10          .              ; error code
     equs "Rea"                                                        ; 9e52: 52 65 61    Rea
-    equb &ec, &85,   0                                                ; 9e55: ec 85 00    ...
+    equb 128 + ('l')                                                  ; 9e55: ec          .              ; "l "
+    equb 128 + 5                                                      ; 9e56: 85          .              ; "overflow" (token 5)
+    equb 0                                                            ; 9e57: 00          .
 
 .c9e58
     brk                                                               ; 9e58: 00          .
 
-    equb &1b, &82, &8c,   0                                           ; 9e59: 1b 82 8c... ...
+    equb &1b                                                          ; 9e59: 1b          .              ; error code
+    equb 128 + 2                                                      ; 9e5a: 82          .              ; "Bad " (token 2)
+    equb 128 + 12                                                     ; 9e5b: 8c          .              ; "number" (token 12)
+    equb 0                                                            ; 9e5c: 00          .
 
 .c9e5d
     lda #0                                                            ; 9e5d: a9 00       ..
@@ -6790,7 +6842,7 @@ oscli                           = &fff7
     jsr sub_c9a1d                                                     ; a860: 20 1d 9a     ..
     ldx #3                                                            ; a863: a2 03       ..
 .loop_ca865
-    lda ca882,x                                                       ; a865: bd 82 a8    ...
+    lda la882,x                                                       ; a865: bd 82 a8    ...
     tay                                                               ; a868: a8          .
     lda (l0000),y                                                     ; a869: b1 00       ..
     sta l061a,x                                                       ; a86b: 9d 1a 06    ...
@@ -6804,10 +6856,8 @@ oscli                           = &fff7
     bne ca89a                                                         ; a87d: d0 1b       ..
     tay                                                               ; a87f: a8          .
     bne ca89a                                                         ; a880: d0 18       ..
-.ca882
-    brk                                                               ; a882: 00          .
-
-    equb 1, 4, 5                                                      ; a883: 01 04 05    ...
+.la882
+    equb 0, 1, 4, 5                                                   ; a882: 00 01 04... ...
 
 .bytecode_opcode_eb_handler
     jsr sub_c8b88                                                     ; a886: 20 88 8b     ..
@@ -7465,20 +7515,25 @@ oscli                           = &fff7
 .cac98
     brk                                                               ; ac98: 00          .
 
-    equb &18, &2d, &76, &e5                                           ; ac99: 18 2d 76... .-v
+    equb &18                                                          ; ac99: 18          .              ; error code
+    equs "-v"                                                         ; ac9a: 2d 76       -v
+    equb 128 + ('e')                                                  ; ac9c: e5          .              ; "e "
     equs "SQRT"                                                       ; ac9d: 53 51 52... SQR
 
 .caca1
     brk                                                               ; aca1: 00          .
 
-    equb &19, &4c, &ce, &87                                           ; aca2: 19 4c ce... .L.
+    equb &19                                                          ; aca2: 19          .              ; error code
+    equs "L"                                                          ; aca3: 4c          L
+    equb 128 + ('N')                                                  ; aca4: ce          .              ; "N "
+    equb 128 + 7                                                      ; aca5: 87          .              ; "range" (token 7)
 
 .caca6
     brk                                                               ; aca6: 00          .
 
-    equb &1a                                                          ; aca7: 1a          .
+    equb &1a                                                          ; aca7: 1a          .              ; error code
     equs "Accurac"                                                    ; aca8: 41 63 63... Acc
-    equb &f9                                                          ; acaf: f9          .
+    equb 128 + ('y')                                                  ; acaf: f9          .              ; "y "
     equs "lost"                                                       ; acb0: 6c 6f 73... los
     equb 0                                                            ; acb4: 00          .
 
@@ -9324,7 +9379,10 @@ oscli                           = &fff7
 .cb8d5
     brk                                                               ; b8d5: 00          .
 
-    equb   5, &8b, &8f,   0                                           ; b8d6: 05 8b 8f... ...
+    equb 5                                                            ; b8d6: 05          .              ; error code
+    equb 128 + 11                                                     ; b8d7: 8b          .              ; "Not " (token 11)
+    equb 128 + 15                                                     ; b8d8: 8f          .              ; "found" (token 15)
+    equb 0                                                            ; b8d9: 00          .
 
 .something_08_handler
     jsr extra_fancy_print_nop_terminated_inlne                        ; b8da: 20 70 b2     p.
@@ -9464,12 +9522,14 @@ oscli                           = &fff7
 .cb9d5
     brk                                                               ; b9d5: 00          .
 
-    equb   8, &89, &8c                                                ; b9d6: 08 89 8c    ...
+    equb 8                                                            ; b9d6: 08          .              ; error code
+    equb 128 + 9                                                      ; b9d7: 89          .              ; "Field " (token 9)
+    equb 128 + 12                                                     ; b9d8: 8c          .              ; "number" (token 12)
 
 .cb9d9
     brk                                                               ; b9d9: 00          .
 
-    equb 7                                                            ; b9da: 07          .
+    equb 7                                                            ; b9da: 07          .              ; error code
     equs "Too complex"                                                ; b9db: 54 6f 6f... Too
     equb 0                                                            ; b9e6: 00          .
 
@@ -9525,9 +9585,9 @@ oscli                           = &fff7
 .cba3b
     brk                                                               ; ba3b: 00          .
 
-    equb 6                                                            ; ba3c: 06          .
+    equb 6                                                            ; ba3c: 06          .              ; error code
     equs "Synta"                                                      ; ba3d: 53 79 6e... Syn
-    equb &f8                                                          ; ba42: f8          .
+    equb 128 + ('x')                                                  ; ba42: f8          .              ; "x "
     equs "error"                                                      ; ba43: 65 72 72... err
     equb 0                                                            ; ba48: 00          .
 
@@ -10031,7 +10091,8 @@ oscli                           = &fff7
 .cbdb4
     brk                                                               ; bdb4: 00          .
 
-    equb   9, &82                                                     ; bdb5: 09 82       ..
+    equb 9                                                            ; bdb5: 09          .              ; error code
+    equb 128 + 2                                                      ; bdb6: 82          .              ; "Bad " (token 2)
     equs "marking"                                                    ; bdb7: 6d 61 72... mar
     equb 0                                                            ; bdbe: 00          .
 
@@ -10639,7 +10700,6 @@ oscli                           = &fff7
 ;     ca820
 ;     ca828
 ;     ca85d
-;     ca882
 ;     ca89a
 ;     ca8d1
 ;     ca8e6
@@ -11078,6 +11138,7 @@ oscli                           = &fff7
 ;     la734
 ;     la73e
 ;     la786
+;     la882
 ;     lab54
 ;     laf70
 ;     lb26e
@@ -11460,6 +11521,8 @@ oscli                           = &fff7
     assert 128 + (')') == &a9
     assert 128 + (',') == &ac
     assert 128 + (':') == &ba
+    assert 128 + ('N') == &ce
+    assert 128 + ('R') == &d2
     assert 128 + (']') == &dd
     assert 128 + ('d') == &e4
     assert 128 + ('e') == &e5
@@ -11468,11 +11531,26 @@ oscli                           = &fff7
     assert 128 + ('o') == &ef
     assert 128 + ('r') == &f2
     assert 128 + ('t') == &f4
+    assert 128 + ('x') == &f8
+    assert 128 + ('y') == &f9
+    assert 128 + 0 == &80
+    assert 128 + 1 == &81
+    assert 128 + 10 == &8a
+    assert 128 + 11 == &8b
+    assert 128 + 12 == &8c
     assert 128 + 13 == &8d
     assert 128 + 14 == &8e
+    assert 128 + 15 == &8f
     assert 128 + 16 == &90
     assert 128 + 17 == &91
     assert 128 + 2 == &82
+    assert 128 + 3 == &83
+    assert 128 + 4 == &84
+    assert 128 + 5 == &85
+    assert 128 + 6 == &86
+    assert 128 + 7 == &87
+    assert 128 + 8 == &88
+    assert 128 + 9 == &89
     assert <(fx163_192_0) == &97
     assert <(input_buffer) == &1a
     assert <(l003e) == &3e
