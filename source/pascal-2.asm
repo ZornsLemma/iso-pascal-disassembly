@@ -1428,7 +1428,7 @@ oscli                           = &fff7
 .bytecode_opcode_1a_handler
 .bytecode_opcode_1b_handler
 .bytecode_opcode_1c_handler
-    lda opcode_18_to_1c_table - 24,x                                  ; 8844: bd 1c a7    ...
+    lda another_something_table - 24,x                                ; 8844: bd 1c a7    ...
     sta l004c                                                         ; 8847: 85 4c       .L
     jsr sub_c9ae2                                                     ; 8849: 20 e2 9a     ..
     ldx #1                                                            ; 884c: a2 01       ..
@@ -1547,14 +1547,14 @@ oscli                           = &fff7
     bne c8916                                                         ; 88ed: d0 27       .'
 .bytecode_opcode_1d_handler
 .bytecode_opcode_1e_handler
-    lda opcode_1d_1e_table - 29,x                                     ; 88ef: bd 17 a7    ...
+    lda another_something_table - 29,x                                ; 88ef: bd 17 a7    ...
     sta l004c                                                         ; 88f2: 85 4c       .L
     jsr sub_c9ae2                                                     ; 88f4: 20 e2 9a     ..
     ldx #1                                                            ; 88f7: a2 01       ..
     bne c8916                                                         ; 88f9: d0 1b       ..
 .bytecode_opcode_05_handler
 .bytecode_opcode_06_handler
-    lda opcode_05_06_table - 5,x                                      ; 88fb: bd 2f a7    ./.
+    lda another_something_table - 5,x                                 ; 88fb: bd 2f a7    ./.
     sta l004c                                                         ; 88fe: 85 4c       .L
     jsr sub_c9a9c                                                     ; 8900: 20 9c 9a     ..
     ldx l004c                                                         ; 8903: a6 4c       .L
@@ -1566,7 +1566,7 @@ oscli                           = &fff7
     ldx #&0f                                                          ; 890c: a2 0f       ..
 .bytecode_opcode_0e_handler
 .bytecode_opcode_0f_handler
-    lda opcode_0e_0f_table - 14,x                                     ; 890e: bd 26 a7    .&.
+    lda another_something_table - 14,x                                ; 890e: bd 26 a7    .&.
     jsr sub_c87e5                                                     ; 8911: 20 e5 87     ..
     ldx #2                                                            ; 8914: a2 02       ..
 .c8916
@@ -1613,7 +1613,7 @@ oscli                           = &fff7
 .bytecode_opcode_23_handler
 .bytecode_opcode_24_handler
 .bytecode_opcode_25_handler
-    lda opcode_21_to_25_table - 33,x                                  ; 894c: bd 13 a7    ...
+    lda another_something_table - 33,x                                ; 894c: bd 13 a7    ...
     sta l004c                                                         ; 894f: 85 4c       .L
     jsr sub_c892d                                                     ; 8951: 20 2d 89     -.
     jsr sub_c9ae2                                                     ; 8954: 20 e2 9a     ..
@@ -1624,7 +1624,7 @@ oscli                           = &fff7
 .bytecode_opcode_13_handler
 .bytecode_opcode_14_handler
 .bytecode_opcode_15_handler
-    lda opcode_11_to_15_table - 17,x                                  ; 895b: bd 23 a7    .#.
+    lda another_something_table - 17,x                                ; 895b: bd 23 a7    .#.
     jsr sub_c87e5                                                     ; 895e: 20 e5 87     ..
     jsr sub_c892d                                                     ; 8961: 20 2d 89     -.
     ldx #2                                                            ; 8964: a2 02       ..
@@ -6639,13 +6639,7 @@ oscli                           = &fff7
 .string_true
     equs "TRUE"                                                       ; a730: 54 52 55... TRU
 .something_else_table
-.opcode_05_06_table
-.opcode_1d_1e_table
-.opcode_21_to_25_table
-.opcode_18_to_1c_table
-.opcode_16_17_table
-.opcode_11_to_15_table
-.opcode_0e_0f_table
+.another_something_table
     equb   0,   1,   3,   4, &1f, &1a,   5, &ff, &20, &ff             ; a734: 00 01 03... ...
 .la73e
     equs "pas___#"                                                    ; a73e: 70 61 73... pas
@@ -12186,14 +12180,14 @@ oscli                           = &fff7
     assert >something_23_handler == &b7
     assert >string_false == &a7
     assert >string_true == &a7
+    assert another_something_table - 14 == &a726
+    assert another_something_table - 17 == &a723
+    assert another_something_table - 24 == &a71c
+    assert another_something_table - 29 == &a717
+    assert another_something_table - 33 == &a713
+    assert another_something_table - 5 == &a72f
     assert copyright - rom_header == &14
     assert fx163_192_2 == &a746
-    assert opcode_05_06_table - 5 == &a72f
-    assert opcode_0e_0f_table - 14 == &a726
-    assert opcode_11_to_15_table - 17 == &a723
-    assert opcode_18_to_1c_table - 24 == &a71c
-    assert opcode_1d_1e_table - 29 == &a717
-    assert opcode_21_to_25_table - 33 == &a713
     assert opcode_subrange1_jump_table_high - 202 == &a920
     assert opcode_subrange1_jump_table_low - 202 == &a919
     assert opcode_subrange2_jump_table_high - 120 == &a951

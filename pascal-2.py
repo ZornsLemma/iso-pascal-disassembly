@@ -338,26 +338,14 @@ expr(0x8940, make_subtract("something_else_table", 0x3b))
 expr(0x88e6, make_subtract("something_else_table", 0x38))
 expr(0x883b, make_subtract("something_else_table", 0x33))
 
-label(0xa72f+0x5, "opcode_05_06_table")
-expr(0x88fc, make_subtract("opcode_05_06_table", 0x5))
-
-label(0xa717+0x1d, "opcode_1d_1e_table")
-expr(0x88f0, make_subtract("opcode_1d_1e_table", 0x1d))
-
-label(0xa713+0x21, "opcode_21_to_25_table")
-expr(0x894d, make_subtract("opcode_21_to_25_table", 0x21))
-
-label(0xa71c+0x18, "opcode_18_to_1c_table")
-expr(0x8845, make_subtract("opcode_18_to_1c_table", 0x18))
-
-label(0xa71e+0x16, "opcode_16_17_table")
-expr(0x8792, make_subtract("opcode_16_17_table", 0x16))
-
-label(0xa723+0x11, "opcode_11_to_15_table")
-expr(0x895c, make_subtract("opcode_11_to_15_table", 0x11))
-
-label(0xa726+0xe, "opcode_0e_0f_table")
-expr(0x890f, make_subtract("opcode_0e_0f_table", 0xe))
+label(0xa72f+0x5, "another_something_table")
+expr(0x88fc, make_subtract("another_something_table", 0x5))
+expr(0x88f0, make_subtract("another_something_table", 0x1d))
+expr(0x894d, make_subtract("another_something_table", 0x21))
+expr(0x8845, make_subtract("another_something_table", 0x18))
+expr(0x8792, make_subtract("another_something_table", 0x16))
+expr(0x895c, make_subtract("another_something_table", 0x11))
+expr(0x890f, make_subtract("another_something_table", 0xe))
 
 nonentry(0xa882)
 
