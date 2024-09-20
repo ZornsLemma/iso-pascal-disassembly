@@ -350,8 +350,6 @@ expr(0x890f, make_subtract("another_something_table", 0xe))
 
 nonentry(0xa882)
 
-# TODO: The "stray" labels inside the high opcode handler table probably indicate subtables offset by opcodes
-
 # TODO: ed_handler is doing some kind of indirect jump
 
 brk(0x83b9)
