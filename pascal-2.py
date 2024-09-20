@@ -62,6 +62,8 @@ entry(0x8344, "language_entry_common")
 
 entry(0x8482, "read_io_memory_at_l003e_and_advance")
 
+entry(0x87e2, "jmp_indirect_via_l0008")
+
 entry(0x89d5, "some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes")
 comment(0x89dc, "Set l0014=-l0012=-(X on entry), unless the result is zero in which case jump to the test at the end of the copy loop.")
 comment(0x89e6, "Subtract 8-bit value at l0014 from 16-bit value at l000a")
@@ -71,6 +73,19 @@ entry(0x8a07, "bulk_copy_loop_x_test")
 
 entry(0xa493, "zero_misc_values")
 
+# TODO: Just guessing this is a bytecode interpreter, but seems likely
+label(0xa507, "bytecode_jump_table_low")
+label(0xa60c, "bytecode_jump_table_high")
+for i in range(256):
+    target = get_u8_binary(0xa507+i) + (get_u8_binary(0xa60c+i) << 8)
+    target_label = entry(target, "bytecode_opcode_%02x_handler" % i)
+    byte(0xa507+i)
+    expr(0xa507+i, make_lo(target_label))
+    byte(0xa60c+i)
+    expr(0xa60c+i, make_hi(target_label))
+
+
 entry(0x85fc, "set_yx_to_himem_minus_2")
+
 
 go()
