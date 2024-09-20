@@ -16,143 +16,143 @@ our_osbyte_a                        = 163
 our_osbyte_x                        = 192
 
 ; Memory locations
-l0000       = &0000
-l0001       = &0001
-l0002       = &0002
-l0003       = &0003
-l0004       = &0004
-l0005       = &0005
-l0006       = &0006
-l0007       = &0007
-l0008       = &0008
-l0009       = &0009
-l000a       = &000a
-l000b       = &000b
-l000c       = &000c
-l000d       = &000d
-l000e       = &000e
-l000f       = &000f
-l0010       = &0010
-l0011       = &0011
-l0012       = &0012
-l0013       = &0013
-l0014       = &0014
-l0015       = &0015
-l0016       = &0016
-l0017       = &0017
-l0018       = &0018
-l0019       = &0019
-l001a       = &001a
-l001b       = &001b
-l001c       = &001c
-l001e       = &001e
-l001f       = &001f
-l0020       = &0020
-l0022       = &0022
-l0024       = &0024
-l0025       = &0025
-l0026       = &0026
-l0027       = &0027
-l0028       = &0028
-l0029       = &0029
-l002a       = &002a
-l002b       = &002b
-l002c       = &002c
-l002d       = &002d
-l002f       = &002f
-l0030       = &0030
-l0031       = &0031
-l0032       = &0032
-l0033       = &0033
-l0035       = &0035
-l0036       = &0036
-l0037       = &0037
-l0038       = &0038
-l0039       = &0039
-l003a       = &003a
-l003e       = &003e
-l003f       = &003f
-l0040       = &0040
-l0041       = &0041
-l0042       = &0042
-l0043       = &0043
-l0044       = &0044
-l0045       = &0045
-l004b       = &004b
-l0053       = &0053
-osbyte_a    = &00ef
-osbyte_x    = &00f0
-osbyte_y    = &00f1
-os_text_ptr = &00f2
-romsel_copy = &00f4
-l00fd       = &00fd
-l00fe       = &00fe
-l00ff       = &00ff
-l0100       = &0100
-brkv        = &0202
-l0400       = &0400
-l0401       = &0401
-l0402       = &0402
-l0403       = &0403
-l0404       = &0404
-l0405       = &0405
-l0407       = &0407
-l0408       = &0408
-l040a       = &040a
-l040b       = &040b
-l040d       = &040d
-l040e       = &040e
-l0410       = &0410
-l0411       = &0411
-l0412       = &0412
-l0413       = &0413
-l0414       = &0414
-l0415       = &0415
-l0416       = &0416
-l0417       = &0417
-l0418       = &0418
-l041a       = &041a
-l0420       = &0420
-l0519       = &0519
-l051a       = &051a
-l061a       = &061a
-l061b       = &061b
-l061c       = &061c
-l061d       = &061d
-l0624       = &0624
-l0625       = &0625
-l0626       = &0626
-l0627       = &0627
-l062e       = &062e
-l062f       = &062f
-l0632       = &0632
-l063a       = &063a
-l0642       = &0642
-l064a       = &064a
-l0655       = &0655
-l0656       = &0656
-l0657       = &0657
-l0658       = &0658
-l0659       = &0659
-l065a       = &065a
-l065b       = &065b
-l065c       = &065c
-l0f03       = &0f03
-l208d       = &208d
-l6e69       = &6e69
-l7420       = &7420
-le8e8       = &e8e8
-lf461       = &f461
-osfind      = &ffce
-osargs      = &ffda
-osfile      = &ffdd
-osrdch      = &ffe0
-osasci      = &ffe3
-osnewl      = &ffe7
-oswrch      = &ffee
-osword      = &fff1
-osbyte      = &fff4
-oscli       = &fff7
+l0000                   = &0000
+l0001                   = &0001
+l0002                   = &0002
+l0003                   = &0003
+l0004                   = &0004
+l0005                   = &0005
+l0006                   = &0006
+l0007                   = &0007
+l0008                   = &0008
+l0009                   = &0009
+l000a                   = &000a
+l000b                   = &000b
+l000c                   = &000c
+l000d                   = &000d
+l000e                   = &000e
+l000f                   = &000f
+l0010                   = &0010
+l0011                   = &0011
+l0012                   = &0012
+l0013                   = &0013
+l0014                   = &0014
+l0015                   = &0015
+l0016                   = &0016
+l0017                   = &0017
+l0018                   = &0018
+l0019                   = &0019
+l001a                   = &001a
+l001b                   = &001b
+l001c                   = &001c
+l001e                   = &001e
+l001f                   = &001f
+l0020                   = &0020
+l0022                   = &0022
+l0024                   = &0024
+l0025                   = &0025
+l0026                   = &0026
+l0027                   = &0027
+l0028                   = &0028
+l0029                   = &0029
+l002a                   = &002a
+l002b                   = &002b
+l002c                   = &002c
+l002d                   = &002d
+l002f                   = &002f
+l0030                   = &0030
+l0031                   = &0031
+l0032                   = &0032
+l0033                   = &0033
+l0035                   = &0035
+l0036                   = &0036
+l0037                   = &0037
+l0038                   = &0038
+l0039                   = &0039
+l003a                   = &003a
+l003e                   = &003e
+l003f                   = &003f
+l0040                   = &0040
+l0041                   = &0041
+l0042                   = &0042
+l0043                   = &0043
+l0044                   = &0044
+l0045                   = &0045
+l004b                   = &004b
+l0053                   = &0053
+osbyte_a                = &00ef
+osbyte_x                = &00f0
+osbyte_y                = &00f1
+os_text_ptr             = &00f2
+romsel_copy             = &00f4
+l00fd                   = &00fd
+l00fe                   = &00fe
+l00ff                   = &00ff
+l0100                   = &0100
+brkv                    = &0202
+l0400                   = &0400
+l0401                   = &0401
+l0402                   = &0402
+l0403                   = &0403
+l0404                   = &0404
+l0405                   = &0405
+l0407                   = &0407
+l0408                   = &0408
+l040a                   = &040a
+l040b                   = &040b
+l040d                   = &040d
+l040e                   = &040e
+l0410                   = &0410
+l0411                   = &0411
+l0412                   = &0412
+l0413                   = &0413
+l0414                   = &0414
+l0415                   = &0415
+l0416                   = &0416
+simplified_machine_type = &0417
+l0418                   = &0418
+l041a                   = &041a
+l0420                   = &0420
+l0519                   = &0519
+l051a                   = &051a
+l061a                   = &061a
+l061b                   = &061b
+l061c                   = &061c
+l061d                   = &061d
+l0624                   = &0624
+l0625                   = &0625
+l0626                   = &0626
+l0627                   = &0627
+l062e                   = &062e
+l062f                   = &062f
+l0632                   = &0632
+l063a                   = &063a
+l0642                   = &0642
+l064a                   = &064a
+l0655                   = &0655
+l0656                   = &0656
+l0657                   = &0657
+l0658                   = &0658
+l0659                   = &0659
+l065a                   = &065a
+l065b                   = &065b
+l065c                   = &065c
+l0f03                   = &0f03
+l208d                   = &208d
+l6e69                   = &6e69
+l7420                   = &7420
+le8e8                   = &e8e8
+lf461                   = &f461
+osfind                  = &ffce
+osargs                  = &ffda
+osfile                  = &ffdd
+osrdch                  = &ffe0
+osasci                  = &ffe3
+osnewl                  = &ffe7
+oswrch                  = &ffee
+osword                  = &fff1
+osbyte                  = &fff4
+oscli                   = &fff7
 
     org &8000
 
@@ -487,6 +487,8 @@ oscli       = &fff7
 .c82a4
     jmp c8344                                                         ; 82a4: 4c 44 83    LD.
 
+; Read the machine type but simplifying so X=0 for BBC B/B+, X=1 for Electron and X>=3
+; is as returned by OSBYTE 0.
 .real_language_entry
     lda #osbyte_read_os_version                                       ; 82a7: a9 00       ..
     ldx #1                                                            ; 82a9: a2 01       ..
@@ -500,7 +502,7 @@ oscli       = &fff7
     ;     X=4, OS 4.0 (Master Econet Terminal)
     ;     X=5, OS 5.0 (Master Compact)
     cpx #3                                                            ; 82ae: e0 03       ..
-    bcs c82c1                                                         ; 82b0: b0 0f       ..
+    bcs simplified_machine_type_in_x                                  ; 82b0: b0 0f       ..
     lda #osbyte_inkey                                                 ; 82b2: a9 81       ..
     ldx #0                                                            ; 82b4: a2 00       ..
     ldy #&fe                                                          ; 82b6: a0 fe       ..
@@ -517,10 +519,10 @@ oscli       = &fff7
     ;     X=247, Master Econet Terminal OS 4.00
     ;     X=245, Master Compact OS 5.10
     cpx #1                                                            ; 82bb: e0 01       ..
-    beq c82c1                                                         ; 82bd: f0 02       ..
+    beq simplified_machine_type_in_x                                  ; 82bd: f0 02       ..
     ldx #0                                                            ; 82bf: a2 00       ..
-.c82c1
-    stx l0417                                                         ; 82c1: 8e 17 04    ...
+.simplified_machine_type_in_x
+    stx simplified_machine_type                                       ; 82c1: 8e 17 04    ...
     lda #osbyte_read_high_order_address                               ; 82c4: a9 82       ..
     jsr osbyte                                                        ; 82c6: 20 f4 ff     ..            ; Read the filing system 'machine high order address'
     stx l0400                                                         ; 82c9: 8e 00 04    ...            ; X and Y contain the machine high order address (low, high)
@@ -2242,7 +2244,7 @@ oscli       = &fff7
     bpl caff6                                                         ; afad: 10 47       .G
     cmp #&b0                                                          ; afaf: c9 b0       ..
     bcs caf9c                                                         ; afb1: b0 e9       ..
-    ldy l0417                                                         ; afb3: ac 17 04    ...
+    ldy simplified_machine_type                                       ; afb3: ac 17 04    ...
     cpy #1                                                            ; afb6: c0 01       ..
     bne cafbe                                                         ; afb8: d0 04       ..
     lda cb096,x                                                       ; afba: bd 96 b0    ...
@@ -2406,7 +2408,7 @@ oscli       = &fff7
     equb &a0,   0, &20, &7b, &b1, &a2, &8a                            ; b15c: a0 00 20... ..
 
 .sub_cb163
-    lda l0417                                                         ; b163: ad 17 04    ...
+    lda simplified_machine_type                                       ; b163: ad 17 04    ...
     cmp #1                                                            ; b166: c9 01       ..
     beq cb171                                                         ; b168: f0 07       ..
     lda #osbyte_read_write_tab_char                                   ; b16a: a9 db       ..
@@ -3561,7 +3563,6 @@ oscli       = &fff7
 ;     c81bc
 ;     c8265
 ;     c82a4
-;     c82c1
 ;     c831a
 ;     c8324
 ;     c832c
@@ -3776,7 +3777,6 @@ oscli       = &fff7
 ;     l0414
 ;     l0415
 ;     l0416
-;     l0417
 ;     l0418
 ;     l041a
 ;     l0420

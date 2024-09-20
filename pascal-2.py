@@ -38,6 +38,10 @@ comment(0x8245, "Set output stream to saved value at &100 in I/O processor")
 comment(0x8252, "Branch if b6 of original last break type clear")
 comment(0x8256, "Branch if b5 of original last break type clear")
 
+entry(0x82c1, "simplified_machine_type_in_x")
+comment(0x82a7, "Read the machine type but simplifying so X=0 for BBC B/B+, X=1 for Electron and X>=3 is as returned by OSBYTE 0.")
+label(0x417, "simplified_machine_type")
+
 entry(0x8482, "read_io_memory_at_l003e_and_advance")
 
 entry(0x89d5, "some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes")
