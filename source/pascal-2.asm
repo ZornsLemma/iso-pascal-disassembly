@@ -3405,7 +3405,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_91_handler
 .bytecode_opcode_92_handler
-    lda la6a3,x                                                       ; 9418: bd a3 a6    ...
+    lda opcode_91_92_table - 145,x                                    ; 9418: bd a3 a6    ...
     sta l004c                                                         ; 941b: 85 4c       .L
     jsr sub_c91a8                                                     ; 941d: 20 a8 91     ..
     lda #0                                                            ; 9420: a9 00       ..
@@ -6508,7 +6508,6 @@ oscli                           = &fff7
     equb >bytecode_opcode_94_handler                                  ; a6a0: 93          .
     equb >bytecode_opcode_95_handler                                  ; a6a1: 93          .
     equb >bytecode_opcode_96_handler                                  ; a6a2: aa          .
-.la6a3
     equb >bytecode_opcode_97_handler                                  ; a6a3: 93          .
     equb >bytecode_opcode_98_handler                                  ; a6a4: aa          .
 .la6a5
@@ -6654,6 +6653,7 @@ oscli                           = &fff7
 .string_true
     equs "TRUE"                                                       ; a730: 54 52 55... TRU
 .opcode_26_27_table
+.opcode_91_92_table
     equb   0,   1,   3,   4, &1f, &1a,   5, &ff, &20, &ff             ; a734: 00 01 03... ...
 .la73e
     equs "pas___#"                                                    ; a73e: 70 61 73... pas
@@ -11113,7 +11113,6 @@ oscli                           = &fff7
 ;     l803c
 ;     l9998
 ;     l9999
-;     la6a3
 ;     la6a5
 ;     la6a9
 ;     la6af
@@ -12213,6 +12212,7 @@ oscli                           = &fff7
     assert copyright - rom_header == &14
     assert fx163_192_2 == &a746
     assert opcode_26_27_table - 38 == &a70e
+    assert opcode_91_92_table - 145 == &a6a3
     assert opcode_subrange1_jump_table_high - 202 == &a920
     assert opcode_subrange1_jump_table_low - 202 == &a919
     assert opcode_subrange2_jump_table_high - 120 == &a951
