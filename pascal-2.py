@@ -34,6 +34,7 @@ entry(0x8092, "unrecognised_osbyte_handler_done")
 entry(0x8094, "unrecognised_osbyte_handler_rts")
 
 entry(0x80e5, "fancy_print_error_at_l00fd")
+entry(0x80e9, "fancy_print_error_at_yx")
 label(0x65b, "line_number_low") # TODO GUESS
 label(0x65c, "line_number_high") # TODO GUESS
 
@@ -89,6 +90,8 @@ comment(0x89e6, "Subtract 8-bit value at l0014 from 16-bit value at l000a")
 comment(0x89f2, "Subtract 8-bit value at l0014 from 16-bit value at l000e")
 entry(0x89fc, "bulk_copy_from_l000a_to_l000e")
 entry(0x8a07, "bulk_copy_loop_x_test")
+
+entry(0x9184, "set_yx_to_41a")
 
 entry(0xa493, "zero_misc_values")
 

@@ -360,7 +360,7 @@ oscli                           = &fff7
 .fancy_print_error_at_l00fd
     ldx l00fd                                                         ; 80e5: a6 fd       ..
     ldy l00fe                                                         ; 80e7: a4 fe       ..
-.sub_c80e9
+.fancy_print_error_at_yx
     jsr osnewl                                                        ; 80e9: 20 e7 ff     ..            ; Write newline (characters 10 and 13)
     lda #0                                                            ; 80ec: a9 00       ..
     jsr fancy_print_at_yx_with_terminator_a                           ; 80ee: 20 7a 81     z.
@@ -538,8 +538,8 @@ oscli                           = &fff7
 ; Branch if b5 of original last break type clear
     rol a                                                             ; 8256: 2a          *
     bpl c8265                                                         ; 8257: 10 0c       ..
-    jsr c9184                                                         ; 8259: 20 84 91     ..
-    jsr sub_c80e9                                                     ; 825c: 20 e9 80     ..
+    jsr set_yx_to_41a                                                 ; 8259: 20 84 91     ..
+    jsr fancy_print_error_at_yx                                       ; 825c: 20 e9 80     ..
     jsr sub_c90dd                                                     ; 825f: 20 dd 90     ..
     jmp language_entry_common                                         ; 8262: 4c 44 83    LD.
 
@@ -2592,7 +2592,7 @@ oscli                           = &fff7
     jsr sub_c9d7a                                                     ; 915c: 20 7a 9d     z.
     lda l041a                                                         ; 915f: ad 1a 04    ...
     cmp #&0d                                                          ; 9162: c9 0d       ..
-    bne c9184                                                         ; 9164: d0 1e       ..
+    bne set_yx_to_41a                                                 ; 9164: d0 1e       ..
     lda l0046                                                         ; 9166: a5 46       .F
     bne c916b                                                         ; 9168: d0 01       ..
 .c916a
@@ -2616,7 +2616,7 @@ oscli                           = &fff7
     dey                                                               ; 917e: 88          .
     bpl loop_c9178                                                    ; 917f: 10 f7       ..
     stx l0420                                                         ; 9181: 8e 20 04    . .
-.c9184
+.set_yx_to_41a
     ldx #&1a                                                          ; 9184: a2 1a       ..
     ldy #4                                                            ; 9186: a0 04       ..
     rts                                                               ; 9188: 60          `
@@ -2889,7 +2889,7 @@ oscli                           = &fff7
 .c931b
     jsr sub_c9f3c                                                     ; 931b: 20 3c 9f     <.
 .c931e
-    jsr c9184                                                         ; 931e: 20 84 91     ..
+    jsr set_yx_to_41a                                                 ; 931e: 20 84 91     ..
     jmp c9340                                                         ; 9321: 4c 40 93    L@.
 
 .bytecode_opcode_95_handler
@@ -6323,7 +6323,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_e7_handler
     jsr sub_c9d75                                                     ; a7e2: 20 75 9d     u.
-    jsr c9184                                                         ; a7e5: 20 84 91     ..
+    jsr set_yx_to_41a                                                 ; a7e5: 20 84 91     ..
     jsr oscli                                                         ; a7e8: 20 f7 ff     ..
     lda #2                                                            ; a7eb: a9 02       ..
     rts                                                               ; a7ed: 60          `
@@ -8558,7 +8558,6 @@ la951 = sub_ca94f+2
 ;     c911d
 ;     c916a
 ;     c916b
-;     c9184
 ;     c91c0
 ;     c91c6
 ;     c91dc
@@ -9169,7 +9168,6 @@ la951 = sub_ca94f+2
 ;     loop_cb5a8
 ;     loop_cb68e
 ;     loop_cbdb4
-;     sub_c80e9
 ;     sub_c8104
 ;     sub_c8494
 ;     sub_c84b3
