@@ -1328,14 +1328,14 @@ oscli                           = &fff7
     sta l0002                                                         ; 87b6: 85 02       ..
     lda l001f                                                         ; 87b8: a5 1f       ..
     sta l0003                                                         ; 87ba: 85 03       ..
-    bne c87c7                                                         ; 87bc: d0 09       ..
-.loop_c87be
+    bne interpreter_loop_no_advance                                   ; 87bc: d0 09       ..
+.interpreter_loop_advance_by_a
     clc                                                               ; 87be: 18          .
     adc l0002                                                         ; 87bf: 65 02       e.
     sta l0002                                                         ; 87c1: 85 02       ..
-    bcc c87c7                                                         ; 87c3: 90 02       ..
+    bcc interpreter_loop_no_advance                                   ; 87c3: 90 02       ..
     inc l0003                                                         ; 87c5: e6 03       ..
-.c87c7
+.interpreter_loop_no_advance
     ldy #0                                                            ; 87c7: a0 00       ..
     lda (l0002),y                                                     ; 87c9: b1 02       ..
     tax                                                               ; 87cb: aa          .
@@ -1344,9 +1344,9 @@ oscli                           = &fff7
     lda bytecode_jump_table_high,x                                    ; 87d1: bd 0c a6    ...
     sta l0009                                                         ; 87d4: 85 09       ..
     jsr jmp_indirect_via_l0008                                        ; 87d6: 20 e2 87     ..
-    bne loop_c87be                                                    ; 87d9: d0 e3       ..
+    bne interpreter_loop_advance_by_a                                 ; 87d9: d0 e3       ..
     bit escape_flag                                                   ; 87db: 24 ff       $.
-    bpl c87c7                                                         ; 87dd: 10 e8       ..
+    bpl interpreter_loop_no_advance                                   ; 87dd: 10 e8       ..
     jmp escape                                                        ; 87df: 4c 76 99    Lv.
 
 .jmp_indirect_via_l0008
@@ -9830,7 +9830,6 @@ la951 = sub_ca94f+2
 ;     c874b
 ;     c875c
 ;     c8770
-;     c87c7
 ;     c8821
 ;     c8830
 ;     c886b
@@ -10535,7 +10534,6 @@ la951 = sub_ca94f+2
 ;     loop_c83cc
 ;     loop_c849a
 ;     loop_c85f5
-;     loop_c87be
 ;     loop_c88c8
 ;     loop_c88d3
 ;     loop_c891a

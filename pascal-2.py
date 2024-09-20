@@ -147,6 +147,9 @@ expr(0x8753, make_hi("bytecode_jump_table_high"))
 expr(0x8789, make_lo("compiler_bytecode_start"))
 expr(0x878d, make_hi("compiler_bytecode_start"))
 
+entry(0x87be, "interpreter_loop_advance_by_a")
+entry(0x87c7, "interpreter_loop_no_advance")
+
 entry(0x87e2, "jmp_indirect_via_l0008")
 label(0x8797, "fx163_192_0")
 
