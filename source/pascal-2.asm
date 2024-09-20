@@ -303,7 +303,7 @@ oscli                           = &fff7
     inc l0416                                                         ; 80dc: ee 16 04    ...
     jsr sub_c90dd                                                     ; 80df: 20 dd 90     ..
 .c80e2
-    jmp c8344                                                         ; 80e2: 4c 44 83    LD.
+    jmp language_entry_common                                         ; 80e2: 4c 44 83    LD.
 
 .sub_c80e5
     ldx l00fd                                                         ; 80e5: a6 fd       ..
@@ -452,7 +452,7 @@ oscli                           = &fff7
     jsr sub_c9184                                                     ; 8259: 20 84 91     ..
     jsr sub_c80e9                                                     ; 825c: 20 e9 80     ..
     jsr sub_c90dd                                                     ; 825f: 20 dd 90     ..
-    jmp c8344                                                         ; 8262: 4c 44 83    LD.
+    jmp language_entry_common                                         ; 8262: 4c 44 83    LD.
 
 .c8265
     lda l0411                                                         ; 8265: ad 11 04    ...
@@ -485,7 +485,7 @@ oscli                           = &fff7
     lda l000f                                                         ; 829f: a5 0f       ..
     sta oshwm_high2,x                                                 ; 82a1: 9d 0d 04    ...
 .c82a4
-    jmp c8344                                                         ; 82a4: 4c 44 83    LD.
+    jmp language_entry_common                                         ; 82a4: 4c 44 83    LD.
 
 ; Read the machine type but simplifying so X=0 for BBC B/B+, X=1 for Electron and X>=3
 ; is as returned by OSBYTE 0.
@@ -541,6 +541,10 @@ oscli                           = &fff7
     ldx #0                                                            ; 82ed: a2 00       ..
     stx l0418                                                         ; 82ef: 8e 18 04    ...
     jsr zero_misc_values                                              ; 82f2: 20 93 a4     ..
+; Read the command tail pointed to by host &F2? Looking for a ' @ ' suffix? TODO: Did
+; the service handler tweak this? How do we know what 'Y' is? How do we know we didn't
+; enter via language entry rather than a * command? Is the command tail set up by the
+; OS here?
     lda #&f2                                                          ; 82f5: a9 f2       ..
     sta l003e                                                         ; 82f7: 85 3e       .>
     jsr read_io_memory_at_l003e_and_advance                           ; 82f9: 20 82 84     ..
@@ -558,14 +562,14 @@ oscli                           = &fff7
     bne c831a                                                         ; 8311: d0 07       ..
     jsr read_io_memory_at_l003e_and_advance                           ; 8313: 20 82 84     ..
     cmp #&0d                                                          ; 8316: c9 0d       ..
-    beq c8324                                                         ; 8318: f0 0a       ..
+    beq language_entry_with_at_symbol                                 ; 8318: f0 0a       ..
 .c831a
     cmp #&0d                                                          ; 831a: c9 0d       ..
     bne loop_c8305                                                    ; 831c: d0 e7       ..
-    jsr sub_c860a                                                     ; 831e: 20 0a 86     ..
-    jmp c8344                                                         ; 8321: 4c 44 83    LD.
+    jsr set_up_for_cold_start                                         ; 831e: 20 0a 86     ..
+    jmp language_entry_common                                         ; 8321: 4c 44 83    LD.
 
-.c8324
+.language_entry_with_at_symbol
     ldy #0                                                            ; 8324: a0 00       ..
     sty l0029                                                         ; 8326: 84 29       .)
     lda l0001                                                         ; 8328: a5 01       ..
@@ -586,7 +590,7 @@ oscli                           = &fff7
     inc l002a                                                         ; 833f: e6 2a       .*
 .c8341
     jsr sub_cb77e                                                     ; 8341: 20 7e b7     ~.
-.c8344
+.language_entry_common
     ldx #&ff                                                          ; 8344: a2 ff       ..
     txs                                                               ; 8346: 9a          .
     ldx #1                                                            ; 8347: a2 01       ..
@@ -885,7 +889,7 @@ oscli                           = &fff7
     tay                                                               ; 8608: a8          .
     rts                                                               ; 8609: 60          `
 
-.sub_c860a
+.set_up_for_cold_start
     lda #0                                                            ; 860a: a9 00       ..
     sta l0415                                                         ; 860c: 8d 15 04    ...
     lda l0416                                                         ; 860f: ad 16 04    ...
@@ -3564,11 +3568,9 @@ oscli                           = &fff7
 ;     c8265
 ;     c82a4
 ;     c831a
-;     c8324
 ;     c832c
 ;     c8337
 ;     c8341
-;     c8344
 ;     c834c
 ;     c8364
 ;     c836c
@@ -3854,7 +3856,6 @@ oscli                           = &fff7
 ;     sub_c85ca
 ;     sub_c85f1
 ;     sub_c85fc
-;     sub_c860a
 ;     sub_c87e2
 ;     sub_c90dd
 ;     sub_c9137

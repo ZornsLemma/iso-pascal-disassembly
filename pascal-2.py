@@ -53,6 +53,10 @@ comment(0x8256, "Branch if b5 of original last break type clear")
 entry(0x82c1, "simplified_machine_type_in_x")
 comment(0x82a7, "Read the machine type but simplifying so X=0 for BBC B/B+, X=1 for Electron and X>=3 is as returned by OSBYTE 0.")
 label(0x417, "simplified_machine_type")
+comment(0x82f5, "Read the command tail pointed to by host &F2? Looking for a ' @\r' suffix? TODO: Did the service handler tweak this? How do we know what 'Y' is? How do we know we didn't enter via language entry rather than a * command? Is the command tail set up by the OS here?")
+entry(0x8324, "language_entry_with_at_symbol")
+entry(0x860a, "set_up_for_cold_start") # TODO: guessing
+entry(0x8344, "language_entry_common")
 
 entry(0x8482, "read_io_memory_at_l003e_and_advance")
 
