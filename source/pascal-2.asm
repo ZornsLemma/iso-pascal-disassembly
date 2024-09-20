@@ -1,6 +1,5 @@
 ; Constants
 compiler_bytecode_start                = 34416
-escape_flag                            = 255
 interpreter_size                       = 8111
 osbyte_acknowledge_escape              = 126
 osbyte_enter_language                  = 142
@@ -126,7 +125,7 @@ os_text_ptr                     = &00f2
 romsel_copy                     = &00f4
 l00fd                           = &00fd
 l00fe                           = &00fe
-l00ff                           = &00ff
+escape_flag                     = &00ff
 l0100                           = &0100
 brkv                            = &0202
 machine_high_order_address_low  = &0400
@@ -1346,7 +1345,7 @@ oscli                           = &fff7
     sta l0009                                                         ; 87d4: 85 09       ..
     jsr jmp_indirect_via_l0008                                        ; 87d6: 20 e2 87     ..
     bne loop_c87be                                                    ; 87d9: d0 e3       ..
-    bit l00ff                                                         ; 87db: 24 ff       $.
+    bit escape_flag                                                   ; 87db: 24 ff       $.
     bpl c87c7                                                         ; 87dd: 10 e8       ..
     jmp escape                                                        ; 87df: 4c 76 99    Lv.
 
@@ -4101,7 +4100,7 @@ oscli                           = &fff7
 .c996e
     jsr sub_c998c                                                     ; 996e: 20 8c 99     ..
 .c9971
-    bit l00ff                                                         ; 9971: 24 ff       $.
+    bit escape_flag                                                   ; 9971: 24 ff       $.
     bmi escape                                                        ; 9973: 30 01       0.
     rts                                                               ; 9975: 60          `
 
@@ -10415,7 +10414,6 @@ la951 = sub_ca94f+2
 ;     l006e
 ;     l00fd
 ;     l00fe
-;     l00ff
 ;     l0100
 ;     l040b
 ;     l040e
