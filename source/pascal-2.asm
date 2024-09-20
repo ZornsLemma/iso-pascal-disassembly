@@ -3435,16 +3435,16 @@ oscli                           = &fff7
     bne c952f                                                         ; 952a: d0 03       ..
     jmp language_entry_common                                         ; 952c: 4c 44 83    LD.
 
+; TODO: Why do we do this indirect OSCLI via ROM? We could save a few bytes by doing
+; LDX#/LDY# and getting rid of the pointer.
 .c952f
-    ldx l9539                                                         ; 952f: ae 39 95    .9.
-    ldy l953a                                                         ; 9532: ac 3a 95    .:.
+    ldx oscli_ptr                                                     ; 952f: ae 39 95    .9.
+    ldy oscli_ptr + 1                                                 ; 9532: ac 3a 95    .:.
     jmp oscli                                                         ; 9535: 4c f7 ff    L..
 
     equb &ad                                                          ; 9538: ad          .
-.l9539
-    equb &46                                                          ; 9539: 46          F
-.l953a
-    equb &a7                                                          ; 953a: a7          .
+.oscli_ptr
+    equw &a746                                                        ; 9539: 46 a7       F.
 
 .bytecode_opcode_b1_handler
     lda l0653                                                         ; 953b: ad 53 06    .S.
@@ -6465,8 +6465,8 @@ oscli                           = &fff7
 .la73e
     equs "pas___#"                                                    ; a73e: 70 61 73... pas
     equb &0d                                                          ; a745: 0d          .
-    equs "fx163,192,2"                                                ; a746: 66 78 31... fx1
-    equb &0d                                                          ; a751: 0d          .
+.fx163_192_2
+    equs "fx163,192,2", &0d                                           ; a746: 66 78 31... fx1
 
 ; TODO: The interpreter copied into RAM for compilation ends here. It is probably
 ; correct that there are additional bytecode implementations beyond this point, but
@@ -10484,8 +10484,6 @@ la951 = sub_ca94f+2
 ;     l0678
 ;     l8036
 ;     l803c
-;     l9539
-;     l953a
 ;     l9998
 ;     l9999
 ;     la595
