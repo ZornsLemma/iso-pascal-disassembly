@@ -220,10 +220,9 @@ tokens = [
     "Insert ",
 ]
 
-def fpnti_hook(target, addr):
-    addr += 3
+def tokenised_string(addr, terminator):
     start_addr = addr
-    while get_u8_binary(addr) != 0xea:
+    while get_u8_binary(addr) != terminator:
         addr += 1
     run_start = start_addr
     for pc in range(start_addr, addr):
@@ -247,6 +246,15 @@ def fpnti_hook(target, addr):
     if addr > run_start:
         string(run_start, addr - run_start)
     return addr
+
+def fpnti_hook(target, addr):
+    return tokenised_string(addr + 3, 0xea)
+
+def brk(addr):
+    assert get_u8_binary(addr) == 0
+    byte(addr + 1)
+    comment(addr + 1, "error code", inline=True)
+    tokenised_string(addr + 2, 0)
 
 hook_subroutine(0xb284, "fancy_print_nop_terminated_inline", fpnti_hook)
 hook_subroutine(0xb270, "extra_fancy_print_nop_terminated_inlne", fpnti_hook)
@@ -316,7 +324,8 @@ expr(0x8d35, make_subtract("opcode_subrange3_jump_table_low", 0x72))
 expr(0x8d3a, make_subtract("opcode_subrange3_jump_table_high", 0x72))
 subrange(0xa607, 0xa70c, 5, 0x72)
 
-# TODO: opcode_d0_handler has some kind of jump table but it's not clear to me what X range is - ditto 7b_handler - ditto 76_handler
 # TODO: ed_handler is doing some kind of indirect jump
+
+brk(0x83b9)
 
 go()

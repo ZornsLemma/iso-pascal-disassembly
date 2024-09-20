@@ -776,7 +776,8 @@ oscli                           = &fff7
 .c83b9
     brk                                                               ; 83b9: 00          .
 
-    equb   1, &82                                                     ; 83ba: 01 82       ..
+    equb 1                                                            ; 83ba: 01          .              ; OS error code
+    equb 128 + 2                                                      ; 83bb: 82          .              ; "Bad " (token 2)
     equs "command"                                                    ; 83bc: 63 6f 6d... com
     equb 0                                                            ; 83c3: 00          .
 
@@ -11471,6 +11472,7 @@ oscli                           = &fff7
     assert 128 + 14 == &8e
     assert 128 + 16 == &90
     assert 128 + 17 == &91
+    assert 128 + 2 == &82
     assert <(fx163_192_0) == &97
     assert <(input_buffer) == &1a
     assert <(l003e) == &3e
