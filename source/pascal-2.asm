@@ -3,11 +3,13 @@ osbyte_acknowledge_escape              = 126
 osbyte_enter_language                  = 142
 osbyte_inkey                           = 129
 osbyte_read_adc_or_get_buffer_status   = 128
+osbyte_read_char_at_cursor             = 135
 osbyte_read_high_order_address         = 130
 osbyte_read_himem                      = 132
 osbyte_read_himem_for_mode             = 133
 osbyte_read_os_version                 = 0
 osbyte_read_oshwm                      = 131
+osbyte_read_vdu_variable               = 160
 osbyte_read_write_last_break_type      = 253
 osbyte_read_write_tab_char             = 219
 osbyte_select_output_stream            = 3
@@ -71,6 +73,7 @@ l0030                           = &0030
 l0031                           = &0031
 l0032                           = &0032
 l0033                           = &0033
+l0034                           = &0034
 l0035                           = &0035
 l0036                           = &0036
 l0037                           = &0037
@@ -132,6 +135,7 @@ l0415                           = &0415
 l0416                           = &0416
 simplified_machine_type         = &0417
 l0418                           = &0418
+l0419                           = &0419
 l041a                           = &041a
 l0420                           = &0420
 l0519                           = &0519
@@ -146,6 +150,8 @@ l0624                           = &0624
 l0625                           = &0625
 l0626                           = &0626
 l0627                           = &0627
+l0628                           = &0628
+l0629                           = &0629
 l062c                           = &062c
 l062d                           = &062d
 l062e                           = &062e
@@ -180,6 +186,7 @@ l0668                           = &0668
 l0669                           = &0669
 l066a                           = &066a
 l066b                           = &066b
+l0678                           = &0678
 lc001                           = &c001
 lc002                           = &c002
 lc003                           = &c003
@@ -697,13 +704,13 @@ oscli                           = &fff7
     jmp user_interface_command_line_loop                              ; 8361: 4c 4c 83    LL.
 
 .c8364
-    lda #&40 ; '@'                                                    ; 8364: a9 40       .@
+    lda #<command_table                                               ; 8364: a9 40       .@
     sta l0008                                                         ; 8366: 85 08       ..
-    lda #&84                                                          ; 8368: a9 84       ..
+    lda #>command_table                                               ; 8368: a9 84       ..
     sta l0009                                                         ; 836a: 85 09       ..
 .c836c
     sty l0015                                                         ; 836c: 84 15       ..
-    lda l8466,y                                                       ; 836e: b9 66 84    .f.
+    lda command_table_entry_lengths,y                                 ; 836e: b9 66 84    .f.
     beq c83b4                                                         ; 8371: f0 41       .A
     tax                                                               ; 8373: aa          .
     ldy #&ff                                                          ; 8374: a0 ff       ..
@@ -725,7 +732,7 @@ oscli                           = &fff7
     ldy l0015                                                         ; 838d: a4 15       ..
     clc                                                               ; 838f: 18          .
     lda l0008                                                         ; 8390: a5 08       ..
-    adc l8466,y                                                       ; 8392: 79 66 84    yf.
+    adc command_table_entry_lengths,y                                 ; 8392: 79 66 84    yf.
     sta l0008                                                         ; 8395: 85 08       ..
     bcc c839b                                                         ; 8397: 90 02       ..
     inc l0009                                                         ; 8399: e6 09       ..
@@ -737,24 +744,25 @@ oscli                           = &fff7
 .c839f
     jsr c84bb                                                         ; 839f: 20 bb 84     ..
     ldx l0015                                                         ; 83a2: a6 15       ..
-    lda l8470,x                                                       ; 83a4: bd 70 84    .p.
+    lda command_jump_table_low,x                                      ; 83a4: bd 70 84    .p.
     sta l0008                                                         ; 83a7: 85 08       ..
-    lda l8479,x                                                       ; 83a9: bd 79 84    .y.
+    lda command_jump_table_high,x                                     ; 83a9: bd 79 84    .y.
     sta l0009                                                         ; 83ac: 85 09       ..
     jsr jmp_indirect_via_l0008                                        ; 83ae: 20 e2 87     ..
     jmp user_interface_command_line_loop                              ; 83b1: 4c 4c 83    LL.
 
 .c83b4
     jsr sub_c999a                                                     ; 83b4: 20 9a 99     ..
-    bcs c83c4                                                         ; 83b7: b0 0b       ..
+    bcs command_run_handler                                           ; 83b7: b0 0b       ..
+.c83b9
     brk                                                               ; 83b9: 00          .
 
     equb   1, &82                                                     ; 83ba: 01 82       ..
     equs "command"                                                    ; 83bc: 63 6f 6d... com
     equb 0                                                            ; 83c3: 00          .
 
-.c83c4
-    jsr sub_c857a                                                     ; 83c4: 20 7a 85     z.
+.command_run_handler
+    jsr command_load_handler                                          ; 83c4: 20 7a 85     z.
     ldy l0017                                                         ; 83c7: a4 17       ..
     dey                                                               ; 83c9: 88          .
     ldx #&ff                                                          ; 83ca: a2 ff       ..
@@ -773,6 +781,7 @@ oscli                           = &fff7
     bcs c83cd                                                         ; 83dd: b0 ee       ..
 .c83df
     jsr sub_c84b3                                                     ; 83df: 20 b3 84     ..
+.command_go_handler
     lda l0411                                                         ; 83e2: ad 11 04    ...
     beq c8412                                                         ; 83e5: f0 2b       .+
     lda himem_low                                                     ; 83e7: ad 02 04    ...
@@ -797,17 +806,48 @@ oscli                           = &fff7
 
     equb   3, &80                                                     ; 8413: 03 80       ..
     equs "code"                                                       ; 8415: 63 6f 64... cod
-    equb   0, &ac, &11,   4, &f0, &f3, &b9,   4,   4, &8d, &24,   6   ; 8419: 00 ac 11... ...
-    equb &b9,   7,   4, &8d, &25,   6, &be, &0a,   4, &b9, &0d,   4   ; 8425: b9 07 04... ...
-    equb &a8, &8e, &28,   6, &8c, &29,   6, &a9,   0, &20, &89, &91   ; 8431: a8 8e 28... ..(
-    equb &4c, &dd, &ff                                                ; 843d: 4c dd ff    L..
+    equb 0                                                            ; 8419: 00          .
+
+.command_save_handler
+    ldy l0411                                                         ; 841a: ac 11 04    ...
+    beq c8412                                                         ; 841d: f0 f3       ..
+    lda oshwm_low1,y                                                  ; 841f: b9 04 04    ...
+    sta l0624                                                         ; 8422: 8d 24 06    .$.
+    lda oshwm_high1,y                                                 ; 8425: b9 07 04    ...
+    sta l0625                                                         ; 8428: 8d 25 06    .%.
+    ldx oshwm_low2,y                                                  ; 842b: be 0a 04    ...
+    lda oshwm_high2,y                                                 ; 842e: b9 0d 04    ...
+    tay                                                               ; 8431: a8          .
+    stx l0628                                                         ; 8432: 8e 28 06    .(.
+    sty l0629                                                         ; 8435: 8c 29 06    .).
+    lda #0                                                            ; 8438: a9 00       ..
+    jsr sub_c9189                                                     ; 843a: 20 89 91     ..
+    jmp osfile                                                        ; 843d: 4c dd ff    L..
+
+.command_table
     equs "CLOSECOMPILEEDITGOLOADMODERUNSAVETRACE"                     ; 8440: 43 4c 4f... CLO
-.l8466
+.command_table_entry_lengths
     equb 5, 7, 4, 2, 4, 4, 3, 4, 5, 0                                 ; 8466: 05 07 04... ...
-.l8470
-    equb &eb, &88,   5, &e2, &7a,   8, &c4, &1a, &ff                  ; 8470: eb 88 05... ...
-.l8479
-    equb &85, &86, &af, &83, &85, &85, &83, &84, &84                  ; 8479: 85 86 af... ...
+.command_jump_table_low
+    equb <command_close_handler                                       ; 8470: eb          .
+    equb <command_compile_handler                                     ; 8471: 88          .
+    equb <command_edit_handler                                        ; 8472: 05          .
+    equb <command_go_handler                                          ; 8473: e2          .
+    equb <command_load_handler                                        ; 8474: 7a          z
+    equb <command_mode_handler                                        ; 8475: 08          .
+    equb <command_run_handler                                         ; 8476: c4          .
+    equb <command_save_handler                                        ; 8477: 1a          .
+    equb <command_trace_handler                                       ; 8478: ff          .
+.command_jump_table_high
+    equb >command_close_handler                                       ; 8479: 85          .
+    equb >command_compile_handler                                     ; 847a: 86          .
+    equb >command_edit_handler                                        ; 847b: af          .
+    equb >command_go_handler                                          ; 847c: 83          .
+    equb >command_load_handler                                        ; 847d: 85          .
+    equb >command_mode_handler                                        ; 847e: 85          .
+    equb >command_run_handler                                         ; 847f: 83          .
+    equb >command_save_handler                                        ; 8480: 84          .
+    equb >command_trace_handler                                       ; 8481: 84          .
 
 .read_io_memory_at_l003e_and_advance
     lda #osword_read_io_memory                                        ; 8482: a9 05       ..
@@ -869,13 +909,40 @@ oscli                           = &fff7
     sta l0017                                                         ; 84e0: 85 17       ..
     rts                                                               ; 84e2: 60          `
 
-    equb &b1, &0c, &99, &1a,   4, &c8, &d0, &f8, &a9,   1, &20, &aa   ; 84e3: b1 0c 99... ...
-    equb &9d, &a4, &16, &b9, &19,   4, &c9, &0d, &d0,   3, &a5        ; 84ef: 9d a4 16... ...
-    equs "j`L"                                                        ; 84fa: 6a 60 4c    j`L
-    equb &b9, &83, &20, &e3, &84, &29,   3, &8d, &18,   4, &60, &20   ; 84fd: b9 83 20... ..
-    equb &e3, &84, &aa, &ac, &11,   4, &d0,   3, &ac, &10,   4, &b9   ; 8509: e3 84 aa... ...
-    equb &0a,   4, &8d, &2c,   6, &b9, &0d,   4, &8d, &2d,   6        ; 8515: 0a 04 8d... ...
+.c84e3
+    lda (l000c),y                                                     ; 84e3: b1 0c       ..
+    sta l041a,y                                                       ; 84e5: 99 1a 04    ...
+    iny                                                               ; 84e8: c8          .
+    bne c84e3                                                         ; 84e9: d0 f8       ..
+    lda #1                                                            ; 84eb: a9 01       ..
+    jsr sub_c9daa                                                     ; 84ed: 20 aa 9d     ..
+    ldy l0016                                                         ; 84f0: a4 16       ..
+    lda l0419,y                                                       ; 84f2: b9 19 04    ...
+    cmp #&0d                                                          ; 84f5: c9 0d       ..
+    bne c84fc                                                         ; 84f7: d0 03       ..
+    lda l006a                                                         ; 84f9: a5 6a       .j
+    rts                                                               ; 84fb: 60          `
 
+.c84fc
+    jmp c83b9                                                         ; 84fc: 4c b9 83    L..
+
+.command_trace_handler
+    jsr c84e3                                                         ; 84ff: 20 e3 84     ..
+    and #3                                                            ; 8502: 29 03       ).
+    sta l0418                                                         ; 8504: 8d 18 04    ...
+    rts                                                               ; 8507: 60          `
+
+.command_mode_handler
+    jsr c84e3                                                         ; 8508: 20 e3 84     ..
+    tax                                                               ; 850b: aa          .
+    ldy l0411                                                         ; 850c: ac 11 04    ...
+    bne c8514                                                         ; 850f: d0 03       ..
+    ldy l0410                                                         ; 8511: ac 10 04    ...
+.c8514
+    lda oshwm_low2,y                                                  ; 8514: b9 0a 04    ...
+    sta l062c                                                         ; 8517: 8d 2c 06    .,.
+    lda oshwm_high2,y                                                 ; 851a: b9 0d 04    ...
+    sta l062d                                                         ; 851d: 8d 2d 06    .-.
 .sub_c8520
     stx l0014                                                         ; 8520: 86 14       ..
     lda machine_high_order_address_low                                ; 8522: ad 00 04    ...
@@ -918,14 +985,16 @@ oscli                           = &fff7
 
     equb   2, &82                                                     ; 856a: 02 82       ..
     equs "mode"                                                       ; 856c: 6d 6f 64... mod
-    equb   0, &20, &88, &85                                           ; 8570: 00 20 88... . .
+    equb 0                                                            ; 8570: 00          .
 
+.sub_c8571
+    jsr sub_c8588                                                     ; 8571: 20 88 85     ..
 .c8574
     ldx #1                                                            ; 8574: a2 01       ..
 .c8576
     ldy #0                                                            ; 8576: a0 00       ..
     beq c8581                                                         ; 8578: f0 07       ..
-.sub_c857a
+.command_load_handler
     jsr sub_c8588                                                     ; 857a: 20 88 85     ..
     ldx #0                                                            ; 857d: a2 00       ..
     ldy #1                                                            ; 857f: a0 01       ..
@@ -985,7 +1054,10 @@ oscli                           = &fff7
 .c85e8
     jmp c9816                                                         ; 85e8: 4c 16 98    L..
 
-    equb &a9,   0, &a8, &4c, &ce, &ff                                 ; 85eb: a9 00 a8... ...
+.command_close_handler
+    lda #osfind_close                                                 ; 85eb: a9 00       ..
+    tay                                                               ; 85ed: a8          .
+    jmp osfind                                                        ; 85ee: 4c ce ff    L..            ; Close all files (Y=0)
 
 .sub_c85f1
     lda #0                                                            ; 85f1: a9 00       ..
@@ -1048,30 +1120,162 @@ oscli                           = &fff7
     equb &ad, &15,   4, &f0, &24, &a0,   0, &8c, &15,   4, &ad, &14   ; 865a: ad 15 04... ...
     equb   4, &91,   4, &20, &fc, &85, &ec, &12,   4, &ed, &13,   4   ; 8666: 04 91 04... ...
     equb &90,   6, &ae, &12,   4, &ac, &13,   4, &8e, &0b,   4, &8c   ; 8672: 90 06 ae... ...
-    equb &0e,   4, &4c, &74, &85,   0,   4, &80, &8a,   0, &a2,   0   ; 867e: 0e 04 4c... ..L
-    equb &b1, &0c, &c9, &3e, &f0,   8, &c9, &7b, &f0,   4, &c9, &0d   ; 868a: b1 0c c9... ...
-    equb &d0,   5, &ae, &10,   4, &f0, &e6, &8e, &10,   4, &bd, &0a   ; 8696: d0 05 ae... ...
-    equb   4, &85, &18, &8d, &2c,   6, &bd, &0d,   4, &85, &19, &8d   ; 86a2: 04 85 18... ...
-    equb &2d,   6, &38, &ad,   2,   4, &e9, &af, &8d, &2e,   6, &ad   ; 86ae: 2d 06 38... -.8
-    equb   3,   4, &e9, &1f, &8d, &2f,   6, &20, &14, &98, &a9, &a3   ; 86ba: 03 04 e9... ...
-    equb &85, &0a, &a9, &87, &85, &0b, &38, &ad, &2e,   6, &85, &0e   ; 86c6: 85 0a a9... ...
-    equb &e9, &a3, &85, &4a, &ad, &2f,   6, &85, &0f, &e9, &87, &85   ; 86d2: e9 a3 85... ...
-    equb &4b, &a2, &af, &a0, &1f, &20, &2b, &b4, &a0,   0, &b1, &0e   ; 86de: 4b a2 af... K..
-    equb &f0, &51, &c9, &20, &f0, &1e, &c9, &60, &f0, &3c, &c9, &ff   ; 86ea: f0 51 c9... .Q.
-    equb &f0, &4d, &29, &1f, &c9, &19, &f0, &10, &29, &0f, &c9, &0c   ; 86f6: f0 4d 29... .M)
-    equb &b0, &0a, &c9,   8, &f0, &28, &c9, &0a, &f0, &24, &d0, &1e   ; 8702: b0 0a c9... ...
-    equb &a0,   2, &b1, &0e, &c9, &80, &90, &12, &c9, &c0, &b0, &0e   ; 870e: a0 02 b1... ...
-    equb &88, &b1, &0e, &65, &4a, &91, &0e, &c8, &b1, &0e, &65, &4b   ; 871a: 88 b1 0e... ...
-    equb &91, &0e, &a9,   2, &d0,   6, &a9,   1, &d0,   2, &a9,   0   ; 8726: 91 0e a9... ...
-    equb &38, &65, &0e, &85, &0e, &90, &ad, &e6, &0f, &d0, &a9, &c8   ; 8732: 38 65 0e... 8e.
-    equb &b1, &0e, &d0, &fb, &98, &d0, &ed, &e6, &0e, &d0,   2, &e6   ; 873e: b1 0e d0... ...
-    equb &0f, &18, &a9, &0c, &65, &4a, &85, &0c, &a9, &a6, &65, &4b   ; 874a: 0f 18 a9... ...
-    equb &85, &0d, &a2,   2, &a0,   0, &18, &b1, &0e, &65, &4a, &91   ; 8756: 85 0d a2... ...
-    equb &0e, &b1, &0c, &65, &4b, &91, &0c, &c8, &d0,   4, &e6, &0f   ; 8762: 0e b1 0c... ...
-    equb &e6, &0d, &c0,   5, &d0, &e8, &ca, &d0, &e5, &a0,   0, &8c   ; 876e: e6 0d c0... ...
-    equb &11,   4, &a9, &0d, &91, &18, &c8, &8c, &59,   6, &a9,   4   ; 877a: 11 04 a9... ...
-    equb &91, &18, &a9, &70, &85, &1e, &a9, &86, &85, &1f, &a2, &97   ; 8786: 91 18 a9... ...
-    equb &a0, &87, &4c, &f7, &ff                                      ; 8792: a0 87 4c... ..L
+    equb &0e,   4, &4c, &74, &85                                      ; 867e: 0e 04 4c... ..L
+
+.loop_c8683
+    brk                                                               ; 8683: 00          .
+
+    equb   4, &80, &8a,   0                                           ; 8684: 04 80 8a... ...
+
+.command_compile_handler
+    ldx #0                                                            ; 8688: a2 00       ..
+    lda (l000c),y                                                     ; 868a: b1 0c       ..
+    cmp #&3e ; '>'                                                    ; 868c: c9 3e       .>
+    beq c8698                                                         ; 868e: f0 08       ..
+    cmp #&7b ; '{'                                                    ; 8690: c9 7b       .{
+    beq c8698                                                         ; 8692: f0 04       ..
+    cmp #&0d                                                          ; 8694: c9 0d       ..
+    bne c869d                                                         ; 8696: d0 05       ..
+.c8698
+    ldx l0410                                                         ; 8698: ae 10 04    ...
+    beq loop_c8683                                                    ; 869b: f0 e6       ..
+.c869d
+    stx l0410                                                         ; 869d: 8e 10 04    ...
+    lda oshwm_low2,x                                                  ; 86a0: bd 0a 04    ...
+    sta l0018                                                         ; 86a3: 85 18       ..
+    sta l062c                                                         ; 86a5: 8d 2c 06    .,.
+    lda oshwm_high2,x                                                 ; 86a8: bd 0d 04    ...
+    sta l0019                                                         ; 86ab: 85 19       ..
+    sta l062d                                                         ; 86ad: 8d 2d 06    .-.
+    sec                                                               ; 86b0: 38          8
+    lda himem_low                                                     ; 86b1: ad 02 04    ...
+    sbc #&af                                                          ; 86b4: e9 af       ..
+    sta l062e                                                         ; 86b6: 8d 2e 06    ...
+    lda himem_high                                                    ; 86b9: ad 03 04    ...
+    sbc #&1f                                                          ; 86bc: e9 1f       ..
+    sta l062f                                                         ; 86be: 8d 2f 06    ./.
+    jsr sub_c9814                                                     ; 86c1: 20 14 98     ..
+    lda #&a3                                                          ; 86c4: a9 a3       ..
+    sta l000a                                                         ; 86c6: 85 0a       ..
+    lda #&87                                                          ; 86c8: a9 87       ..
+    sta l000b                                                         ; 86ca: 85 0b       ..
+    sec                                                               ; 86cc: 38          8
+    lda l062e                                                         ; 86cd: ad 2e 06    ...
+    sta l000e                                                         ; 86d0: 85 0e       ..
+    sbc #&a3                                                          ; 86d2: e9 a3       ..
+    sta l004a                                                         ; 86d4: 85 4a       .J
+    lda l062f                                                         ; 86d6: ad 2f 06    ./.
+    sta l000f                                                         ; 86d9: 85 0f       ..
+    sbc #&87                                                          ; 86db: e9 87       ..
+    sta l004b                                                         ; 86dd: 85 4b       .K
+    ldx #&af                                                          ; 86df: a2 af       ..
+    ldy #&1f                                                          ; 86e1: a0 1f       ..
+    jsr sub_cb42b                                                     ; 86e3: 20 2b b4     +.
+.c86e6
+    ldy #0                                                            ; 86e6: a0 00       ..
+    lda (l000e),y                                                     ; 86e8: b1 0e       ..
+    beq c873d                                                         ; 86ea: f0 51       .Q
+    cmp #&20 ; ' '                                                    ; 86ec: c9 20       .
+    beq c870e                                                         ; 86ee: f0 1e       ..
+    cmp #&60 ; '`'                                                    ; 86f0: c9 60       .`
+    beq c8730                                                         ; 86f2: f0 3c       .<
+    cmp #&ff                                                          ; 86f4: c9 ff       ..
+    beq c8745                                                         ; 86f6: f0 4d       .M
+    and #&1f                                                          ; 86f8: 29 1f       ).
+    cmp #&19                                                          ; 86fa: c9 19       ..
+    beq c870e                                                         ; 86fc: f0 10       ..
+    and #&0f                                                          ; 86fe: 29 0f       ).
+    cmp #&0c                                                          ; 8700: c9 0c       ..
+    bcs c870e                                                         ; 8702: b0 0a       ..
+    cmp #8                                                            ; 8704: c9 08       ..
+    beq c8730                                                         ; 8706: f0 28       .(
+    cmp #&0a                                                          ; 8708: c9 0a       ..
+    beq c8730                                                         ; 870a: f0 24       .$
+    bne c872c                                                         ; 870c: d0 1e       ..
+.c870e
+    ldy #2                                                            ; 870e: a0 02       ..
+    lda (l000e),y                                                     ; 8710: b1 0e       ..
+    cmp #&80                                                          ; 8712: c9 80       ..
+    bcc c8728                                                         ; 8714: 90 12       ..
+    cmp #&c0                                                          ; 8716: c9 c0       ..
+    bcs c8728                                                         ; 8718: b0 0e       ..
+    dey                                                               ; 871a: 88          .
+    lda (l000e),y                                                     ; 871b: b1 0e       ..
+    adc l004a                                                         ; 871d: 65 4a       eJ
+    sta (l000e),y                                                     ; 871f: 91 0e       ..
+    iny                                                               ; 8721: c8          .
+    lda (l000e),y                                                     ; 8722: b1 0e       ..
+    adc l004b                                                         ; 8724: 65 4b       eK
+    sta (l000e),y                                                     ; 8726: 91 0e       ..
+.c8728
+    lda #2                                                            ; 8728: a9 02       ..
+    bne c8732                                                         ; 872a: d0 06       ..
+.c872c
+    lda #1                                                            ; 872c: a9 01       ..
+    bne c8732                                                         ; 872e: d0 02       ..
+.c8730
+    lda #0                                                            ; 8730: a9 00       ..
+.c8732
+    sec                                                               ; 8732: 38          8
+    adc l000e                                                         ; 8733: 65 0e       e.
+    sta l000e                                                         ; 8735: 85 0e       ..
+    bcc c86e6                                                         ; 8737: 90 ad       ..
+    inc l000f                                                         ; 8739: e6 0f       ..
+    bne c86e6                                                         ; 873b: d0 a9       ..
+.c873d
+    iny                                                               ; 873d: c8          .
+    lda (l000e),y                                                     ; 873e: b1 0e       ..
+    bne c873d                                                         ; 8740: d0 fb       ..
+    tya                                                               ; 8742: 98          .
+    bne c8732                                                         ; 8743: d0 ed       ..
+.c8745
+    inc l000e                                                         ; 8745: e6 0e       ..
+    bne c874b                                                         ; 8747: d0 02       ..
+    inc l000f                                                         ; 8749: e6 0f       ..
+.c874b
+    clc                                                               ; 874b: 18          .
+    lda #&0c                                                          ; 874c: a9 0c       ..
+    adc l004a                                                         ; 874e: 65 4a       eJ
+    sta l000c                                                         ; 8750: 85 0c       ..
+    lda #&a6                                                          ; 8752: a9 a6       ..
+    adc l004b                                                         ; 8754: 65 4b       eK
+    sta l000d                                                         ; 8756: 85 0d       ..
+    ldx #2                                                            ; 8758: a2 02       ..
+    ldy #0                                                            ; 875a: a0 00       ..
+.c875c
+    clc                                                               ; 875c: 18          .
+    lda (l000e),y                                                     ; 875d: b1 0e       ..
+    adc l004a                                                         ; 875f: 65 4a       eJ
+    sta (l000e),y                                                     ; 8761: 91 0e       ..
+    lda (l000c),y                                                     ; 8763: b1 0c       ..
+    adc l004b                                                         ; 8765: 65 4b       eK
+    sta (l000c),y                                                     ; 8767: 91 0c       ..
+    iny                                                               ; 8769: c8          .
+    bne c8770                                                         ; 876a: d0 04       ..
+    inc l000f                                                         ; 876c: e6 0f       ..
+    inc l000d                                                         ; 876e: e6 0d       ..
+.c8770
+    cpy #5                                                            ; 8770: c0 05       ..
+    bne c875c                                                         ; 8772: d0 e8       ..
+    dex                                                               ; 8774: ca          .
+    bne c875c                                                         ; 8775: d0 e5       ..
+    ldy #0                                                            ; 8777: a0 00       ..
+    sty l0411                                                         ; 8779: 8c 11 04    ...
+    lda #&0d                                                          ; 877c: a9 0d       ..
+    sta (l0018),y                                                     ; 877e: 91 18       ..
+    iny                                                               ; 8780: c8          .
+    sty l0659                                                         ; 8781: 8c 59 06    .Y.
+    lda #4                                                            ; 8784: a9 04       ..
+    sta (l0018),y                                                     ; 8786: 91 18       ..
+    lda #&70 ; 'p'                                                    ; 8788: a9 70       .p
+    sta l001e                                                         ; 878a: 85 1e       ..
+    lda #&86                                                          ; 878c: a9 86       ..
+    sta l001f                                                         ; 878e: 85 1f       ..
+    ldx #<(l8797)                                                     ; 8790: a2 97       ..
+    ldy #>(l8797)                                                     ; 8792: a0 87       ..
+    jmp oscli                                                         ; 8794: 4c f7 ff    L..
+
+.l8797
     equs "fx163,192,0"                                                ; 8797: 66 78 31... fx1
     equb &0d                                                          ; 87a2: 0d          .
 
@@ -3647,6 +3851,7 @@ oscli                           = &fff7
     sbc l0013                                                         ; 980e: e5 13       ..
     sta l062f                                                         ; 9810: 8d 2f 06    ./.
     tay                                                               ; 9813: a8          .
+.sub_c9814
     bcs c9820                                                         ; 9814: b0 0a       ..
 .c9816
     brk                                                               ; 9816: 00          .
@@ -7040,19 +7245,75 @@ la951 = sub_ca94f+2
     sta l0049                                                         ; af02: 85 49       .I
     rts                                                               ; af04: 60          `
 
-    equb &20, &5d, &85, &a9, &a0, &a2,   9, &20, &f4, &ff, &c0, &27   ; af05: 20 5d 85...  ].
-    equb &b0,   3, &4c, &69, &85, &86, &30, &ca, &86, &2d, &84, &2c   ; af11: b0 03 4c... ..L
-    equb &8a, &e9,   4, &85, &2f, &a9, &87, &20, &f4, &ff, &84, &2b   ; af1d: 8a e9 04... ...
-    equb &a0,   0, &84, &34, &b1, &0c, &c9, &0d, &f0,   6, &20, &42   ; af29: a0 00 84... ...
-    equb &b8, &20, &71, &85, &ae, &0b,   4, &ac, &0e,   4, &ad, &10   ; af35: b8 20 71... . q
-    equb   4, &d0,   4, &a6,   4, &a4,   5, &86,   2, &84,   3, &20   ; af41: 04 d0 04... ...
-    equb &d9, &af, &86,   0, &85,   1, &a6,   4, &a4,   5, &20,   4   ; af4d: d9 af 86... ...
-    equb &b4, &a5, &27, &85,   2, &a5, &28, &85,   3, &ad, &17,   4   ; af59: b4 a5 27... ..'
-    equb &c9,   3, &d0, &11, &a2, &70, &a0, &af, &4c, &f7, &ff        ; af65: c9 03 d0... ...
-    equs "EDIT 0,29"                                                  ; af70: 45 44 49... EDI
-    equb &0d, &a9, &0d, &a0,   0, &91,   4, &91, &29, &84, &33, &84   ; af79: 0d a9 0d... ...
-    equb &37, &84, &39, &84, &24, &c8, &84, &36                       ; af85: 37 84 39... 7.9
+.command_edit_handler
+    jsr c855d                                                         ; af05: 20 5d 85     ].
+    lda #osbyte_read_vdu_variable                                     ; af08: a9 a0       ..
+    ldx #9                                                            ; af0a: a2 09       ..
+    jsr osbyte                                                        ; af0c: 20 f4 ff     ..            ; Read the text window bottom position (VDU variable X=9)
+    cpy #&27 ; '''                                                    ; af0f: c0 27       .'             ; Y is the text window right position
+    bcs caf16                                                         ; af11: b0 03       ..
+    jmp c8569                                                         ; af13: 4c 69 85    Li.
 
+.caf16
+    stx l0030                                                         ; af16: 86 30       .0
+    dex                                                               ; af18: ca          .
+    stx l002d                                                         ; af19: 86 2d       .-
+    sty l002c                                                         ; af1b: 84 2c       .,
+    txa                                                               ; af1d: 8a          .
+    sbc #4                                                            ; af1e: e9 04       ..
+    sta l002f                                                         ; af20: 85 2f       ./
+    lda #osbyte_read_char_at_cursor                                   ; af22: a9 87       ..
+    jsr osbyte                                                        ; af24: 20 f4 ff     ..            ; Read character at the text cursor, and current screen MODE
+    sty l002b                                                         ; af27: 84 2b       .+             ; Y is the current screen MODE (0-7)
+    ldy #0                                                            ; af29: a0 00       ..
+    sty l0034                                                         ; af2b: 84 34       .4
+    lda (l000c),y                                                     ; af2d: b1 0c       ..
+    cmp #&0d                                                          ; af2f: c9 0d       ..
+    beq caf39                                                         ; af31: f0 06       ..
+    jsr sub_cb842                                                     ; af33: 20 42 b8     B.
+    jsr sub_c8571                                                     ; af36: 20 71 85     q.
+.caf39
+    ldx l040b                                                         ; af39: ae 0b 04    ...
+    ldy l040e                                                         ; af3c: ac 0e 04    ...
+    lda l0410                                                         ; af3f: ad 10 04    ...
+    bne caf48                                                         ; af42: d0 04       ..
+    ldx oshwm_low_zp                                                  ; af44: a6 04       ..
+    ldy oshwm_high_zp                                                 ; af46: a4 05       ..
+.caf48
+    stx l0002                                                         ; af48: 86 02       ..
+    sty l0003                                                         ; af4a: 84 03       ..
+    jsr sub_cafd9                                                     ; af4c: 20 d9 af     ..
+    stx l0000                                                         ; af4f: 86 00       ..
+    sta l0001                                                         ; af51: 85 01       ..
+    ldx oshwm_low_zp                                                  ; af53: a6 04       ..
+    ldy oshwm_high_zp                                                 ; af55: a4 05       ..
+    jsr cb404                                                         ; af57: 20 04 b4     ..
+    lda l0027                                                         ; af5a: a5 27       .'
+    sta l0002                                                         ; af5c: 85 02       ..
+    lda l0028                                                         ; af5e: a5 28       .(
+    sta l0003                                                         ; af60: 85 03       ..
+    lda simplified_machine_type                                       ; af62: ad 17 04    ...
+    cmp #3                                                            ; af65: c9 03       ..
+    bne caf7a                                                         ; af67: d0 11       ..
+    ldx #<(laf70)                                                     ; af69: a2 70       .p
+    ldy #>(laf70)                                                     ; af6b: a0 af       ..
+    jmp oscli                                                         ; af6d: 4c f7 ff    L..
+
+.laf70
+    equs "EDIT 0,29"                                                  ; af70: 45 44 49... EDI
+    equb &0d                                                          ; af79: 0d          .
+
+.caf7a
+    lda #&0d                                                          ; af7a: a9 0d       ..
+    ldy #0                                                            ; af7c: a0 00       ..
+    sta (oshwm_low_zp),y                                              ; af7e: 91 04       ..
+    sta (l0029),y                                                     ; af80: 91 29       .)
+    sty l0033                                                         ; af82: 84 33       .3
+    sty l0037                                                         ; af84: 84 37       .7
+    sty l0039                                                         ; af86: 84 39       .9
+    sty l0024                                                         ; af88: 84 24       .$
+    iny                                                               ; af8a: c8          .
+    sty l0036                                                         ; af8b: 84 36       .6
 .caf8d
     ldx #&ff                                                          ; af8d: a2 ff       ..
     txs                                                               ; af8f: 9a          .
@@ -7670,6 +7931,7 @@ la951 = sub_ca94f+2
     sbc l0013                                                         ; b425: e5 13       ..
     sta l000f                                                         ; b427: 85 0f       ..
     sta l0001                                                         ; b429: 85 01       ..
+.sub_cb42b
     stx l0012                                                         ; b42b: 86 12       ..
     sty l0013                                                         ; b42d: 84 13       ..
     ldx l0013                                                         ; b42f: a6 13       ..
@@ -8186,10 +8448,22 @@ la951 = sub_ca94f+2
     equb &f0, &0f, &a0,   0, &b9, &78,   6, &c9, &0d, &f0,   6, &20   ; b817: f0 0f a0... ...
     equb &ee, &ff, &c8, &d0, &f3, &20, &84, &b2, &5d, &ba, &ea, &20   ; b823: ee ff c8... ...
     equb &90, &b2, &d0, &0f, &a5, &34, &f0, &0b, &b9, &78,   6, &99   ; b82f: 90 b2 d0... ...
-    equb &1a,   5, &c8, &c9, &0d, &d0, &f5, &a6, &17, &a0,   0, &bd   ; b83b: 1a 05 c8... ...
-    equb &1a,   5, &99, &78,   6, &e8, &c8, &c9, &0d, &d0, &f4, &e6   ; b847: 1a 05 99... ...
-    equs "4`LX"                                                       ; b853: 34 60 4c... 4`L
-    equb &9e, &20, &70, &b2                                           ; b857: 9e 20 70... . p
+    equb &1a,   5, &c8, &c9, &0d, &d0, &f5                            ; b83b: 1a 05 c8... ...
+
+.sub_cb842
+    ldx l0017                                                         ; b842: a6 17       ..
+    ldy #0                                                            ; b844: a0 00       ..
+.loop_cb846
+    lda l051a,x                                                       ; b846: bd 1a 05    ...
+    sta l0678,y                                                       ; b849: 99 78 06    .x.
+    inx                                                               ; b84c: e8          .
+    iny                                                               ; b84d: c8          .
+    cmp #&0d                                                          ; b84e: c9 0d       ..
+    bne loop_cb846                                                    ; b850: d0 f4       ..
+    inc l0034                                                         ; b852: e6 34       .4
+    rts                                                               ; b854: 60          `
+
+    equb &4c, &58, &9e, &20, &70, &b2                                 ; b855: 4c 58 9e... LX.
     equs "Line"                                                       ; b85b: 4c 69 6e... Lin
     equb &ba, &ea, &20, &90, &b2, &f0, &ef, &84, &16, &84, &46, &84   ; b85f: ba ea 20... ..
     equb &47, &a4, &16, &b1, &0c, &c9, &0d, &f0, &31, &c9, &3a, &b0   ; b86b: 47 a4 16... G..
@@ -8461,7 +8735,7 @@ la951 = sub_ca94f+2
 ;     c839e
 ;     c839f
 ;     c83b4
-;     c83c4
+;     c83b9
 ;     c83cd
 ;     c83df
 ;     c8412
@@ -8469,6 +8743,9 @@ la951 = sub_ca94f+2
 ;     c84a4
 ;     c84bb
 ;     c84c4
+;     c84e3
+;     c84fc
+;     c8514
 ;     c8535
 ;     c855d
 ;     c8562
@@ -8481,6 +8758,19 @@ la951 = sub_ca94f+2
 ;     c8633
 ;     c8639
 ;     c8655
+;     c8698
+;     c869d
+;     c86e6
+;     c870e
+;     c8728
+;     c872c
+;     c8730
+;     c8732
+;     c873d
+;     c8745
+;     c874b
+;     c875c
+;     c8770
 ;     c87a3
 ;     c87c7
 ;     c8821
@@ -8784,6 +9074,10 @@ la951 = sub_ca94f+2
 ;     cae87
 ;     cae92
 ;     caf00
+;     caf16
+;     caf39
+;     caf48
+;     caf7a
 ;     caf8d
 ;     caf9c
 ;     cafbe
@@ -8921,6 +9215,7 @@ la951 = sub_ca94f+2
 ;     l0031
 ;     l0032
 ;     l0033
+;     l0034
 ;     l0035
 ;     l0036
 ;     l0037
@@ -8965,6 +9260,7 @@ la951 = sub_ca94f+2
 ;     l0415
 ;     l0416
 ;     l0418
+;     l0419
 ;     l041a
 ;     l0420
 ;     l0519
@@ -8979,6 +9275,8 @@ la951 = sub_ca94f+2
 ;     l0625
 ;     l0626
 ;     l0627
+;     l0628
+;     l0629
 ;     l062c
 ;     l062d
 ;     l062e
@@ -9011,11 +9309,10 @@ la951 = sub_ca94f+2
 ;     l0669
 ;     l066a
 ;     l066b
+;     l0678
 ;     l8036
 ;     l803c
-;     l8466
-;     l8470
-;     l8479
+;     l8797
 ;     l9539
 ;     l953a
 ;     l9998
@@ -9049,6 +9346,7 @@ la951 = sub_ca94f+2
 ;     la786
 ;     la920
 ;     la951
+;     laf70
 ;     lb072
 ;     lb193
 ;     lb19a
@@ -9068,6 +9366,7 @@ la951 = sub_ca94f+2
 ;     loop_c83cc
 ;     loop_c849a
 ;     loop_c85f5
+;     loop_c8683
 ;     loop_c87be
 ;     loop_c88c8
 ;     loop_c88d3
@@ -9166,11 +9465,12 @@ la951 = sub_ca94f+2
 ;     loop_cb574
 ;     loop_cb5a8
 ;     loop_cb68e
+;     loop_cb846
 ;     loop_cbdb4
 ;     sub_c8104
 ;     sub_c84b3
 ;     sub_c8520
-;     sub_c857a
+;     sub_c8571
 ;     sub_c8588
 ;     sub_c859b
 ;     sub_c85ca
@@ -9230,6 +9530,7 @@ la951 = sub_ca94f+2
 ;     sub_c9676
 ;     sub_c9685
 ;     sub_c979a
+;     sub_c9814
 ;     sub_c981e
 ;     sub_c982f
 ;     sub_c9918
@@ -9350,6 +9651,7 @@ la951 = sub_ca94f+2
 ;     sub_cb39b
 ;     sub_cb3b1
 ;     sub_cb3fd
+;     sub_cb42b
 ;     sub_cb455
 ;     sub_cb49f
 ;     sub_cb4a9
@@ -9364,6 +9666,7 @@ la951 = sub_ca94f+2
 ;     sub_cb727
 ;     sub_cb77e
 ;     sub_cb7cc
+;     sub_cb842
 ;     sub_cbdbf
 ;     sub_cbe06
     assert &80+' ' == &a0
@@ -9387,6 +9690,8 @@ la951 = sub_ca94f+2
     assert 128 + 17 == &91
     assert <(l003e) == &3e
     assert <(l051a) == &1a
+    assert <(l8797) == &97
+    assert <(laf70) == &70
     assert <brkv_handler == &98
     assert <bytecode_opcode_00_handler == &50
     assert <bytecode_opcode_01_handler == &50
@@ -9644,8 +9949,20 @@ la951 = sub_ca94f+2
     assert <bytecode_opcode_fd_handler == &9e
     assert <bytecode_opcode_fe_handler == &48
     assert <bytecode_opcode_ff_handler == &4e
+    assert <command_close_handler == &eb
+    assert <command_compile_handler == &88
+    assert <command_edit_handler == &05
+    assert <command_go_handler == &e2
+    assert <command_load_handler == &7a
+    assert <command_mode_handler == &08
+    assert <command_run_handler == &c4
+    assert <command_save_handler == &1a
+    assert <command_table == &40
+    assert <command_trace_handler == &ff
     assert >(l003e) == &00
     assert >(l051a) == &05
+    assert >(l8797) == &87
+    assert >(laf70) == &af
     assert >brkv_handler == &80
     assert >bytecode_opcode_00_handler == &88
     assert >bytecode_opcode_01_handler == &88
@@ -9903,17 +10220,29 @@ la951 = sub_ca94f+2
     assert >bytecode_opcode_fd_handler == &a8
     assert >bytecode_opcode_fe_handler == &8e
     assert >bytecode_opcode_ff_handler == &8b
+    assert >command_close_handler == &85
+    assert >command_compile_handler == &86
+    assert >command_edit_handler == &af
+    assert >command_go_handler == &83
+    assert >command_load_handler == &85
+    assert >command_mode_handler == &85
+    assert >command_run_handler == &83
+    assert >command_save_handler == &84
+    assert >command_table == &84
+    assert >command_trace_handler == &84
     assert copyright - rom_header == &14
     assert osbyte_163_192_x_minus_1_table - 1 == &8094
     assert osbyte_acknowledge_escape == &7e
     assert osbyte_enter_language == &8e
     assert osbyte_inkey == &81
     assert osbyte_read_adc_or_get_buffer_status == &80
+    assert osbyte_read_char_at_cursor == &87
     assert osbyte_read_high_order_address == &82
     assert osbyte_read_himem == &84
     assert osbyte_read_himem_for_mode == &85
     assert osbyte_read_os_version == &00
     assert osbyte_read_oshwm == &83
+    assert osbyte_read_vdu_variable == &a0
     assert osbyte_read_write_last_break_type == &fd
     assert osbyte_read_write_tab_char == &db
     assert osbyte_select_output_stream == &03

@@ -84,6 +84,30 @@ entry(0x8482, "read_io_memory_at_l003e_and_advance")
 
 entry(0x834c, "user_interface_command_line_loop")
 entry(0x8494, "probably_read_input_line_to_l051a")
+label(0x8440, "command_table")
+label(0x8466, "command_table_entry_lengths")
+expr(0x8365, make_lo("command_table"))
+expr(0x8369, make_hi("command_table"))
+label(0x8470, "command_jump_table_low")
+label(0x8479, "command_jump_table_high")
+commands = [
+    "close",
+    "compile",
+    "edit",
+    "go",
+    "load",
+    "mode",
+    "run",
+    "save",
+    "trace",
+]
+for i in range(9):
+    target = get_u8_binary(0x8470+i) + (get_u8_binary(0x8479+i) << 8)
+    target_label = entry(target, "command_%s_handler" % commands[i])
+    byte(0x8470+i)
+    expr(0x8470+i, make_lo(target_label))
+    byte(0x8479+i)
+    expr(0x8479+i, make_hi(target_label))
 
 entry(0x87e2, "jmp_indirect_via_l0008")
 
