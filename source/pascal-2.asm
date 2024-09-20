@@ -2431,7 +2431,7 @@ oscli                           = &fff7
 .bytecode_opcode_57_handler
 .bytecode_opcode_58_handler
 .bytecode_opcode_59_handler
-    lda la6bd,x                                                       ; 8e27: bd bd a6    ...
+    lda opcode_54_to_59_table - 84,x                                  ; 8e27: bd bd a6    ...
     sta l0663                                                         ; 8e2a: 8d 63 06    .c.
     jsr sub_c9a15                                                     ; 8e2d: 20 15 9a     ..
     lda (l0000),y                                                     ; 8e30: b1 00       ..
@@ -2465,7 +2465,7 @@ oscli                           = &fff7
     beq c8e4a                                                         ; 8e54: f0 f4       ..
 .bytecode_opcode_5a_handler
 .bytecode_opcode_5b_handler
-    lda la6b7,x                                                       ; 8e56: bd b7 a6    ...
+    lda opcode_5a_5b_table - 90,x                                     ; 8e56: bd b7 a6    ...
     sta l0663                                                         ; 8e59: 8d 63 06    .c.
     jsr sub_c8b88                                                     ; 8e5c: 20 88 8b     ..
     lda l006a                                                         ; 8e5f: a5 6a       .j
@@ -6528,14 +6528,12 @@ oscli                           = &fff7
     equb >bytecode_opcode_a8_handler                                  ; a6b4: 9d          .
     equb >bytecode_opcode_a9_handler                                  ; a6b5: 8b          .
     equb >bytecode_opcode_aa_handler                                  ; a6b6: 90          .
-.la6b7
     equb >bytecode_opcode_ab_handler                                  ; a6b7: 90          .
     equb >bytecode_opcode_ac_handler                                  ; a6b8: 8b          .
     equb >bytecode_opcode_ad_handler                                  ; a6b9: 93          .
     equb >bytecode_opcode_ae_handler                                  ; a6ba: 93          .
     equb >bytecode_opcode_af_handler                                  ; a6bb: 94          .
     equb >bytecode_opcode_b0_handler                                  ; a6bc: 95          .
-.la6bd
     equb >bytecode_opcode_b1_handler                                  ; a6bd: 95          .
     equb >bytecode_opcode_b2_handler                                  ; a6be: 99          .
     equb >bytecode_opcode_b3_handler                                  ; a6bf: 95          .
@@ -6629,6 +6627,8 @@ oscli                           = &fff7
 .opcode_68_69_table
 .opcode_62_to_67_table
 .opcode_5c_to_61_table
+.opcode_5a_5b_table
+.opcode_54_to_59_table
     equb 2, 5                                                         ; a711: 02 05       ..
 .la713
     equb 6, 3, 4, 1                                                   ; a713: 06 03 04... ...
@@ -11113,8 +11113,6 @@ oscli                           = &fff7
 ;     l803c
 ;     l9998
 ;     l9999
-;     la6b7
-;     la6bd
 ;     la6f4
 ;     la6f9
 ;     la6fc
@@ -12208,6 +12206,8 @@ oscli                           = &fff7
     assert copyright - rom_header == &14
     assert fx163_192_2 == &a746
     assert opcode_26_27_table - 38 == &a70e
+    assert opcode_54_to_59_table - 84 == &a6bd
+    assert opcode_5a_5b_table - 90 == &a6b7
     assert opcode_5c_to_61_table - 92 == &a6b5
     assert opcode_62_to_67_table - 98 == &a6af
     assert opcode_68_69_table - 104 == &a6a9
