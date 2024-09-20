@@ -191,7 +191,7 @@ entry(0x9335, "oswrch_or_osbput_aligned_string_yx") # TODO: guessing a bit
 label(0xa730, "string_true")
 expr(0xaa90, make_lo("string_true"))
 expr(0xaa92, make_hi("string_true"))
-label_and_expr(0xa72b, "string_false", 0xaa88, 0xaa90)
+label_and_expr(0xa72b, "string_false", 0xaa88, 0xaa8a)
 
 entry(0x9976, "escape")
 

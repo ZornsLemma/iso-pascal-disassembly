@@ -6992,7 +6992,7 @@ la951 = sub_ca94f+2
     jsr sub_c9af1                                                     ; aa82: 20 f1 9a     ..
     bne caa8f                                                         ; aa85: d0 08       ..
     ldx #<string_false                                                ; aa87: a2 2b       .+
-    ldy #&a7                                                          ; aa89: a0 a7       ..
+    ldy #>string_false                                                ; aa89: a0 a7       ..
     lda #5                                                            ; aa8b: a9 05       ..
     bne caa95                                                         ; aa8d: d0 06       ..
 .caa8f
@@ -11514,6 +11514,7 @@ la951 = sub_ca94f+2
     assert >something_21_handler == &b7
     assert >something_22_handler == &b7
     assert >something_23_handler == &b7
+    assert >string_false == &a7
     assert >string_true == &a7
     assert copyright - rom_header == &14
     assert osbyte_163_192_x_minus_1_table - 1 == &8094
