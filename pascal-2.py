@@ -328,23 +328,18 @@ expr(0x898c, make_subtract("opcode_26_27_table", 0x26))
 label(0xa6a3+0x91, "opcode_91_92_table")
 expr(0x9419, make_subtract("opcode_91_92_table", 0x91))
 
-label(0xa6a5+0x6c, "opcode_6c_to_71_table")
-expr(0x8ed2, make_subtract("opcode_6c_to_71_table", 0x6c))
 
-label(0xa6a9+0x68, "opcode_68_69_table")
-expr(0x8e6d, make_subtract("opcode_68_69_table", 0x68))
 
-label(0xa6af+0x62, "opcode_62_to_67_table")
-expr(0xa962, make_subtract("opcode_62_to_67_table", 0x62))
+label(0xa6a5+0x6c, "something_table")
+expr(0x8ed2, make_subtract("something_table", 0x6c))
+expr(0x8e6d, make_subtract("something_table", 0x68))
+expr(0xa962, make_subtract("something_table", 0x62))
+expr(0x8ea1, make_subtract("something_table", 0x5c))
+expr(0x8e57, make_subtract("something_table", 0x5a))
+expr(0x8e28, make_subtract("something_table", 0x54))
 
-label(0xa6b5+0x5c, "opcode_5c_to_61_table")
-expr(0x8ea1, make_subtract("opcode_5c_to_61_table", 0x5c))
 
-label(0xa6b7+0x5a, "opcode_5a_5b_table")
-expr(0x8e57, make_subtract("opcode_5a_5b_table", 0x5a))
 
-label(0xa6bd+0x54, "opcode_54_to_59_table")
-expr(0x8e28, make_subtract("opcode_54_to_59_table", 0x54))
 
 label(0xa6f4+0x40, "opcode_40_41_table")
 expr(0x897f, make_subtract("opcode_40_41_table", 0x40))

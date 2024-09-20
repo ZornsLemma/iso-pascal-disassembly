@@ -2431,7 +2431,7 @@ oscli                           = &fff7
 .bytecode_opcode_57_handler
 .bytecode_opcode_58_handler
 .bytecode_opcode_59_handler
-    lda opcode_54_to_59_table - 84,x                                  ; 8e27: bd bd a6    ...
+    lda something_table - 84,x                                        ; 8e27: bd bd a6    ...
     sta l0663                                                         ; 8e2a: 8d 63 06    .c.
     jsr sub_c9a15                                                     ; 8e2d: 20 15 9a     ..
     lda (l0000),y                                                     ; 8e30: b1 00       ..
@@ -2465,7 +2465,7 @@ oscli                           = &fff7
     beq c8e4a                                                         ; 8e54: f0 f4       ..
 .bytecode_opcode_5a_handler
 .bytecode_opcode_5b_handler
-    lda opcode_5a_5b_table - 90,x                                     ; 8e56: bd b7 a6    ...
+    lda something_table - 90,x                                        ; 8e56: bd b7 a6    ...
     sta l0663                                                         ; 8e59: 8d 63 06    .c.
     jsr sub_c8b88                                                     ; 8e5c: 20 88 8b     ..
     lda l006a                                                         ; 8e5f: a5 6a       .j
@@ -2477,7 +2477,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_68_handler
 .bytecode_opcode_69_handler
-    lda opcode_68_69_table - 104,x                                    ; 8e6c: bd a9 a6    ...
+    lda something_table - 104,x                                       ; 8e6c: bd a9 a6    ...
     sta l0663                                                         ; 8e6f: 8d 63 06    .c.
     jsr sub_c9a08                                                     ; 8e72: 20 08 9a     ..
 .loop_c8e75
@@ -2513,7 +2513,7 @@ oscli                           = &fff7
 .bytecode_opcode_5f_handler
 .bytecode_opcode_60_handler
 .bytecode_opcode_61_handler
-    lda opcode_5c_to_61_table - 92,x                                  ; 8ea0: bd b5 a6    ...
+    lda something_table - 92,x                                        ; 8ea0: bd b5 a6    ...
     sta l0663                                                         ; 8ea3: 8d 63 06    .c.
     jsr sub_c9a68                                                     ; 8ea6: 20 68 9a     h.
     jsr c9a8a                                                         ; 8ea9: 20 8a 9a     ..
@@ -2548,7 +2548,7 @@ oscli                           = &fff7
 .bytecode_opcode_6f_handler
 .bytecode_opcode_70_handler
 .bytecode_opcode_71_handler
-    lda opcode_6c_to_71_table - 108,x                                 ; 8ed1: bd a5 a6    ...
+    lda something_table - 108,x                                       ; 8ed1: bd a5 a6    ...
     sta l0663                                                         ; 8ed4: 8d 63 06    .c.
     jsr sub_c9af9                                                     ; 8ed7: 20 f9 9a     ..
     jsr sub_c8b88                                                     ; 8eda: 20 88 8b     ..
@@ -6619,12 +6619,7 @@ oscli                           = &fff7
     equb >opcode_74_sub_handler                                       ; a70e: 8c          .
     equb >opcode_75_sub_handler                                       ; a70f: 8b          .
     equb >opcode_76_sub_handler                                       ; a710: 8c          .
-.opcode_6c_to_71_table
-.opcode_68_69_table
-.opcode_62_to_67_table
-.opcode_5c_to_61_table
-.opcode_5a_5b_table
-.opcode_54_to_59_table
+.something_table
     equb 2, 5                                                         ; a711: 02 05       ..
 .la713
     equb 6, 3, 4, 1                                                   ; a713: 06 03 04... ...
@@ -7012,7 +7007,7 @@ oscli                           = &fff7
 .bytecode_opcode_65_handler
 .bytecode_opcode_66_handler
 .bytecode_opcode_67_handler
-    lda opcode_62_to_67_table - 98,x                                  ; a961: bd af a6    ...
+    lda something_table - 98,x                                        ; a961: bd af a6    ...
     sta l0663                                                         ; a964: 8d 63 06    .c.
     jsr sub_ca297                                                     ; a967: 20 97 a2     ..
     jsr sub_c9a6c                                                     ; a96a: 20 6c 9a     l.
@@ -12206,12 +12201,6 @@ oscli                           = &fff7
     assert opcode_38_39_table - 56 == &a6fc
     assert opcode_3b_to_3f_table - 59 == &a6f9
     assert opcode_40_41_table - 64 == &a6f4
-    assert opcode_54_to_59_table - 84 == &a6bd
-    assert opcode_5a_5b_table - 90 == &a6b7
-    assert opcode_5c_to_61_table - 92 == &a6b5
-    assert opcode_62_to_67_table - 98 == &a6af
-    assert opcode_68_69_table - 104 == &a6a9
-    assert opcode_6c_to_71_table - 108 == &a6a5
     assert opcode_91_92_table - 145 == &a6a3
     assert opcode_subrange1_jump_table_high - 202 == &a920
     assert opcode_subrange1_jump_table_low - 202 == &a919
@@ -12244,5 +12233,11 @@ oscli                           = &fff7
     assert our_osbyte_x == &c0
     assert something_jump_table_high_minus_128-128 == &b072
     assert something_jump_table_low_minus_128-128 == &b04e
+    assert something_table - 104 == &a6a9
+    assert something_table - 108 == &a6a5
+    assert something_table - 84 == &a6bd
+    assert something_table - 90 == &a6b7
+    assert something_table - 92 == &a6b5
+    assert something_table - 98 == &a6af
 
 save pydis_start, pydis_end
