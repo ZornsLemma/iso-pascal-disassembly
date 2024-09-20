@@ -7323,7 +7323,7 @@ la951 = sub_ca94f+2
 
 .sub_cb270
     ldy l0030                                                         ; b270: a4 30       .0
-    jsr cb634                                                         ; b272: 20 34 b6     4.
+    jsr maybe_clear_part_of_screen                                    ; b272: 20 34 b6     4.
     jsr sub_cb2f5                                                     ; b275: 20 f5 b2     ..
     lda #&23 ; '#'                                                    ; b278: a9 23       .#
     jsr oswrch                                                        ; b27a: 20 ee ff     ..            ; Write character 35
@@ -7728,7 +7728,7 @@ la951 = sub_ca94f+2
     ldy l002d                                                         ; b553: a4 2d       .-
     lda l0015                                                         ; b555: a5 15       ..
     beq cb585                                                         ; b557: f0 2c       .,
-    jmp cb634                                                         ; b559: 4c 34 b6    L4.
+    jmp maybe_clear_part_of_screen                                    ; b559: 4c 34 b6    L4.
 
 .cb55c
     lda l0025                                                         ; b55c: a5 25       .%
@@ -7835,7 +7835,7 @@ la951 = sub_ca94f+2
     lda l004b                                                         ; b612: a5 4b       .K
     beq cb5a3                                                         ; b614: f0 8d       ..
     ldy l0026                                                         ; b616: a4 26       .&
-    jsr cb634                                                         ; b618: 20 34 b6     4.
+    jsr maybe_clear_part_of_screen                                    ; b618: 20 34 b6     4.
     jmp cb605                                                         ; b61b: 4c 05 b6    L..
 
 .sub_cb61e
@@ -7853,7 +7853,7 @@ la951 = sub_ca94f+2
 .cb633
     rts                                                               ; b633: 60          `
 
-.cb634
+.maybe_clear_part_of_screen
     lda #0                                                            ; b634: a9 00       ..
 .sub_cb636
     tax                                                               ; b636: aa          .
@@ -8737,7 +8737,6 @@ la951 = sub_ca94f+2
 ;     cb5f9
 ;     cb605
 ;     cb633
-;     cb634
 ;     cb660
 ;     cb671
 ;     cb67b

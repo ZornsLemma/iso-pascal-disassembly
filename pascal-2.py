@@ -88,6 +88,7 @@ entry(0x85fc, "set_yx_to_himem_minus_2")
 
 entry(0xb374, "something_to_do_with_finding_cr")
 entry(0xb45c, "bulk_copy_from_l0000_to_l0002")
+entry(0xb634, "maybe_clear_part_of_screen")
 
 
 go()
