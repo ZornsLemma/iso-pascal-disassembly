@@ -7442,7 +7442,7 @@ la951 = sub_ca94f+2
     sbc l0014                                                         ; b371: e5 14       ..
     rts                                                               ; b373: 60          `
 
-.sub_cb374
+.something_to_do_with_finding_cr
     ldx l0000                                                         ; b374: a6 00       ..
     ldy l0001                                                         ; b376: a4 01       ..
     stx l0010                                                         ; b378: 86 10       ..
@@ -7589,10 +7589,10 @@ la951 = sub_ca94f+2
     equb &a5, &30                                                     ; b453: a5 30       .0
 
 .sub_cb455
-    jsr sub_cb374                                                     ; b455: 20 74 b3     t.
+    jsr something_to_do_with_finding_cr                               ; b455: 20 74 b3     t.
     ldx l0010                                                         ; b458: a6 10       ..
     ldy l0011                                                         ; b45a: a4 11       ..
-.cb45c
+.bulk_copy_from_l0000_to_l0002
     lda l0000                                                         ; b45c: a5 00       ..
     sta l000a                                                         ; b45e: 85 0a       ..
     lda l0001                                                         ; b460: a5 01       ..
@@ -7711,7 +7711,7 @@ la951 = sub_ca94f+2
 
 .cb531
     lda #4                                                            ; b531: a9 04       ..
-    jsr sub_cb374                                                     ; b533: 20 74 b3     t.
+    jsr something_to_do_with_finding_cr                               ; b533: 20 74 b3     t.
     jsr sub_cb2f5                                                     ; b536: 20 f5 b2     ..
     lda #&0a                                                          ; b539: a9 0a       ..
     jsr oswrch                                                        ; b53b: 20 ee ff     ..            ; Write character 10
@@ -7997,7 +7997,7 @@ la951 = sub_ca94f+2
 .sub_cb727
     ldx l0029                                                         ; b727: a6 29       .)
     ldy l002a                                                         ; b729: a4 2a       .*
-    jmp cb45c                                                         ; b72b: 4c 5c b4    L\.
+    jmp bulk_copy_from_l0000_to_l0002                                 ; b72b: 4c 5c b4    L\.
 
     equb &a5, &33, &49,   1, &85                                      ; b72e: a5 33 49... .3I
     equs "3` "                                                        ; b733: 33 60 20    3`
@@ -8717,7 +8717,6 @@ la951 = sub_ca94f+2
 ;     cb441
 ;     cb449
 ;     cb452
-;     cb45c
 ;     cb4a8
 ;     cb4ea
 ;     cb4f2
@@ -9240,7 +9239,6 @@ la951 = sub_ca94f+2
 ;     sub_cb2fd
 ;     sub_cb34d
 ;     sub_cb359
-;     sub_cb374
 ;     sub_cb39b
 ;     sub_cb3b1
 ;     sub_cb3fd
