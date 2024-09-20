@@ -21,6 +21,8 @@ entry(0x8904, "unrecognised_osbyte_handler_rts")
 
 label(0x8095, "osbyte_163_192_x_minus_1_table")
 byte(0x8095, 3)
+comment(0x8075, "Set the last break type to the value from our table corresponding to the OSBYTE 163,192 Y.")
+comment(0x8081, "Save the current output stream to l0100.")
 expr(0x8077, make_subtract("osbyte_163_192_x_minus_1_table", 1))
 
 entry(0x8098, "brkv_handler")
@@ -41,5 +43,7 @@ comment(0x89e6, "Subtract 8-bit value at l0014 from 16-bit value at l000a")
 comment(0x89f2, "Subtract 8-bit value at l0014 from 16-bit value at l000e")
 entry(0x89fc, "bulk_copy_from_l000a_to_l000e")
 entry(0x8a07, "bulk_copy_loop_x_test")
+
+entry(0xa493, "zero_misc_values")
 
 go()

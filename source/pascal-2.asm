@@ -242,12 +242,15 @@ oscli       = &fff7
     bne unrecognised_osbyte_handler_done                              ; 806f: d0 21       .!
     lda osbyte_y                                                      ; 8071: a5 f1       ..
     beq unrecognised_osbyte_handler_done                              ; 8073: f0 1d       ..
+; Set the last break type to the value from our table corresponding to the OSBYTE
+; 163,192 Y.
     tax                                                               ; 8075: aa          .
     lda osbyte_163_192_x_minus_1_table - 1,x                          ; 8076: bd 94 80    ...
     tax                                                               ; 8079: aa          .
     ldy #3                                                            ; 807a: a0 03       ..
     lda #osbyte_read_write_last_break_type                            ; 807c: a9 fd       ..
     jsr osbyte                                                        ; 807e: 20 f4 ff     ..            ; Read/Write type of last reset
+; Save the current output stream to l0100.
     lda #osbyte_select_output_stream                                  ; 8081: a9 03       ..
     ldx #%00010110                                                    ; 8083: a2 16       ..
     jsr osbyte                                                        ; 8085: 20 f4 ff     ..            ; Select output stream based on X: disable RS232 output; disable VDU driver; disable printer output; disable printer despite CTRL-B/C state; disable SPOOLed output; enable printer output even without VDU 1 first
@@ -431,7 +434,7 @@ oscli       = &fff7
     txa                                                               ; 823e: 8a          .              ; X=value of type of last reset
     bpl real_language_entry                                           ; 823f: 10 66       .f
     pha                                                               ; 8241: 48          H
-    jsr sub_ca493                                                     ; 8242: 20 93 a4     ..
+    jsr zero_misc_values                                              ; 8242: 20 93 a4     ..
     lda #1                                                            ; 8245: a9 01       ..
     sta l003f                                                         ; 8247: 85 3f       .?
     jsr sub_c8482                                                     ; 8249: 20 82 84     ..
@@ -534,7 +537,7 @@ oscli       = &fff7
     jsr sub_c855d                                                     ; 82ea: 20 5d 85     ].
     ldx #0                                                            ; 82ed: a2 00       ..
     stx l0418                                                         ; 82ef: 8e 18 04    ...
-    jsr sub_ca493                                                     ; 82f2: 20 93 a4     ..
+    jsr zero_misc_values                                              ; 82f2: 20 93 a4     ..
     lda #&f2                                                          ; 82f5: a9 f2       ..
     sta l003e                                                         ; 82f7: 85 3e       .>
     jsr sub_c8482                                                     ; 82f9: 20 82 84     ..
@@ -1919,7 +1922,7 @@ oscli       = &fff7
     equb &89, &a4, &a5, &44,   9,   1, &85, &44, &a9,   0, &85, &45   ; a481: 89 a4 a5... ...
     equb &a5, &3f, &f0, &14, &10, &13                                 ; a48d: a5 3f f0... .?.
 
-.sub_ca493
+.zero_misc_values
     lda #0                                                            ; a493: a9 00       ..
     sta l0041                                                         ; a495: 85 41       .A
     sta l0042                                                         ; a497: 85 42       .B
@@ -3872,7 +3875,6 @@ oscli       = &fff7
 ;     sub_c996e
 ;     sub_c998c
 ;     sub_c999a
-;     sub_ca493
 ;     sub_cafd9
 ;     sub_caffc
 ;     sub_cb146
