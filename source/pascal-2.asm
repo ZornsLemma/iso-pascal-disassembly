@@ -2548,7 +2548,7 @@ oscli                           = &fff7
 .bytecode_opcode_6f_handler
 .bytecode_opcode_70_handler
 .bytecode_opcode_71_handler
-    lda la6a5,x                                                       ; 8ed1: bd a5 a6    ...
+    lda opcode_6c_to_71_table - 108,x                                 ; 8ed1: bd a5 a6    ...
     sta l0663                                                         ; 8ed4: 8d 63 06    .c.
     jsr sub_c9af9                                                     ; 8ed7: 20 f9 9a     ..
     jsr sub_c8b88                                                     ; 8eda: 20 88 8b     ..
@@ -6510,7 +6510,6 @@ oscli                           = &fff7
     equb >bytecode_opcode_96_handler                                  ; a6a2: aa          .
     equb >bytecode_opcode_97_handler                                  ; a6a3: 93          .
     equb >bytecode_opcode_98_handler                                  ; a6a4: aa          .
-.la6a5
     equb >bytecode_opcode_99_handler                                  ; a6a5: a8          .
     equb >bytecode_opcode_9a_handler                                  ; a6a6: 92          .
     equb >bytecode_opcode_9b_handler                                  ; a6a7: 91          .
@@ -6629,6 +6628,7 @@ oscli                           = &fff7
     equb >opcode_74_sub_handler                                       ; a70e: 8c          .
     equb >opcode_75_sub_handler                                       ; a70f: 8b          .
     equb >opcode_76_sub_handler                                       ; a710: 8c          .
+.opcode_6c_to_71_table
     equb 2, 5                                                         ; a711: 02 05       ..
 .la713
     equb 6, 3, 4, 1                                                   ; a713: 06 03 04... ...
@@ -11113,7 +11113,6 @@ oscli                           = &fff7
 ;     l803c
 ;     l9998
 ;     l9999
-;     la6a5
 ;     la6a9
 ;     la6af
 ;     la6b5
@@ -12212,6 +12211,7 @@ oscli                           = &fff7
     assert copyright - rom_header == &14
     assert fx163_192_2 == &a746
     assert opcode_26_27_table - 38 == &a70e
+    assert opcode_6c_to_71_table - 108 == &a6a5
     assert opcode_91_92_table - 145 == &a6a3
     assert opcode_subrange1_jump_table_high - 202 == &a920
     assert opcode_subrange1_jump_table_low - 202 == &a919
