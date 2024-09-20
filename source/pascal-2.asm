@@ -1437,7 +1437,7 @@ oscli                           = &fff7
 .bytecode_opcode_01_handler
 .bytecode_opcode_02_handler
 .bytecode_opcode_03_handler
-    lda la734,x                                                       ; 8850: bd 34 a7    .4.
+    lda opcode_26_27_table,x                                          ; 8850: bd 34 a7    .4.
     sta l004c                                                         ; 8853: 85 4c       .L
     jsr sub_c9a9c                                                     ; 8855: 20 9c 9a     ..
     ldx l004c                                                         ; 8858: a6 4c       .L
@@ -1654,7 +1654,7 @@ oscli                           = &fff7
     bne c8966                                                         ; 8989: d0 db       ..
 .bytecode_opcode_26_handler
 .bytecode_opcode_27_handler
-    lda la70e,x                                                       ; 898b: bd 0e a7    ...
+    lda opcode_26_27_table - 38,x                                     ; 898b: bd 0e a7    ...
     sta l004c                                                         ; 898e: 85 4c       .L
     jsr sub_c9a68                                                     ; 8990: 20 68 9a     h.
     jsr sub_c9ae2                                                     ; 8993: 20 e2 9a     ..
@@ -6627,7 +6627,6 @@ oscli                           = &fff7
 .opcode_subrange3_jump_table_high
     equb >opcode_72_sub_handler                                       ; a70c: 8c          .
     equb >opcode_73_sub_handler                                       ; a70d: 8d          .
-.la70e
     equb >opcode_74_sub_handler                                       ; a70e: 8c          .
     equb >opcode_75_sub_handler                                       ; a70f: 8b          .
     equb >opcode_76_sub_handler                                       ; a710: 8c          .
@@ -6654,7 +6653,7 @@ oscli                           = &fff7
     equb &45                                                          ; a72f: 45          E
 .string_true
     equs "TRUE"                                                       ; a730: 54 52 55... TRU
-.la734
+.opcode_26_27_table
     equb   0,   1,   3,   4, &1f, &1a,   5, &ff, &20, &ff             ; a734: 00 01 03... ...
 .la73e
     equs "pas___#"                                                    ; a73e: 70 61 73... pas
@@ -11125,7 +11124,6 @@ oscli                           = &fff7
 ;     la6f9
 ;     la6fc
 ;     la701
-;     la70e
 ;     la713
 ;     la717
 ;     la71c
@@ -11135,7 +11133,6 @@ oscli                           = &fff7
 ;     la726
 ;     la727
 ;     la72f
-;     la734
 ;     la73e
 ;     la786
 ;     la882
@@ -12215,6 +12212,7 @@ oscli                           = &fff7
     assert >string_true == &a7
     assert copyright - rom_header == &14
     assert fx163_192_2 == &a746
+    assert opcode_26_27_table - 38 == &a70e
     assert opcode_subrange1_jump_table_high - 202 == &a920
     assert opcode_subrange1_jump_table_low - 202 == &a919
     assert opcode_subrange2_jump_table_high - 120 == &a951

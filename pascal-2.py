@@ -322,6 +322,9 @@ expr(0x8d35, make_subtract("opcode_subrange3_jump_table_low", 0x72))
 expr(0x8d3a, make_subtract("opcode_subrange3_jump_table_high", 0x72))
 subrange(0xa607, 0xa70c, 5, 0x72)
 
+label(0xa734, "opcode_26_27_table")
+expr(0x898c, make_subtract("opcode_26_27_table", 0x26))
+
 nonentry(0xa882)
 
 # TODO: ed_handler is doing some kind of indirect jump
