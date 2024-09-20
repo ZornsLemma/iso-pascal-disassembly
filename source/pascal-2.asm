@@ -1447,7 +1447,7 @@ oscli                           = &fff7
 .bytecode_opcode_0b_handler
 .bytecode_opcode_0c_handler
 .bytecode_opcode_0d_handler
-    lda la72b,x                                                       ; 8863: bd 2b a7    .+.
+    lda string_false,x                                                ; 8863: bd 2b a7    .+.
     jsr sub_c87e5                                                     ; 8866: 20 e5 87     ..
     ldx #2                                                            ; 8869: a2 02       ..
 .c886b
@@ -6454,7 +6454,7 @@ oscli                           = &fff7
     equb &80                                                          ; a726: 80          .
 .la727
     equb   8, &10, &18, &20                                           ; a727: 08 10 18... ...
-.la72b
+.string_false
     equs "FALS"                                                       ; a72b: 46 41 4c... FAL
 .la72f
     equb &45                                                          ; a72f: 45          E
@@ -6991,7 +6991,7 @@ la951 = sub_ca94f+2
     jsr sub_c9300                                                     ; aa7f: 20 00 93     ..
     jsr sub_c9af1                                                     ; aa82: 20 f1 9a     ..
     bne caa8f                                                         ; aa85: d0 08       ..
-    ldx #&2b ; '+'                                                    ; aa87: a2 2b       .+
+    ldx #<string_false                                                ; aa87: a2 2b       .+
     ldy #&a7                                                          ; aa89: a0 a7       ..
     lda #5                                                            ; aa8b: a9 05       ..
     bne caa95                                                         ; aa8d: d0 06       ..
@@ -10510,7 +10510,6 @@ la951 = sub_ca94f+2
 ;     la723
 ;     la726
 ;     la727
-;     la72b
 ;     la72f
 ;     la734
 ;     la73e
@@ -11200,6 +11199,7 @@ la951 = sub_ca94f+2
     assert <something_21_handler == &04
     assert <something_22_handler == &18
     assert <something_23_handler == &0d
+    assert <string_false == &2b
     assert <string_true == &30
     assert >(fx163_192_0) == &87
     assert >(input_buffer) == &05

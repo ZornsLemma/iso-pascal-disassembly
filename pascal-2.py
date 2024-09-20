@@ -181,10 +181,17 @@ entry(0x855d, "set_himem") # TODO: here and elsewhere we may mean "himem_prime" 
 entry(0x8562, "set_himem_to_yx")
 entry(0x85fc, "set_yx_to_himem_minus_2")
 
+# TODO: Use this everywhere and maybe (with renaming/tweaks?) make it a standard py8dis function?
+def label_and_expr(addr, name, lo_ref, hi_ref):
+    label(addr, name)
+    expr(lo_ref, make_lo(name))
+    expr(hi_ref, make_hi(name))
+
 entry(0x9335, "oswrch_or_osbput_aligned_string_yx") # TODO: guessing a bit
 label(0xa730, "string_true")
 expr(0xaa90, make_lo("string_true"))
 expr(0xaa92, make_hi("string_true"))
+label_and_expr(0xa72b, "string_false", 0xaa88, 0xaa90)
 
 entry(0x9976, "escape")
 
