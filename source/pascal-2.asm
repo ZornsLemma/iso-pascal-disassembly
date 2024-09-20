@@ -1,4 +1,5 @@
 ; Constants
+compiler_bytecode_size                 = 8111
 osbyte_acknowledge_escape              = 126
 osbyte_enter_language                  = 142
 osbyte_inkey                           = 129
@@ -817,7 +818,7 @@ oscli                           = &fff7
     sta l0019                                                         ; 8408: 85 19       ..
     ldx #0                                                            ; 840a: a2 00       ..
     stx l0659                                                         ; 840c: 8e 59 06    .Y.
-    jmp c87a3                                                         ; 840f: 4c a3 87    L..
+    jmp something1                                                    ; 840f: 4c a3 87    L..
 
 .c8412
     brk                                                               ; 8412: 00          .
@@ -1182,15 +1183,15 @@ oscli                           = &fff7
     sta l062d                                                         ; 86ad: 8d 2d 06    .-.
     sec                                                               ; 86b0: 38          8
     lda himem_low                                                     ; 86b1: ad 02 04    ...
-    sbc #&af                                                          ; 86b4: e9 af       ..
+    sbc #<compiler_bytecode_size                                      ; 86b4: e9 af       ..
     sta l062e                                                         ; 86b6: 8d 2e 06    ...
     lda himem_high                                                    ; 86b9: ad 03 04    ...
-    sbc #&1f                                                          ; 86bc: e9 1f       ..
+    sbc #>compiler_bytecode_size                                      ; 86bc: e9 1f       ..
     sta l062f                                                         ; 86be: 8d 2f 06    ./.
     jsr sub_c9814                                                     ; 86c1: 20 14 98     ..
-    lda #&a3                                                          ; 86c4: a9 a3       ..
+    lda #<something1                                                  ; 86c4: a9 a3       ..
     sta l000a                                                         ; 86c6: 85 0a       ..
-    lda #&87                                                          ; 86c8: a9 87       ..
+    lda #>something1                                                  ; 86c8: a9 87       ..
     sta l000b                                                         ; 86ca: 85 0b       ..
     sec                                                               ; 86cc: 38          8
     lda l062e                                                         ; 86cd: ad 2e 06    ...
@@ -1312,7 +1313,7 @@ oscli                           = &fff7
     equs "fx163,192,0"                                                ; 8797: 66 78 31... fx1
     equb &0d                                                          ; 87a2: 0d          .
 
-.c87a3
+.something1
     ldx #0                                                            ; 87a3: a2 00       ..
     stx l0416                                                         ; 87a5: 8e 16 04    ...
     ldx #0                                                            ; 87a8: a2 00       ..
@@ -9828,7 +9829,6 @@ la951 = sub_ca94f+2
 ;     c874b
 ;     c875c
 ;     c8770
-;     c87a3
 ;     c87c7
 ;     c8821
 ;     c8830
@@ -11165,7 +11165,9 @@ la951 = sub_ca94f+2
     assert <command_save_handler == &1a
     assert <command_table == &40
     assert <command_trace_handler == &ff
+    assert <compiler_bytecode_size == &af
     assert <input_buffer == &1a
+    assert <something1 == &a3
     assert <something_00_handler == &58
     assert <something_01_handler == &41
     assert <something_02_handler == &96
@@ -11473,7 +11475,9 @@ la951 = sub_ca94f+2
     assert >command_save_handler == &84
     assert >command_table == &84
     assert >command_trace_handler == &84
+    assert >compiler_bytecode_size == &1f
     assert >input_buffer == &05
+    assert >something1 == &87
     assert >something_00_handler == &b8
     assert >something_01_handler == &b7
     assert >something_02_handler == &b7

@@ -113,6 +113,14 @@ for i in range(9):
     byte(0x8479+i)
     expr(0x8479+i, make_hi(target_label))
 
+constant(0x1faf, "compiler_bytecode_size")
+expr(0x86b5, make_lo("compiler_bytecode_size"))
+expr(0x86bd, make_hi("compiler_bytecode_size"))
+
+label(0x87a3, "something1")
+expr(0x86c5, make_lo("something1"))
+expr(0x86c9, make_hi("something1"))
+
 entry(0x87e2, "jmp_indirect_via_l0008")
 
 entry(0x89d5, "some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes")
