@@ -1554,7 +1554,7 @@ oscli                           = &fff7
     bne c8916                                                         ; 88f9: d0 1b       ..
 .bytecode_opcode_05_handler
 .bytecode_opcode_06_handler
-    lda la72f,x                                                       ; 88fb: bd 2f a7    ./.
+    lda opcode_05_06_table - 5,x                                      ; 88fb: bd 2f a7    ./.
     sta l004c                                                         ; 88fe: 85 4c       .L
     jsr sub_c9a9c                                                     ; 8900: 20 9c 9a     ..
     ldx l004c                                                         ; 8903: a6 4c       .L
@@ -6639,11 +6639,11 @@ oscli                           = &fff7
     equb   8, &10, &18, &20                                           ; a727: 08 10 18... ...
 .string_false
     equs "FALS"                                                       ; a72b: 46 41 4c... FAL
-.la72f
     equb &45                                                          ; a72f: 45          E
 .string_true
     equs "TRUE"                                                       ; a730: 54 52 55... TRU
 .something_else_table
+.opcode_05_06_table
     equb   0,   1,   3,   4, &1f, &1a,   5, &ff, &20, &ff             ; a734: 00 01 03... ...
 .la73e
     equs "pas___#"                                                    ; a73e: 70 61 73... pas
@@ -11111,7 +11111,6 @@ oscli                           = &fff7
 ;     la723
 ;     la726
 ;     la727
-;     la72f
 ;     la73e
 ;     la786
 ;     la882
@@ -12191,6 +12190,7 @@ oscli                           = &fff7
     assert >string_true == &a7
     assert copyright - rom_header == &14
     assert fx163_192_2 == &a746
+    assert opcode_05_06_table - 5 == &a72f
     assert opcode_subrange1_jump_table_high - 202 == &a920
     assert opcode_subrange1_jump_table_low - 202 == &a919
     assert opcode_subrange2_jump_table_high - 120 == &a951
