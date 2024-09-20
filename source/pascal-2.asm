@@ -684,17 +684,17 @@ oscli                           = &fff7
     txs                                                               ; 8346: 9a          .
     ldx #1                                                            ; 8347: a2 01       ..
     stx l0416                                                         ; 8349: 8e 16 04    ...
-.c834c
+.user_interface_command_line_loop
     lda #&25 ; '%'                                                    ; 834c: a9 25       .%
     jsr oswrch                                                        ; 834e: 20 ee ff     ..            ; Write character 37
-    jsr sub_c8494                                                     ; 8351: 20 94 84     ..
-    beq c834c                                                         ; 8354: f0 f6       ..
+    jsr probably_read_input_line_to_l051a                             ; 8351: 20 94 84     ..
+    beq user_interface_command_line_loop                              ; 8354: f0 f6       ..
     cmp #&2a ; '*'                                                    ; 8356: c9 2a       .*
     bne c8364                                                         ; 8358: d0 0a       ..
     ldx #<(l051a)                                                     ; 835a: a2 1a       ..
     ldy #>(l051a)                                                     ; 835c: a0 05       ..
     jsr oscli                                                         ; 835e: 20 f7 ff     ..
-    jmp c834c                                                         ; 8361: 4c 4c 83    LL.
+    jmp user_interface_command_line_loop                              ; 8361: 4c 4c 83    LL.
 
 .c8364
     lda #&40 ; '@'                                                    ; 8364: a9 40       .@
@@ -742,7 +742,7 @@ oscli                           = &fff7
     lda l8479,x                                                       ; 83a9: bd 79 84    .y.
     sta l0009                                                         ; 83ac: 85 09       ..
     jsr jmp_indirect_via_l0008                                        ; 83ae: 20 e2 87     ..
-    jmp c834c                                                         ; 83b1: 4c 4c 83    LL.
+    jmp user_interface_command_line_loop                              ; 83b1: 4c 4c 83    LL.
 
 .c83b4
     jsr sub_c999a                                                     ; 83b4: 20 9a 99     ..
@@ -821,7 +821,7 @@ oscli                           = &fff7
     lda l0042                                                         ; 8491: a5 42       .B
     rts                                                               ; 8493: 60          `
 
-.sub_c8494
+.probably_read_input_line_to_l051a
     jsr sub_c996e                                                     ; 8494: 20 6e 99     n.
     tya                                                               ; 8497: 98          .
     beq c84a4                                                         ; 8498: f0 0a       ..
@@ -8126,7 +8126,7 @@ la951 = sub_ca94f+2
 .cb752
     lda #&2a ; '*'                                                    ; b752: a9 2a       .*
     jsr oswrch                                                        ; b754: 20 ee ff     ..            ; Write character 42
-    jsr sub_c8494                                                     ; b757: 20 94 84     ..
+    jsr probably_read_input_line_to_l051a                             ; b757: 20 94 84     ..
     beq cb766                                                         ; b75a: f0 0a       ..
     ldx #<(l051a)                                                     ; b75c: a2 1a       ..
     ldy #>(l051a)                                                     ; b75e: a0 05       ..
@@ -8454,7 +8454,6 @@ la951 = sub_ca94f+2
 ;     c832c
 ;     c8337
 ;     c8341
-;     c834c
 ;     c8364
 ;     c836c
 ;     c838d
@@ -9169,7 +9168,6 @@ la951 = sub_ca94f+2
 ;     loop_cb68e
 ;     loop_cbdb4
 ;     sub_c8104
-;     sub_c8494
 ;     sub_c84b3
 ;     sub_c8520
 ;     sub_c857a

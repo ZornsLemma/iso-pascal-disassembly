@@ -82,6 +82,9 @@ entry(0x8344, "language_entry_common")
 
 entry(0x8482, "read_io_memory_at_l003e_and_advance")
 
+entry(0x834c, "user_interface_command_line_loop")
+entry(0x8494, "probably_read_input_line_to_l051a")
+
 entry(0x87e2, "jmp_indirect_via_l0008")
 
 entry(0x89d5, "some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes")
