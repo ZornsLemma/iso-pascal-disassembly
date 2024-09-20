@@ -192,6 +192,7 @@ label(0xa730, "string_true")
 expr(0xaa90, make_lo("string_true"))
 expr(0xaa92, make_hi("string_true"))
 label_and_expr(0xa72b, "string_false", 0xaa88, 0xaa8a)
+string(0xa72b, 5)
 
 entry(0x9976, "escape")
 

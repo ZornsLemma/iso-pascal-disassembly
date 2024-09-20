@@ -6634,8 +6634,7 @@ oscli                           = &fff7
 .la727
     equb   8, &10, &18, &20                                           ; a727: 08 10 18... ...
 .string_false
-    equs "FALS"                                                       ; a72b: 46 41 4c... FAL
-    equb &45                                                          ; a72f: 45          E
+    equs "FALSE"                                                      ; a72b: 46 41 4c... FAL
 .string_true
     equs "TRUE"                                                       ; a730: 54 52 55... TRU
 .something_else_table
