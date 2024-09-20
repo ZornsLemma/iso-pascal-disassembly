@@ -60,7 +60,8 @@ oscli       = &fff7
     bne unrecognised_osbyte_handler_done                              ; 8021: d0 1a       ..
     lda osbyte_y                                                      ; 8023: a5 f1       ..
     bne unrecognised_osbyte_handler_done                              ; 8025: d0 16       ..
-; TODO: do we read the last break type then ignore the result here?
+; We're processing *FX163,192,0.
+; Set the last break type to &80.
     ldx #&80                                                          ; 8027: a2 80       ..
     jsr set_last_break_type_to_x_and_return_with_old_break_type_in_x  ; 8029: 20 67 80     g.
     lda #osbyte_select_output_stream                                  ; 802c: a9 03       ..

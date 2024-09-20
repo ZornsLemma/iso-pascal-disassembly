@@ -33,7 +33,7 @@ comment(0x8017, "Unrecognised OSBYTE handler")
 expr(0x801a, "our_osbyte_a")
 expr(0x8020, "our_osbyte_x")
 entry(0x803d, "unrecognised_osbyte_handler_done")
-comment(0x8027, "TODO: do we read the last break type then ignore the result here?")
+comment(0x8027, "We're processing *FX163,192,0.\nSet the last break type to &80.")
 entry(0x803f, "rts")
 
 comment(0x8085, "Read the byte at &100 in the I/O processor and store it at &6E.")
