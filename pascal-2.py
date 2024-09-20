@@ -48,7 +48,7 @@ entry(0x808b, "pascal_command_handler")
 entry(0x8179, "rts2")
 # TODO: Rough WIP notes:
 # - non-top-bit-set characters are printed via OSASCI
-# - &80+' ' prints a double space
+# - &80+'c' prints a 'c' followed by a space where 'c' is a printable 7-bit ASCII character (>=32)
 # - other top-bit-set characters are treated as &80+n where n is a 0-based token (?) number for tokens starting at l81c2. Each token is terminated by a top-bit-set character, which (with the top bit cleared) is the last printable character of the token.
 entry(0x817a, "fancy_print_at_yx_with_terminator_a")
 entry(0x8180, "print_loop")
@@ -100,6 +100,17 @@ for i in range(256):
     expr(0xa60c+i, make_hi(target_label))
 
 entry(0x85fc, "set_yx_to_himem_minus_2")
+
+def fpnti_hook(target, addr):
+    # TODO: This could expand out tokens (as comments) and &80+'c' as 'c'-plus-space
+    addr += 3
+    start_addr = addr + 3
+    while get_u8_binary(addr) != 0xea:
+        addr += 1
+    string(start_addr, addr - start_addr)
+    return addr
+
+hook_subroutine(0xb284, "fancy_print_nop_terminated_inline", fpnti_hook)
 
 entry(0xb374, "something_to_do_with_finding_cr")
 entry(0xb45c, "bulk_copy_from_l0000_to_l0002")

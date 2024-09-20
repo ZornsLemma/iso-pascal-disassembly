@@ -11,6 +11,7 @@ osbyte_read_oshwm                      = 131
 osbyte_read_write_last_break_type      = 253
 osbyte_read_write_tab_char             = 219
 osbyte_select_output_stream            = 3
+osbyte_select_printer                  = 5
 osfind_close                           = 0
 osfind_open_input                      = 64
 osfind_open_output                     = 128
@@ -179,15 +180,10 @@ l0668                           = &0668
 l0669                           = &0669
 l066a                           = &066a
 l066b                           = &066b
-l0f03                           = &0f03
-l208d                           = &208d
-l6e69                           = &6e69
-l7420                           = &7420
 lc001                           = &c001
 lc002                           = &c002
 lc003                           = &c003
 le8e8                           = &e8e8
-lf461                           = &f461
 osfind                          = &ffce
 osbput                          = &ffd4
 osbget                          = &ffd7
@@ -339,12 +335,14 @@ oscli                           = &fff7
 
 .c80bf
     jsr sub_cb1eb                                                     ; 80bf: 20 eb b1     ..
-    jsr sub_cb284                                                     ; 80c2: 20 84 b2     ..
-    ora l208d                                                         ; 80c5: 0d 8d 20    ..
-    stx l7420                                                         ; 80c8: 8e 20 74    . t
-    equb &ef                                                          ; 80cb: ef          .
-    equs "continu"                                                    ; 80cc: 63 6f 6e... con
-    equb &e5, &8d, &ea, &20,   7, &b2, &4c, &d6, &80                  ; 80d3: e5 8d ea... ...
+    jsr fancy_print_nop_terminated_inline                             ; 80c2: 20 84 b2     ..
+    equb &0d, &8d, &20                                                ; 80c5: 0d 8d 20    ..
+    equs &8e, " t", &ef, "continu", &e5, &8d                          ; 80c8: 8e 20 74... . t
+
+    nop                                                               ; 80d5: ea          .
+.loop_c80d6
+    jsr sub_cb207                                                     ; 80d6: 20 07 b2     ..
+    jmp loop_c80d6                                                    ; 80d9: 4c d6 80    L..
 
 .c80dc
     inc l0416                                                         ; 80dc: ee 16 04    ...
@@ -369,20 +367,70 @@ oscli                           = &fff7
     jmp osnewl                                                        ; 8101: 4c e7 ff    L..            ; Write newline (characters 10 and 13)
 
 .sub_c8104
-    jsr sub_cb284                                                     ; 8104: 20 84 b2     ..
-    jsr lf461                                                         ; 8107: 20 61 f4     a.
-    jmp (l6e69)                                                       ; 810a: 6c 69 6e    lin
+    jsr fancy_print_nop_terminated_inline                             ; 8104: 20 84 b2     ..
+    equb &20, &61, &f4                                                ; 8107: 20 61 f4     a.
+    equs "lin", &e5                                                   ; 810a: 6c 69 6e... lin
 
-    equb &e5, &ea, &ae, &5b,   6, &ac, &5c,   6, &20, &0c, &b3, &20   ; 810d: e5 ea ae... ...
-    equb &84, &b2, &20, &69, &ee, &ea, &a9,   0, &85, &16, &85,   8   ; 8119: 84 b2 20... ..
-    equb &85,   9, &a4, &16, &18, &a5, &1e, &71, &1c, &85, &0c, &aa   ; 8125: 85 09 a4... ...
-    equb &c8, &a5, &1f, &71, &1c, &85, &0d, &b0, &31, &e4,   2, &e5   ; 8131: c8 a5 1f... ...
-    equb   3, &b0, &25, &a0,   1, &b1, &0c, &65, &0c, &85, &10, &a9   ; 813d: 03 b0 25... ..%
-    equb   0, &65, &0d, &85, &11, &a0,   3, &b1, &10, &a0,   6, &d1   ; 8149: 00 65 0d... .e.
-    equb &1a, &d0, &0d, &a4, &0d, &98, &e4,   8, &e5,   9, &90,   4   ; 8155: 1a d0 0d... ...
-    equb &86,   8, &84,   9, &e6, &16, &e6, &16, &d0, &bc, &a0,   1   ; 8161: 86 08 84... ...
-    equb &b1,   8, &aa, &c8, &b1,   8, &20, &ee, &ff, &ca, &d0, &f7   ; 816d: b1 08 aa... ...
+    nop                                                               ; 810e: ea          .
+    ldx l065b                                                         ; 810f: ae 5b 06    .[.
+    ldy l065c                                                         ; 8112: ac 5c 06    .\.
+    jsr sub_cb30c                                                     ; 8115: 20 0c b3     ..
+    jsr fancy_print_nop_terminated_inline                             ; 8118: 20 84 b2     ..
+    equb &20, &69, &ee                                                ; 811b: 20 69 ee     i.
 
+    nop                                                               ; 811e: ea          .
+    lda #0                                                            ; 811f: a9 00       ..
+    sta l0016                                                         ; 8121: 85 16       ..
+    sta l0008                                                         ; 8123: 85 08       ..
+    sta l0009                                                         ; 8125: 85 09       ..
+.c8127
+    ldy l0016                                                         ; 8127: a4 16       ..
+    clc                                                               ; 8129: 18          .
+    lda l001e                                                         ; 812a: a5 1e       ..
+    adc (l001c),y                                                     ; 812c: 71 1c       q.
+    sta l000c                                                         ; 812e: 85 0c       ..
+    tax                                                               ; 8130: aa          .
+    iny                                                               ; 8131: c8          .
+    lda l001f                                                         ; 8132: a5 1f       ..
+    adc (l001c),y                                                     ; 8134: 71 1c       q.
+    sta l000d                                                         ; 8136: 85 0d       ..
+    bcs c816b                                                         ; 8138: b0 31       .1
+    cpx l0002                                                         ; 813a: e4 02       ..
+    sbc l0003                                                         ; 813c: e5 03       ..
+    bcs c8165                                                         ; 813e: b0 25       .%
+    ldy #1                                                            ; 8140: a0 01       ..
+    lda (l000c),y                                                     ; 8142: b1 0c       ..
+    adc l000c                                                         ; 8144: 65 0c       e.
+    sta l0010                                                         ; 8146: 85 10       ..
+    lda #0                                                            ; 8148: a9 00       ..
+    adc l000d                                                         ; 814a: 65 0d       e.
+    sta l0011                                                         ; 814c: 85 11       ..
+    ldy #3                                                            ; 814e: a0 03       ..
+    lda (l0010),y                                                     ; 8150: b1 10       ..
+    ldy #6                                                            ; 8152: a0 06       ..
+    cmp (l001a),y                                                     ; 8154: d1 1a       ..
+    bne c8165                                                         ; 8156: d0 0d       ..
+    ldy l000d                                                         ; 8158: a4 0d       ..
+    tya                                                               ; 815a: 98          .
+    cpx l0008                                                         ; 815b: e4 08       ..
+    sbc l0009                                                         ; 815d: e5 09       ..
+    bcc c8165                                                         ; 815f: 90 04       ..
+    stx l0008                                                         ; 8161: 86 08       ..
+    sty l0009                                                         ; 8163: 84 09       ..
+.c8165
+    inc l0016                                                         ; 8165: e6 16       ..
+    inc l0016                                                         ; 8167: e6 16       ..
+    bne c8127                                                         ; 8169: d0 bc       ..
+.c816b
+    ldy #1                                                            ; 816b: a0 01       ..
+    lda (l0008),y                                                     ; 816d: b1 08       ..
+    tax                                                               ; 816f: aa          .
+.loop_c8170
+    iny                                                               ; 8170: c8          .
+    lda (l0008),y                                                     ; 8171: b1 08       ..
+    jsr oswrch                                                        ; 8173: 20 ee ff     ..            ; Write character
+    dex                                                               ; 8176: ca          .
+    bne loop_c8170                                                    ; 8177: d0 f7       ..
 .rts2
     rts                                                               ; 8179: 60          `
 
@@ -840,12 +888,18 @@ oscli                           = &fff7
     and #7                                                            ; 8548: 29 07       ).
     cmp #7                                                            ; 854a: c9 07       ..
     bne c855d                                                         ; 854c: d0 0f       ..
-    jsr sub_cb284                                                     ; 854e: 20 84 b2     ..
-    equb &1c,   0, &18, &27, &10, &ea, &a2,   0, &a0, &74, &d0,   5   ; 8551: 1c 00 18... ...
+    jsr fancy_print_nop_terminated_inline                             ; 854e: 20 84 b2     ..
+    equb &1c,   0, &18                                                ; 8551: 1c 00 18    ...
+    equs "'", &10                                                     ; 8554: 27 10       '.
 
+    nop                                                               ; 8556: ea          .
+    ldx #0                                                            ; 8557: a2 00       ..
+    ldy #&74 ; 't'                                                    ; 8559: a0 74       .t
+    bne c8562                                                         ; 855b: d0 05       ..
 .c855d
     lda #osbyte_read_himem                                            ; 855d: a9 84       ..
     jsr osbyte                                                        ; 855f: 20 f4 ff     ..            ; Read top of user memory (HIMEM)
+.c8562
     stx himem_low                                                     ; 8562: 8e 02 04    ...            ; X and Y contain the address of HIMEM (low, high)
     sty himem_high                                                    ; 8565: 8c 03 04    ...
     rts                                                               ; 8568: 60          `
@@ -6396,10 +6450,17 @@ oscli                           = &fff7
     lda l0418                                                         ; a8b7: ad 18 04    ...
     cmp #2                                                            ; a8ba: c9 02       ..
     bcc ca8d1                                                         ; a8bc: 90 13       ..
-    jsr sub_cb284                                                     ; a8be: 20 84 b2     ..
-    equb &5b, &ea, &ae, &5b,   6, &ac, &5c,   6, &20, &0c, &b3, &20   ; a8c1: 5b ea ae... [..
-    equb &84, &b2, &dd, &ea                                           ; a8cd: 84 b2 dd... ...
+    jsr fancy_print_nop_terminated_inline                             ; a8be: 20 84 b2     ..
+    equb &5b                                                          ; a8c1: 5b          [
 
+    nop                                                               ; a8c2: ea          .
+    ldx l065b                                                         ; a8c3: ae 5b 06    .[.
+    ldy l065c                                                         ; a8c6: ac 5c 06    .\.
+    jsr sub_cb30c                                                     ; a8c9: 20 0c b3     ..
+    jsr fancy_print_nop_terminated_inline                             ; a8cc: 20 84 b2     ..
+    equb &dd                                                          ; a8cf: dd          .
+
+    nop                                                               ; a8d0: ea          .
 .ca8d1
     lda #3                                                            ; a8d1: a9 03       ..
     rts                                                               ; a8d3: 60          `
@@ -6480,8 +6541,9 @@ la920 = sub_ca91f+1
     lda l0418                                                         ; a93d: ad 18 04    ...
     beq ca95d                                                         ; a940: f0 1b       ..
     stx l0015                                                         ; a942: 86 15       ..
-    jsr sub_cb284                                                     ; a944: 20 84 b2     ..
-    plp                                                               ; a947: 28          (
+    jsr fancy_print_nop_terminated_inline                             ; a944: 20 84 b2     ..
+    equb &28                                                          ; a947: 28          (
+
     nop                                                               ; a948: ea          .
     ldx l0015                                                         ; a949: a6 15       ..
     ldy #2                                                            ; a94b: a0 02       ..
@@ -6493,8 +6555,10 @@ la951 = sub_ca94f+2
     iny                                                               ; a952: c8          .
     dex                                                               ; a953: ca          .
     bne ca94d                                                         ; a954: d0 f7       ..
-    jsr sub_cb284                                                     ; a956: 20 84 b2     ..
-    lda #&ea                                                          ; a959: a9 ea       ..
+    jsr fancy_print_nop_terminated_inline                             ; a956: 20 84 b2     ..
+    equb &a9                                                          ; a959: a9          .
+
+    nop                                                               ; a95a: ea          .
     ldx l0015                                                         ; a95b: a6 15       ..
 .ca95d
     inx                                                               ; a95d: e8          .
@@ -7075,7 +7139,7 @@ la951 = sub_ca94f+2
     lda l0024                                                         ; b02e: a5 24       .$
     adc #0                                                            ; b030: 69 00       i.
     ldy l0025                                                         ; b032: a4 25       .%
-    jsr sub_cb636                                                     ; b034: 20 36 b6     6.
+    jsr cb636                                                         ; b034: 20 36 b6     6.
     jsr sub_cb6fe                                                     ; b037: 20 fe b6     ..
     jsr sub_cb6e5                                                     ; b03a: 20 e5 b6     ..
 .cb03d
@@ -7162,11 +7226,18 @@ la951 = sub_ca94f+2
 .sub_cb146
     lda #0                                                            ; b146: a9 00       ..
     sta l0035                                                         ; b148: 85 35       .5
-    jsr sub_cb284                                                     ; b14a: 20 84 b2     ..
-    ora l0f03                                                         ; b14d: 0d 03 0f    ...
-    equb &1a, &ea, &a9,   5, &20, &f4, &ff, &20, &f4, &ff, &a2,   4   ; b150: 1a ea a9... ...
-    equb &a0,   0, &20, &7b, &b1, &a2, &8a                            ; b15c: a0 00 20... ..
+    jsr fancy_print_nop_terminated_inline                             ; b14a: 20 84 b2     ..
+    equb &0d,   3, &0f                                                ; b14d: 0d 03 0f    ...
+    equs &1a                                                          ; b150: 1a          .
 
+    nop                                                               ; b151: ea          .
+    lda #osbyte_select_printer                                        ; b152: a9 05       ..
+    jsr osbyte                                                        ; b154: 20 f4 ff     ..            ; Select printer destination based on X
+    jsr osbyte                                                        ; b157: 20 f4 ff     ..
+    ldx #4                                                            ; b15a: a2 04       ..
+    ldy #0                                                            ; b15c: a0 00       ..
+    jsr sub_cb17b                                                     ; b15e: 20 7b b1     {.
+    ldx #&8a                                                          ; b161: a2 8a       ..
 .sub_cb163
     lda simplified_machine_type                                       ; b163: ad 17 04    ...
     cmp #1                                                            ; b166: c9 01       ..
@@ -7182,6 +7253,7 @@ la951 = sub_ca94f+2
     jsr sub_cb163                                                     ; b174: 20 63 b1     c.
     ldx #3                                                            ; b177: a2 03       ..
     ldy #4                                                            ; b179: a0 04       ..
+.sub_cb17b
     stx l0015                                                         ; b17b: 86 15       ..
     sty l0016                                                         ; b17d: 84 16       ..
 .loop_cb17f
@@ -7292,19 +7364,38 @@ la951 = sub_ca94f+2
     jsr sub_cb2f5                                                     ; b22c: 20 f5 b2     ..
     lda l0036                                                         ; b22f: a5 36       .6
     bne cb241                                                         ; b231: d0 0e       ..
-    jsr sub_cb284                                                     ; b233: 20 84 b2     ..
-    equs "#Over "                                                     ; b236: 23 4f 76... #Ov
-    equb &a0, &ea, &4c, &47, &b2                                      ; b23c: a0 ea 4c... ..L
+    jsr fancy_print_nop_terminated_inline                             ; b233: 20 84 b2     ..
+    equs "#Ov"                                                        ; b236: 23 4f 76    #Ov
+    equs "er ", &a0                                                   ; b239: 65 72 20... er
+
+    nop                                                               ; b23d: ea          .
+    jmp cb247                                                         ; b23e: 4c 47 b2    LG.
 
 .cb241
-    jsr sub_cb284                                                     ; b241: 20 84 b2     ..
-    equb &23, &91, &ea, &a6, &35, &bd, &6e, &b2, &20, &ee, &ff, &a9   ; b244: 23 91 ea... #..
-    equb &20, &20, &ee, &ff, &a5, &39,   9, &30, &20, &ee, &ff, &20   ; b250: 20 20 ee...   .
-    equb &84, &b2                                                     ; b25c: 84 b2       ..
-    equs " mark(s)"                                                   ; b25e: 20 6d 61...  ma
-    equb &ea, &a9, &13, &a4                                           ; b266: ea a9 13... ...
-    equs "0L6"                                                        ; b26a: 30 4c 36    0L6
-    equb &b6, &20, &2a                                                ; b26d: b6 20 2a    . *
+    jsr fancy_print_nop_terminated_inline                             ; b241: 20 84 b2     ..
+    equb &23, &91                                                     ; b244: 23 91       #.
+
+    nop                                                               ; b246: ea          .
+.cb247
+    ldx l0035                                                         ; b247: a6 35       .5
+    lda lb26e,x                                                       ; b249: bd 6e b2    .n.
+    jsr oswrch                                                        ; b24c: 20 ee ff     ..            ; Write character
+    lda #&20 ; ' '                                                    ; b24f: a9 20       .
+    jsr oswrch                                                        ; b251: 20 ee ff     ..            ; Write character 32
+    lda l0039                                                         ; b254: a5 39       .9
+    ora #&30 ; '0'                                                    ; b256: 09 30       .0
+    jsr oswrch                                                        ; b258: 20 ee ff     ..            ; Write character
+    jsr fancy_print_nop_terminated_inline                             ; b25b: 20 84 b2     ..
+    equs " ma"                                                        ; b25e: 20 6d 61     ma
+    equs "rk(s)"                                                      ; b261: 72 6b 28... rk(
+
+    nop                                                               ; b266: ea          .
+    lda #&13                                                          ; b267: a9 13       ..
+    ldy l0030                                                         ; b269: a4 30       .0
+    jmp cb636                                                         ; b26b: 4c 36 b6    L6.
+
+.lb26e
+    equb &20, &2a                                                     ; b26e: 20 2a        *
 
 .sub_cb270
     ldy l0030                                                         ; b270: a4 30       .0
@@ -7315,7 +7406,7 @@ la951 = sub_ca94f+2
     ldy l0030                                                         ; b27d: a4 30       .0
     lda l002c                                                         ; b27f: a5 2c       .,
     sta l0658,y                                                       ; b281: 99 58 06    .X.
-.sub_cb284
+.fancy_print_nop_terminated_inline
     pla                                                               ; b284: 68          h
     tax                                                               ; b285: aa          .
     pla                                                               ; b286: 68          h
@@ -7391,11 +7482,44 @@ la951 = sub_ca94f+2
     tya                                                               ; b308: 98          .
     jmp oswrch                                                        ; b309: 4c ee ff    L..            ; Write character
 
-    equb &86, &0c, &84, &0d, &a2,   4, &86, &15, &a9,   0, &85, &14   ; b30c: 86 0c 84... ...
-    equb &38, &a5, &0c, &fd, &43, &b3, &a8, &a5, &0d, &fd, &48, &b3   ; b318: 38 a5 0c... 8..
-    equb &90,   8, &84, &0c, &85, &0d, &e6, &14, &d0, &ea, &a5, &14   ; b324: 90 08 84... ...
-    equb &d0,   4, &c6, &15, &10,   9,   9, &30, &20, &ee, &ff, &a9   ; b330: d0 04 c6... ...
-    equb   0, &85, &15, &ca, &10, &d2, &60,   1, &0a, &64, &e8, &10   ; b33c: 00 85 15... ...
+.sub_cb30c
+    stx l000c                                                         ; b30c: 86 0c       ..
+    sty l000d                                                         ; b30e: 84 0d       ..
+    ldx #4                                                            ; b310: a2 04       ..
+    stx l0015                                                         ; b312: 86 15       ..
+.cb314
+    lda #0                                                            ; b314: a9 00       ..
+    sta l0014                                                         ; b316: 85 14       ..
+.loop_cb318
+    sec                                                               ; b318: 38          8
+    lda l000c                                                         ; b319: a5 0c       ..
+    sbc lb343,x                                                       ; b31b: fd 43 b3    .C.
+    tay                                                               ; b31e: a8          .
+    lda l000d                                                         ; b31f: a5 0d       ..
+    sbc lb348,x                                                       ; b321: fd 48 b3    .H.
+    bcc cb32e                                                         ; b324: 90 08       ..
+    sty l000c                                                         ; b326: 84 0c       ..
+    sta l000d                                                         ; b328: 85 0d       ..
+    inc l0014                                                         ; b32a: e6 14       ..
+    bne loop_cb318                                                    ; b32c: d0 ea       ..
+.cb32e
+    lda l0014                                                         ; b32e: a5 14       ..
+    bne cb336                                                         ; b330: d0 04       ..
+    dec l0015                                                         ; b332: c6 15       ..
+    bpl cb33f                                                         ; b334: 10 09       ..
+.cb336
+    ora #&30 ; '0'                                                    ; b336: 09 30       .0
+    jsr oswrch                                                        ; b338: 20 ee ff     ..            ; Write character
+    lda #0                                                            ; b33b: a9 00       ..
+    sta l0015                                                         ; b33d: 85 15       ..
+.cb33f
+    dex                                                               ; b33f: ca          .
+    bpl cb314                                                         ; b340: 10 d2       ..
+    rts                                                               ; b342: 60          `
+
+.lb343
+    equb   1, &0a, &64, &e8, &10                                      ; b343: 01 0a 64... ..d
+.lb348
     equb   0,   0,   0,   3, &27                                      ; b348: 00 00 00... ...
 
 .sub_cb34d
@@ -7774,7 +7898,7 @@ la951 = sub_ca94f+2
     iny                                                               ; b5ba: c8          .
     tya                                                               ; b5bb: 98          .
     ldy l0026                                                         ; b5bc: a4 26       .&
-    jsr sub_cb636                                                     ; b5be: 20 36 b6     6.
+    jsr cb636                                                         ; b5be: 20 36 b6     6.
     lda l0010                                                         ; b5c1: a5 10       ..
     sta l000a                                                         ; b5c3: 85 0a       ..
     lda l0011                                                         ; b5c5: a5 11       ..
@@ -7840,7 +7964,7 @@ la951 = sub_ca94f+2
 
 .maybe_clear_part_of_screen
     lda #0                                                            ; b634: a9 00       ..
-.sub_cb636
+.cb636
     tax                                                               ; b636: aa          .
     cmp l0658,y                                                       ; b637: d9 58 06    .X.
     bcs cb660                                                         ; b63a: b0 24       .$
@@ -8315,6 +8439,9 @@ la951 = sub_ca94f+2
 ;     c80dc
 ;     c80e2
 ;     c8101
+;     c8127
+;     c8165
+;     c816b
 ;     c8186
 ;     c819d
 ;     c81a7
@@ -8342,6 +8469,7 @@ la951 = sub_ca94f+2
 ;     c84c4
 ;     c8535
 ;     c855d
+;     c8562
 ;     c8569
 ;     c8574
 ;     c8576
@@ -8681,9 +8809,14 @@ la951 = sub_ca94f+2
 ;     cb1ef
 ;     cb210
 ;     cb241
+;     cb247
 ;     cb2d0
 ;     cb2ef
 ;     cb2ff
+;     cb314
+;     cb32e
+;     cb336
+;     cb33f
 ;     cb356
 ;     cb364
 ;     cb366
@@ -8719,6 +8852,7 @@ la951 = sub_ca94f+2
 ;     cb5f9
 ;     cb605
 ;     cb633
+;     cb636
 ;     cb660
 ;     cb671
 ;     cb67b
@@ -8878,10 +9012,6 @@ la951 = sub_ca94f+2
 ;     l0669
 ;     l066a
 ;     l066b
-;     l0f03
-;     l208d
-;     l6e69
-;     l7420
 ;     l8036
 ;     l803c
 ;     l8466
@@ -8923,14 +9053,18 @@ la951 = sub_ca94f+2
 ;     lb072
 ;     lb193
 ;     lb19a
+;     lb26e
+;     lb343
+;     lb348
 ;     lb6a0
 ;     lc001
 ;     lc002
 ;     lc003
 ;     le8e8
-;     lf461
 ;     loop_c8028
 ;     loop_c8047
+;     loop_c80d6
+;     loop_c8170
 ;     loop_c8305
 ;     loop_c8376
 ;     loop_c83cc
@@ -9025,6 +9159,7 @@ la951 = sub_ca94f+2
 ;     loop_cb1bb
 ;     loop_cb200
 ;     loop_cb2c8
+;     loop_cb318
 ;     loop_cb381
 ;     loop_cb383
 ;     loop_cb4b2
@@ -9202,6 +9337,7 @@ la951 = sub_ca94f+2
 ;     sub_cb146
 ;     sub_cb163
 ;     sub_cb172
+;     sub_cb17b
 ;     sub_cb1a1
 ;     sub_cb1aa
 ;     sub_cb1b9
@@ -9211,11 +9347,11 @@ la951 = sub_ca94f+2
 ;     sub_cb207
 ;     sub_cb229
 ;     sub_cb270
-;     sub_cb284
 ;     sub_cb29d
 ;     sub_cb2f5
 ;     sub_cb2fb
 ;     sub_cb2fd
+;     sub_cb30c
 ;     sub_cb34d
 ;     sub_cb359
 ;     sub_cb39b
@@ -9227,7 +9363,6 @@ la951 = sub_ca94f+2
 ;     sub_cb4c2
 ;     sub_cb586
 ;     sub_cb61e
-;     sub_cb636
 ;     sub_cb665
 ;     sub_cb6d2
 ;     sub_cb6e5
@@ -9779,6 +9914,7 @@ la951 = sub_ca94f+2
     assert osbyte_read_write_last_break_type == &fd
     assert osbyte_read_write_tab_char == &db
     assert osbyte_select_output_stream == &03
+    assert osbyte_select_printer == &05
     assert osfind_close == &00
     assert osfind_open_input == &40
     assert osfind_open_output == &80
