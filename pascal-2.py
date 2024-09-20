@@ -282,4 +282,6 @@ entry(0xb17f, "do_x_osbyte_calls_from_table_starting_at_y")
 entry(0xb172, "set_tab_char_to_9_if_not_electron_and_do_cleanup_osbyte_calls")
 comment(0xb15a, "Do 'setup' OSBYTE calls")
 
+# TODO: opcode_do_handler has some kind of jump table but it's not clear to me what X range is - ditto 7b_handler
+
 go()
