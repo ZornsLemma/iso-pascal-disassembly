@@ -282,7 +282,7 @@ entry(0xb17f, "do_x_osbyte_calls_from_table_starting_at_y")
 entry(0xb172, "set_tab_char_to_9_if_not_electron_and_do_cleanup_osbyte_calls")
 comment(0xb15a, "Do 'setup' OSBYTE calls")
 
-comment(0x952f, "TODO: Why do we do this indirect OSCLI via ROM? We could save a few bytes by doing LDX#/LDY# and getting rid of the pointer.")
+comment(0x952f, "TODO: Why do we do this indirect OSCLI via ROM? We could save a few bytes by doing LDX#/LDY# and getting rid of the pointer. AFAICS we do not rely on this do vary the command depending on which of our two ROMs is paged in, but maybe we do.")
 label(0x9539, "oscli_ptr")
 word(0x9539)
 expr_label(0x953a, "oscli_ptr + 1")
