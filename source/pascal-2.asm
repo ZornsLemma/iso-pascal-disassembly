@@ -1547,7 +1547,7 @@ oscli                           = &fff7
     bne c8916                                                         ; 88ed: d0 27       .'
 .bytecode_opcode_1d_handler
 .bytecode_opcode_1e_handler
-    lda la717,x                                                       ; 88ef: bd 17 a7    ...
+    lda opcode_1d_1e_table - 29,x                                     ; 88ef: bd 17 a7    ...
     sta l004c                                                         ; 88f2: 85 4c       .L
     jsr sub_c9ae2                                                     ; 88f4: 20 e2 9a     ..
     ldx #1                                                            ; 88f7: a2 01       ..
@@ -6644,6 +6644,7 @@ oscli                           = &fff7
     equs "TRUE"                                                       ; a730: 54 52 55... TRU
 .something_else_table
 .opcode_05_06_table
+.opcode_1d_1e_table
     equb   0,   1,   3,   4, &1f, &1a,   5, &ff, &20, &ff             ; a734: 00 01 03... ...
 .la73e
     equs "pas___#"                                                    ; a73e: 70 61 73... pas
@@ -12191,6 +12192,7 @@ oscli                           = &fff7
     assert copyright - rom_header == &14
     assert fx163_192_2 == &a746
     assert opcode_05_06_table - 5 == &a72f
+    assert opcode_1d_1e_table - 29 == &a717
     assert opcode_subrange1_jump_table_high - 202 == &a920
     assert opcode_subrange1_jump_table_low - 202 == &a919
     assert opcode_subrange2_jump_table_high - 120 == &a951
