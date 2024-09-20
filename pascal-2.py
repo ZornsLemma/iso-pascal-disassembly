@@ -45,6 +45,21 @@ expr(0x8231, make_hi("brkv_handler"))
 
 entry(0x808b, "pascal_command_handler")
 
+entry(0x8179, "rts2")
+# TODO: Rough WIP notes:
+# - non-top-bit-set characters are printed via OSASCI
+# - &80+' ' prints a double space
+# - other top-bit-set characters are treated as &80+n where n is a 0-based token (?) number for tokens starting at l81c2. Each token is terminated by a top-bit-set character, which (with the top bit cleared) is the last printable character of the token.
+entry(0x817a, "fancy_print_at_yx_with_terminator_a")
+entry(0x8180, "print_loop")
+entry(0x81b7, "oswrch_a_space_and_loop")
+entry(0x81bc, "osasci_a_and_loop")
+
+entry(0x81c2, "token_table")
+pc = 0x81c2
+for i in range(18):
+    pc = stringhi(pc, lambda x: True)
+
 comment(0x8235, "Set last break type to 0 and get old value in X")
 entry(0x82a7, "real_language_entry") # TODO: guess
 comment(0x823e, "Branch if b7 of original last break type clear")

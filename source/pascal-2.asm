@@ -358,7 +358,7 @@ oscli                           = &fff7
 .sub_c80e9
     jsr osnewl                                                        ; 80e9: 20 e7 ff     ..            ; Write newline (characters 10 and 13)
     lda #0                                                            ; 80ec: a9 00       ..
-    jsr sub_c817a                                                     ; 80ee: 20 7a 81     z.
+    jsr fancy_print_at_yx_with_terminator_a                           ; 80ee: 20 7a 81     z.
     lda l0416                                                         ; 80f1: ad 16 04    ...
     bne c8101                                                         ; 80f4: d0 0b       ..
     lda l065b                                                         ; 80f6: ad 5b 06    .[.
@@ -383,14 +383,14 @@ oscli                           = &fff7
     equb &86,   8, &84,   9, &e6, &16, &e6, &16, &d0, &bc, &a0,   1   ; 8161: 86 08 84... ...
     equb &b1,   8, &aa, &c8, &b1,   8, &20, &ee, &ff, &ca, &d0, &f7   ; 816d: b1 08 aa... ...
 
-.loop_c8179
+.rts2
     rts                                                               ; 8179: 60          `
 
-.sub_c817a
+.fancy_print_at_yx_with_terminator_a
     sta l0014                                                         ; 817a: 85 14       ..
     stx l0006                                                         ; 817c: 86 06       ..
     sty l0007                                                         ; 817e: 84 07       ..
-.c8180
+.print_loop
     inc l0006                                                         ; 8180: e6 06       ..
     bne c8186                                                         ; 8182: d0 02       ..
     inc l0007                                                         ; 8184: e6 07       ..
@@ -398,72 +398,56 @@ oscli                           = &fff7
     ldy #0                                                            ; 8186: a0 00       ..
     lda (l0006),y                                                     ; 8188: b1 06       ..
     cmp l0014                                                         ; 818a: c5 14       ..
-    beq loop_c8179                                                    ; 818c: f0 eb       ..
+    beq rts2                                                          ; 818c: f0 eb       ..
     tax                                                               ; 818e: aa          .
-    bpl c81bc                                                         ; 818f: 10 2b       .+
+    bpl osasci_a_and_loop                                             ; 818f: 10 2b       .+
     ldx #&ff                                                          ; 8191: a2 ff       ..
     and #&7f                                                          ; 8193: 29 7f       ).
     beq c81a7                                                         ; 8195: f0 10       ..
     cmp #&20 ; ' '                                                    ; 8197: c9 20       .
-    bcs c81b7                                                         ; 8199: b0 1c       ..
+    bcs oswrch_a_space_and_loop                                       ; 8199: b0 1c       ..
     sta l0016                                                         ; 819b: 85 16       ..
 .c819d
     inx                                                               ; 819d: e8          .
-    lda l81c2,x                                                       ; 819e: bd c2 81    ...
+    lda token_table,x                                                 ; 819e: bd c2 81    ...
     bpl c819d                                                         ; 81a1: 10 fa       ..
     dec l0016                                                         ; 81a3: c6 16       ..
     bne c819d                                                         ; 81a5: d0 f6       ..
 .c81a7
     inx                                                               ; 81a7: e8          .
-    lda l81c2,x                                                       ; 81a8: bd c2 81    ...
+    lda token_table,x                                                 ; 81a8: bd c2 81    ...
     and #&7f                                                          ; 81ab: 29 7f       ).
     jsr oswrch                                                        ; 81ad: 20 ee ff     ..            ; Write character
-    lda l81c2,x                                                       ; 81b0: bd c2 81    ...
+    lda token_table,x                                                 ; 81b0: bd c2 81    ...
     bpl c81a7                                                         ; 81b3: 10 f2       ..
-    bmi c8180                                                         ; 81b5: 30 c9       0.
-.c81b7
+    bmi print_loop                                                    ; 81b5: 30 c9       0.
+.oswrch_a_space_and_loop
     jsr oswrch                                                        ; 81b7: 20 ee ff     ..            ; Write character
     lda #&20 ; ' '                                                    ; 81ba: a9 20       .
-.c81bc
+.osasci_a_and_loop
     jsr osasci                                                        ; 81bc: 20 e3 ff     ..            ; Write character 32
-    jmp c8180                                                         ; 81bf: 4c 80 81    L..
+    jmp print_loop                                                    ; 81bf: 4c 80 81    L..
 
-.l81c2
-    equb &4e, &6f, &a0                                                ; 81c2: 4e 6f a0    No.
-    equs "onl"                                                        ; 81c5: 6f 6e 6c    onl
-    equb &f9                                                          ; 81c8: f9          .
-    equs "Bad"                                                        ; 81c9: 42 61 64    Bad
-    equb &a0                                                          ; 81cc: a0          .
-    equs "variabl"                                                    ; 81cd: 76 61 72... var
-    equb &e5                                                          ; 81d4: e5          .
-    equs "Undefined"                                                  ; 81d5: 55 6e 64... Und
-    equb &a0                                                          ; 81de: a0          .
-    equs "overflo"                                                    ; 81df: 6f 76 65... ove
-    equb &f7                                                          ; 81e6: f7          .
-    equs "fil"                                                        ; 81e7: 66 69 6c    fil
-    equb &e5                                                          ; 81ea: e5          .
-    equs "rang"                                                       ; 81eb: 72 61 6e... ran
-    equb &e5                                                          ; 81ef: e5          .
-    equs "ope"                                                        ; 81f0: 6f 70 65    ope
-    equb &ee                                                          ; 81f3: ee          .
-    equs "Field"                                                      ; 81f4: 46 69 65... Fie
-    equb &a0                                                          ; 81f9: a0          .
-    equs "tex"                                                        ; 81fa: 74 65 78    tex
-    equb &f4                                                          ; 81fd: f4          .
-    equs "Not"                                                        ; 81fe: 4e 6f 74    Not
-    equb &a0                                                          ; 8201: a0          .
-    equs "numbe"                                                      ; 8202: 6e 75 6d... num
-    equb &f2                                                          ; 8207: f2          .
-    equs "********"                                                   ; 8208: 2a 2a 2a... ***
-    equb &aa                                                          ; 8210: aa          .
-    equs "Escap"                                                      ; 8211: 45 73 63... Esc
-    equb &e5                                                          ; 8216: e5          .
-    equs "foun"                                                       ; 8217: 66 6f 75... fou
-    equb &e4                                                          ; 821b: e4          .
-    equs "eplac"                                                      ; 821c: 65 70 6c... epl
-    equb &e5                                                          ; 8221: e5          .
-    equs "Insert"                                                     ; 8222: 49 6e 73... Ins
-    equb &a0                                                          ; 8228: a0          .
+; overlapping: lsr sub_ca06f                                          ; 81c2: 4e 6f a0    No.
+.token_table
+    equs "No", &80+' '                                                ; 81c2: 4e 6f a0    No.
+    equs "onl", &80+'y'                                               ; 81c5: 6f 6e 6c... onl
+    equs "Bad", &80+' '                                               ; 81c9: 42 61 64... Bad
+    equs "variabl", &80+'e'                                           ; 81cd: 76 61 72... var
+    equs "Undefined", &80+' '                                         ; 81d5: 55 6e 64... Und
+    equs "overflo", &80+'w'                                           ; 81df: 6f 76 65... ove
+    equs "fil", &80+'e'                                               ; 81e7: 66 69 6c... fil
+    equs "rang", &80+'e'                                              ; 81eb: 72 61 6e... ran
+    equs "ope", &80+'n'                                               ; 81f0: 6f 70 65... ope
+    equs "Field", &80+' '                                             ; 81f4: 46 69 65... Fie
+    equs "tex", &80+'t'                                               ; 81fa: 74 65 78... tex
+    equs "Not", &80+' '                                               ; 81fe: 4e 6f 74... Not
+    equs "numbe", &80+'r'                                             ; 8202: 6e 75 6d... num
+    equs "********", &80+'*'                                          ; 8208: 2a 2a 2a... ***
+    equs "Escap", &80+'e'                                             ; 8211: 45 73 63... Esc
+    equs "foun", &80+'d'                                              ; 8217: 66 6f 75... fou
+    equs "eplac", &80+'e'                                             ; 821c: 65 70 6c... epl
+    equs "Insert", &80+' '                                            ; 8222: 49 6e 73... Ins
 
 .language_handler
     cli                                                               ; 8229: 58          X
@@ -4958,6 +4942,7 @@ oscli                           = &fff7
     sec                                                               ; a06d: 38          8
 .loop_ca06e
     inx                                                               ; a06e: e8          .
+.sub_ca06f
     sbc #&0a                                                          ; a06f: e9 0a       ..
     bcs loop_ca06e                                                    ; a071: b0 fb       ..
     adc #&0a                                                          ; a073: 69 0a       i.
@@ -7336,7 +7321,7 @@ la951 = sub_ca94f+2
     pla                                                               ; b286: 68          h
     tay                                                               ; b287: a8          .
     lda #&ea                                                          ; b288: a9 ea       ..
-    jsr sub_c817a                                                     ; b28a: 20 7a 81     z.
+    jsr fancy_print_at_yx_with_terminator_a                           ; b28a: 20 7a 81     z.
     jmp (l0006)                                                       ; b28d: 6c 06 00    l..
 
     equb &20, &96, &b2, &4c, &97, &84, &a9,   5, &85                  ; b290: 20 96 b2...  ..
@@ -8330,12 +8315,9 @@ la951 = sub_ca94f+2
 ;     c80dc
 ;     c80e2
 ;     c8101
-;     c8180
 ;     c8186
 ;     c819d
 ;     c81a7
-;     c81b7
-;     c81bc
 ;     c8265
 ;     c82a4
 ;     c831a
@@ -8902,7 +8884,6 @@ la951 = sub_ca94f+2
 ;     l7420
 ;     l8036
 ;     l803c
-;     l81c2
 ;     l8466
 ;     l8470
 ;     l8479
@@ -8950,7 +8931,6 @@ la951 = sub_ca94f+2
 ;     lf461
 ;     loop_c8028
 ;     loop_c8047
-;     loop_c8179
 ;     loop_c8305
 ;     loop_c8376
 ;     loop_c83cc
@@ -9057,7 +9037,6 @@ la951 = sub_ca94f+2
 ;     sub_c80e5
 ;     sub_c80e9
 ;     sub_c8104
-;     sub_c817a
 ;     sub_c8494
 ;     sub_c84b3
 ;     sub_c8520
@@ -9187,6 +9166,7 @@ la951 = sub_ca94f+2
 ;     sub_c9ef3
 ;     sub_c9f03
 ;     sub_c9f3c
+;     sub_ca06f
 ;     sub_ca07b
 ;     sub_ca07d
 ;     sub_ca08b
@@ -9258,6 +9238,15 @@ la951 = sub_ca94f+2
 ;     sub_cb7cc
 ;     sub_cbdbf
 ;     sub_cbe06
+    assert &80+' ' == &a0
+    assert &80+'*' == &aa
+    assert &80+'d' == &e4
+    assert &80+'e' == &e5
+    assert &80+'n' == &ee
+    assert &80+'r' == &f2
+    assert &80+'t' == &f4
+    assert &80+'w' == &f7
+    assert &80+'y' == &f9
     assert <(l003e) == &3e
     assert <(l051a) == &1a
     assert <brkv_handler == &98
