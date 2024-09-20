@@ -3086,7 +3086,7 @@ oscli                           = &fff7
     lda #1                                                            ; 92d6: a9 01       ..
     rts                                                               ; 92d8: 60          `
 
-.sub_c92d9
+.oswrch_or_osbput
     tax                                                               ; 92d9: aa          .
     ldy #4                                                            ; 92da: a0 04       ..
     lda (l0008),y                                                     ; 92dc: b1 08       ..
@@ -3108,7 +3108,7 @@ oscli                           = &fff7
     jsr sub_c91cf                                                     ; 92f3: 20 cf 91     ..
     ldy #0                                                            ; 92f6: a0 00       ..
     lda (l000a),y                                                     ; 92f8: b1 0a       ..
-    jsr sub_c92d9                                                     ; 92fa: 20 d9 92     ..
+    jsr oswrch_or_osbput                                              ; 92fa: 20 d9 92     ..
     lda #1                                                            ; 92fd: a9 01       ..
     rts                                                               ; 92ff: 60          `
 
@@ -3155,7 +3155,7 @@ oscli                           = &fff7
     cmp l0657                                                         ; 9347: cd 57 06    .W.
     bcs c9356                                                         ; 934a: b0 0a       ..
     lda #&20 ; ' '                                                    ; 934c: a9 20       .
-    jsr sub_c92d9                                                     ; 934e: 20 d9 92     ..
+    jsr oswrch_or_osbput                                              ; 934e: 20 d9 92     ..
     dec l0657                                                         ; 9351: ce 57 06    .W.
     bne loop_c9344                                                    ; 9354: d0 ee       ..
 .c9356
@@ -3166,7 +3166,7 @@ oscli                           = &fff7
 .loop_c9360
     ldy l0016                                                         ; 9360: a4 16       ..
     lda (l000a),y                                                     ; 9362: b1 0a       ..
-    jsr sub_c92d9                                                     ; 9364: 20 d9 92     ..
+    jsr oswrch_or_osbput                                              ; 9364: 20 d9 92     ..
     inc l0016                                                         ; 9367: e6 16       ..
     dec l065f                                                         ; 9369: ce 5f 06    ._.
     bne loop_c9360                                                    ; 936c: d0 f2       ..
@@ -3184,7 +3184,7 @@ oscli                           = &fff7
 .loop_c9383
     ldy #0                                                            ; 9383: a0 00       ..
     lda (l000a),y                                                     ; 9385: b1 0a       ..
-    jsr sub_c92d9                                                     ; 9387: 20 d9 92     ..
+    jsr oswrch_or_osbput                                              ; 9387: 20 d9 92     ..
     jsr sub_c94ba                                                     ; 938a: 20 ba 94     ..
     bne loop_c9383                                                    ; 938d: d0 f4       ..
     beq c939e                                                         ; 938f: f0 0d       ..
@@ -3207,10 +3207,10 @@ oscli                           = &fff7
     lda (l0008),y                                                     ; 93a6: b1 08       ..
     bne c93af                                                         ; 93a8: d0 05       ..
     lda #&0a                                                          ; 93aa: a9 0a       ..
-    jsr sub_c92d9                                                     ; 93ac: 20 d9 92     ..
+    jsr oswrch_or_osbput                                              ; 93ac: 20 d9 92     ..
 .c93af
     lda #&0d                                                          ; 93af: a9 0d       ..
-    jsr sub_c92d9                                                     ; 93b1: 20 d9 92     ..
+    jsr oswrch_or_osbput                                              ; 93b1: 20 d9 92     ..
     ldy #4                                                            ; 93b4: a0 04       ..
     lda (l0008),y                                                     ; 93b6: b1 08       ..
     ora #&20 ; ' '                                                    ; 93b8: 09 20       .
@@ -3227,7 +3227,7 @@ oscli                           = &fff7
     jsr sub_c93a4                                                     ; 93cb: 20 a4 93     ..
 .c93ce
     lda #&0c                                                          ; 93ce: a9 0c       ..
-    jsr sub_c92d9                                                     ; 93d0: 20 d9 92     ..
+    jsr oswrch_or_osbput                                              ; 93d0: 20 d9 92     ..
     lda #1                                                            ; 93d3: a9 01       ..
     rts                                                               ; 93d5: 60          `
 
@@ -7619,6 +7619,7 @@ la951 = sub_ca94f+2
     equb >something_21_handler                                        ; b113: b7          .
     equb >something_22_handler                                        ; b114: b7          .
     equb >something_23_handler                                        ; b115: b7          .
+; TODO: junk?
     equb &99, &90, &91, &92, &a0, &94, &a0, &96, &97, &98, &a0, &8b   ; b116: 99 90 91... ...
     equb &8c, &8d, &8e, &8f, &8a, &a0, &a0, &a0, &82, &a0, &a0, &a0   ; b122: 8c 8d 8e... ...
     equb &87, &a0, &a0, &a0, &9e, &9f, &88, &89, &80, &83, &a0, &84   ; b12e: 87 a0 a0... ...
@@ -10697,7 +10698,6 @@ la951 = sub_ca94f+2
 ;     sub_c9213
 ;     sub_c9224
 ;     sub_c9227
-;     sub_c92d9
 ;     sub_c9300
 ;     sub_c93a4
 ;     sub_c944c
