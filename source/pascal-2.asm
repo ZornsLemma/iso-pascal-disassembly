@@ -2019,6 +2019,7 @@ oscli                           = &fff7
 .sub_c8bc1
     lda #&4a ; 'J'                                                    ; 8bc1: a9 4a       .J
     bne c8c3e                                                         ; 8bc3: d0 79       .y
+.c8bc5
     brk                                                               ; 8bc5: 00          .
 
     equb &15                                                          ; 8bc6: 15          .
@@ -5319,6 +5320,7 @@ oscli                           = &fff7
     sta l003e                                                         ; a0e5: 85 3e       .>
     lda l0048                                                         ; a0e7: a5 48       .H
     sta l0040                                                         ; a0e9: 85 40       .@
+.sub_ca0eb
     lda l0049                                                         ; a0eb: a5 49       .I
     sta l0041                                                         ; a0ed: 85 41       .A
     lda l004a                                                         ; a0ef: a5 4a       .J
@@ -5334,9 +5336,10 @@ oscli                           = &fff7
 
 .sub_ca100
     jsr c9ee8                                                         ; a100: 20 e8 9e     ..
-.sub_ca103
+.ca103
     jsr sub_ca304                                                     ; a103: 20 04 a3     ..
     beq ca0ff                                                         ; a106: f0 f7       ..
+.sub_ca108
     jsr sub_ca10e                                                     ; a108: 20 0e a1     ..
     jmp ca473                                                         ; a10b: 4c 73 a4    Ls.
 
@@ -5568,8 +5571,8 @@ oscli                           = &fff7
     jsr sub_c9a6c                                                     ; a297: 20 6c 9a     l.
     jmp ca2a0                                                         ; a29a: 4c a0 a2    L..
 
-    equb &20, &68, &a3                                                ; a29d: 20 68 a3     h.
-
+.ca29d
+    jsr sub_ca368                                                     ; a29d: 20 68 a3     h.
 .ca2a0
     ldy #4                                                            ; a2a0: a0 04       ..
     lda (l000a),y                                                     ; a2a2: b1 0a       ..
@@ -5599,10 +5602,15 @@ oscli                           = &fff7
     sta l0041                                                         ; a2cc: 85 41       .A
     rts                                                               ; a2ce: 60          `
 
-    equb &a9, &58, &d0,   6, &a9, &5d, &d0,   2                       ; a2cf: a9 58 d0... .X.
-
+.sub_ca2cf
+    lda #&58 ; 'X'                                                    ; a2cf: a9 58       .X
+    bne ca2d9                                                         ; a2d1: d0 06       ..
+.sub_ca2d3
+    lda #&5d ; ']'                                                    ; a2d3: a9 5d       .]
+    bne ca2d9                                                         ; a2d5: d0 02       ..
 .sub_ca2d7
     lda #&53 ; 'S'                                                    ; a2d7: a9 53       .S
+.ca2d9
     sta l000a                                                         ; a2d9: 85 0a       ..
     lda #0                                                            ; a2db: a9 00       ..
     sta l000b                                                         ; a2dd: 85 0b       ..
@@ -5684,10 +5692,18 @@ oscli                           = &fff7
     ror l004d                                                         ; a359: 66 4d       fM
     rts                                                               ; a35b: 60          `
 
-    equb &a9, &62, &d0, &0a, &a9, &58, &d0,   6, &a9, &5d, &d0,   2   ; a35c: a9 62 d0... .b.
-
+.sub_ca35c
+    lda #&62 ; 'b'                                                    ; a35c: a9 62       .b
+    bne ca36a                                                         ; a35e: d0 0a       ..
+.sub_ca360
+    lda #&58 ; 'X'                                                    ; a360: a9 58       .X
+    bne ca36a                                                         ; a362: d0 06       ..
+.sub_ca364
+    lda #&5d ; ']'                                                    ; a364: a9 5d       .]
+    bne ca36a                                                         ; a366: d0 02       ..
 .sub_ca368
     lda #&53 ; 'S'                                                    ; a368: a9 53       .S
+.ca36a
     sta l000a                                                         ; a36a: 85 0a       ..
     lda #0                                                            ; a36c: a9 00       ..
     sta l000b                                                         ; a36e: 85 0b       ..
@@ -5739,6 +5755,7 @@ oscli                           = &fff7
 .ca3c3
     lda l003e                                                         ; a3c3: a5 3e       .>
     bpl ca3e0                                                         ; a3c5: 10 19       ..
+.sub_ca3c7
     sec                                                               ; a3c7: 38          8
     lda #0                                                            ; a3c8: a9 00       ..
     sbc l0044                                                         ; a3ca: e5 44       .D
@@ -5784,9 +5801,20 @@ oscli                           = &fff7
     sta l0040                                                         ; a40d: 85 40       .@
     jmp ca428                                                         ; a40f: 4c 28 a4    L(.
 
-    equb &48, &20, &93, &a4, &68, &f0, &c7, &10,   7, &85, &3e, &38   ; a412: 48 20 93... H .
-    equb &a9,   0, &e5, &3e, &85, &41, &a9, &88, &85, &40             ; a41e: a9 00 e5... ...
-
+.sub_ca412
+    pha                                                               ; a412: 48          H
+    jsr zero_misc_values                                              ; a413: 20 93 a4     ..
+    pla                                                               ; a416: 68          h
+    beq ca3e0                                                         ; a417: f0 c7       ..
+    bpl ca422                                                         ; a419: 10 07       ..
+    sta l003e                                                         ; a41b: 85 3e       .>
+    sec                                                               ; a41d: 38          8
+    lda #0                                                            ; a41e: a9 00       ..
+    sbc l003e                                                         ; a420: e5 3e       .>
+.ca422
+    sta l0041                                                         ; a422: 85 41       .A
+    lda #&88                                                          ; a424: a9 88       ..
+    sta l0040                                                         ; a426: 85 40       .@
 .ca428
     lda l0041                                                         ; a428: a5 41       .A
     bmi ca3e0                                                         ; a42a: 30 b4       0.
@@ -5865,13 +5893,33 @@ oscli                           = &fff7
 .ca4a6
     jmp c9e50                                                         ; a4a6: 4c 50 9e    LP.
 
-    equb &a5, &40, &10                                                ; a4a9: a5 40 10    .@.
-    equs "% q"                                                        ; a4ac: 25 20 71    % q
-    equb &a3, &a5, &44, &85, &3a, &20, &eb, &a0, &a9, &80, &85, &40   ; a4af: a3 a5 44... ..D
-    equb &a6, &41, &10, &10, &45, &3e, &85, &3e, &10,   5, &e6, &3a   ; a4bb: a6 41 10... .A.
-    equb &4c, &cc, &a4, &c6, &3a, &20, &c7, &a3, &4c, &28, &a4, &a9   ; a4c7: 4c cc a4... L..
-    equb   0, &85, &3a                                                ; a4d3: 00 85 3a    ..:
+.sub_ca4a9
+    lda l0040                                                         ; a4a9: a5 40       .@
+    bpl ca4d2                                                         ; a4ab: 10 25       .%
+    jsr sub_ca371                                                     ; a4ad: 20 71 a3     q.
+    lda l0044                                                         ; a4b0: a5 44       .D
+    sta l003a                                                         ; a4b2: 85 3a       .:
+    jsr sub_ca0eb                                                     ; a4b4: 20 eb a0     ..
+    lda #&80                                                          ; a4b7: a9 80       ..
+    sta l0040                                                         ; a4b9: 85 40       .@
+    ldx l0041                                                         ; a4bb: a6 41       .A
+    bpl ca4cf                                                         ; a4bd: 10 10       ..
+    eor l003e                                                         ; a4bf: 45 3e       E>
+    sta l003e                                                         ; a4c1: 85 3e       .>
+    bpl ca4ca                                                         ; a4c3: 10 05       ..
+    inc l003a                                                         ; a4c5: e6 3a       .:
+    jmp ca4cc                                                         ; a4c7: 4c cc a4    L..
 
+.ca4ca
+    dec l003a                                                         ; a4ca: c6 3a       .:
+.ca4cc
+    jsr sub_ca3c7                                                     ; a4cc: 20 c7 a3     ..
+.ca4cf
+    jmp ca428                                                         ; a4cf: 4c 28 a4    L(.
+
+.ca4d2
+    lda #0                                                            ; a4d2: a9 00       ..
+    sta l003a                                                         ; a4d4: 85 3a       .:
 .sub_ca4d6
     lda l0041                                                         ; a4d6: a5 41       .A
     ora l0042                                                         ; a4d8: 05 42       .B
@@ -6899,9 +6947,21 @@ la951 = sub_ca94f+2
     rts                                                               ; a9e2: 60          `
 
 .opcode_subrange1_jump_table_low
-    equb &ed, &33, &2b, &a0, &b5, &68, &78                            ; a9e3: ed 33 2b... .3+
+    equb <opcode_subrange1_for_ca_handler                             ; a9e3: ed          .
+    equb <opcode_subrange1_for_cb_handler                             ; a9e4: 33          3
+    equb <opcode_subrange1_for_cc_handler                             ; a9e5: 2b          +
+    equb <opcode_subrange1_for_cd_handler                             ; a9e6: a0          .
+    equb <opcode_subrange1_for_ce_handler                             ; a9e7: b5          .
+    equb <opcode_subrange1_for_cf_handler                             ; a9e8: 68          h
+    equb <opcode_subrange1_for_d0_handler                             ; a9e9: 78          x
 .opcode_subrange1_jump_table_high
-    equb &aa, &ac, &ac, &aa, &ac, &ac, &ad                            ; a9ea: aa ac ac... ...
+    equb >opcode_subrange1_for_ca_handler                             ; a9ea: aa          .
+    equb >opcode_subrange1_for_cb_handler                             ; a9eb: ac          .
+    equb >opcode_subrange1_for_cc_handler                             ; a9ec: ac          .
+    equb >opcode_subrange1_for_cd_handler                             ; a9ed: aa          .
+    equb >opcode_subrange1_for_ce_handler                             ; a9ee: ac          .
+    equb >opcode_subrange1_for_cf_handler                             ; a9ef: ac          .
+    equb >opcode_subrange1_for_d0_handler                             ; a9f0: ad          .
 
 .bytecode_opcode_d1_handler
 .bytecode_opcode_d2_handler
@@ -6914,7 +6974,7 @@ la951 = sub_ca94f+2
     sta l000b                                                         ; a9fe: 85 0b       ..
     lda l003e                                                         ; aa00: a5 3e       .>
     bmi caa0a                                                         ; aa02: 30 06       0.
-    jsr sub_ca103                                                     ; aa04: 20 03 a1     ..
+    jsr ca103                                                         ; aa04: 20 03 a1     ..
     jmp caa0d                                                         ; aa07: 4c 0d aa    L..
 
 .caa0a
@@ -7002,94 +7062,453 @@ la951 = sub_ca94f+2
 .caa95
     jmp oswrch_or_osbput_aligned_string_yx                            ; aa95: 4c 35 93    L5.
 
-    equb &4c, &50, &9e, &82, &2d, &f8, &54, &58, &a5, &40, &c9, &87   ; aa98: 4c 50 9e... LP.
-    equb &90, &0f, &d0,   6, &a4, &41, &c0, &b3, &90,   7, &a5, &3e   ; aaa4: 90 0f d0... ...
-    equb &10, &e6, &4c, &93, &a4, &20, &a9, &a4, &a9,   7, &a0, &c7   ; aab0: 10 e6 4c... ..L
-    equb &20, &fe, &ab, &20, &d3, &a2, &a9, &9b, &85, &0a, &a9, &aa   ; aabc: 20 fe ab...  ..
-    equb &85, &0b, &20, &a0, &a2, &38, &a9,   0, &e5, &3a, &30,   5   ; aac8: 85 0b 20... ..
-    equb &85                                                          ; aad4: 85          .
-    equs ": >"                                                        ; aad5: 3a 20 3e    : >
-    equb &ab, &20, &d7, &a2, &20, &fa, &a4, &a5, &3a, &f0,   7, &20   ; aad8: ab 20 d7... . .
-    equb &ed, &aa, &c6, &3a, &d0, &f9, &20, &64, &a3, &a5, &41, &f0   ; aae4: ed aa c6... ...
-    equb &47, &20,   4, &a3, &d0,   3, &4c, &93, &a4, &18, &a5        ; aaf0: 47 20 04... G .
-    equs "@eH&?"                                                      ; aafb: 40 65 48... @eH
-    equb &e9, &7f, &85, &40, &b0,   2, &c6, &3f, &a2,   5, &a0,   0   ; ab00: e9 7f 85... ...
-    equb &b5, &40, &95, &4d, &94, &40, &ca, &d0, &f7, &a5             ; ab0c: b5 40 95... .@.
-    equs ">EF"                                                        ; ab16: 3e 45 46    >EF
-    equb &85, &3e, &a0                                                ; ab19: 85 3e a0    .>.
-    equs " FIfJfKfLfM"                                                ; ab1c: 20 46 49...  FI
-    equb 6                                                            ; ab27: 06          .
-    equs "Q&P&O&N"                                                    ; ab28: 51 26 50... Q&P
-    equb &90,   4, &18, &20,   3, &9f, &88, &d0, &e5, &20, &28, &a4   ; ab2f: 90 04 18... ...
-    equb &4c, &73, &a4, &20, &d7, &a2, &20, &fa, &a4, &a5, &41, &f0   ; ab3b: 4c 73 a4... Ls.
-    equb &0b, &20, &31, &a3, &20, &a0, &a2, &d0, &15, &4c, &c5, &8b   ; ab47: 0b 20 31... . 1
-    equb &60,   2,   8,   8,   8,   8, &a5, &41, &f0, &f3, &20,   4   ; ab53: 60 02 08... `..
-    equb &a3, &d0,   3, &4c, &93, &a4, &a5                            ; ab5f: a3 d0 03... ...
-    equs "FE>"                                                        ; ab66: 46 45 3e    FE>
-    equb &85, &3e, &38, &a5, &48, &69, &81, &26, &3f, &e5, &40, &b0   ; ab69: 85 3e 38... .>8
-    equb   2, &c6, &3f, &85, &40, &18, &a0,   4, &84, &48, &a5, &49   ; ab75: 02 c6 3f... ..?
-    equb &be, &54, &ab, &b0, &16, &c5, &41, &d0, &10, &a4, &4a, &c4   ; ab81: be 54 ab... .T.
-    equb &42, &d0, &0a, &a4, &4b, &c4, &43, &d0,   4, &a4, &4c, &c4   ; ab8d: 42 d0 0a... B..
-    equb &44, &90, &17, &a8, &a5, &4c, &e5, &44, &85, &4c, &a5, &4b   ; ab99: 44 90 17... D..
-    equb &e5, &43, &85, &4b, &a5, &4a, &e5, &42, &85, &4a, &98, &e5   ; aba5: e5 43 85... .C.
-    equs "A8&F"                                                       ; abb1: 41 38 26... A8&
-    equb 6                                                            ; abb5: 06          .
-    equs "L&K&J*"                                                     ; abb6: 4c 26 4b... L&K
-    equb &ca, &d0, &c5, &c6, &48, &a6, &46, &a4, &48, &96, &4f, &10   ; abbc: ca d0 c5... ...
-    equb &b8,   5, &4a,   5, &4b,   5, &4c, &f0,   1, &38, &8a        ; abc8: b8 05 4a... ..J
-    equs "jjj)"                                                       ; abd3: 6a 6a 6a... jjj
-    equb &e0, &85, &45, &a5, &4f, &85, &44, &a5, &50, &85, &43, &a5   ; abd7: e0 85 45... ..E
-    equb &51, &85, &42, &a5, &52, &85                                 ; abe3: 51 85 42... Q.B
-    equs "AL8"                                                        ; abe9: 41 4c 38    AL8
-    equb &ab, &a9, &f9, &d0,   6, &a9, &f4, &d0,   2, &a9, &ef, &85   ; abec: ab a9 f9... ...
-    equb &0a, &a9, &bf, &85, &0b, &60, &85, &35, &84, &31, &20, &d7   ; abf8: 0a a9 bf... ...
-    equb &a2, &a5, &31, &85, &0a, &a9, &bf, &85, &0b, &20, &a0, &a2   ; ac04: a2 a5 31... ..1
-    equb &20, &68, &a3, &20, &59, &ab, &18, &a5, &31, &69,   5, &85   ; ac10: 20 68 a3...  h.
-    equb &31, &85, &0a, &a9, &bf, &85, &0b, &20,   3, &a1, &c6, &35   ; ac1c: 31 85 0a... 1..
-    equb &d0, &e6, &60, &20, &13, &ad, &e6                            ; ac28: d0 e6 60... ..`
-    equs ":L6"                                                        ; ac2f: 3a 4c 36    :L6
-    equb &ac, &20, &13, &ad, &a5, &3a, &29,   2, &f0, &16, &20, &52   ; ac32: ac 20 13... . .
-    equb &ac, &4c, &e8, &9e, &20, &d3, &a2, &20, &ed, &aa, &a9,   5   ; ac3e: ac 4c e8... .L.
-    equb &a0, &a9, &20, &fe, &ab, &4c, &ea, &aa, &46, &3a, &90, &ec   ; ac4a: a0 a9 20... ..
-    equb &20, &42, &ac, &20, &d7, &a2, &20, &ed, &aa, &20, &df, &a2   ; ac56: 20 42 ac...  B.
-    equb &20, &fa, &a4, &20, &1b, &aa, &20, &d6, &a4, &f0             ; ac62: 20 fa a4...  ..
-    equs "*0) "                                                       ; ac6c: 2a 30 29... *0)
-    equb &d7, &a2, &a5                                                ; ac70: d7 a2 a5    ...
-    equs "@Ji@"                                                       ; ac73: 40 4a 69... @Ji
-    equb &85, &40, &a9,   5, &85                                      ; ac77: 85 40 a9... .@.
-    equs "8 `"                                                        ; ac7c: 38 20 60    8 `
-    equb &a3, &20, &df, &a2, &a9, &53, &85, &0a, &20, &59, &ab, &a9   ; ac7f: a3 20 df... . .
-    equb &58, &85, &0a, &20,   3, &a1, &c6, &40, &c6, &38, &d0, &e9   ; ac8b: 58 85 0a... X..
-    equb &60,   0, &18, &2d, &76, &e5                                 ; ac97: 60 00 18... `..
+.loop_caa98
+    jmp c9e50                                                         ; aa98: 4c 50 9e    LP.
+
+    equb &82, &2d, &f8, &54, &58                                      ; aa9b: 82 2d f8... .-.
+
+.opcode_subrange1_for_cd_handler
+    lda l0040                                                         ; aaa0: a5 40       .@
+    cmp #&87                                                          ; aaa2: c9 87       ..
+    bcc caab5                                                         ; aaa4: 90 0f       ..
+    bne caaae                                                         ; aaa6: d0 06       ..
+    ldy l0041                                                         ; aaa8: a4 41       .A
+    cpy #&b3                                                          ; aaaa: c0 b3       ..
+    bcc caab5                                                         ; aaac: 90 07       ..
+.caaae
+    lda l003e                                                         ; aaae: a5 3e       .>
+    bpl loop_caa98                                                    ; aab0: 10 e6       ..
+    jmp zero_misc_values                                              ; aab2: 4c 93 a4    L..
+
+.caab5
+    jsr sub_ca4a9                                                     ; aab5: 20 a9 a4     ..
+    lda #7                                                            ; aab8: a9 07       ..
+    ldy #&c7                                                          ; aaba: a0 c7       ..
+    jsr sub_cabfe                                                     ; aabc: 20 fe ab     ..
+    jsr sub_ca2d3                                                     ; aabf: 20 d3 a2     ..
+    lda #&9b                                                          ; aac2: a9 9b       ..
+    sta l000a                                                         ; aac4: 85 0a       ..
+    lda #&aa                                                          ; aac6: a9 aa       ..
+    sta l000b                                                         ; aac8: 85 0b       ..
+    jsr ca2a0                                                         ; aaca: 20 a0 a2     ..
+    sec                                                               ; aacd: 38          8
+    lda #0                                                            ; aace: a9 00       ..
+    sbc l003a                                                         ; aad0: e5 3a       .:
+    bmi caad9                                                         ; aad2: 30 05       0.
+    sta l003a                                                         ; aad4: 85 3a       .:
+    jsr sub_cab3e                                                     ; aad6: 20 3e ab     >.
+.caad9
+    jsr sub_ca2d7                                                     ; aad9: 20 d7 a2     ..
+    jsr sub_ca4fa                                                     ; aadc: 20 fa a4     ..
+    lda l003a                                                         ; aadf: a5 3a       .:
+    beq caaea                                                         ; aae1: f0 07       ..
+.loop_caae3
+    jsr opcode_subrange1_for_ca_handler                               ; aae3: 20 ed aa     ..
+    dec l003a                                                         ; aae6: c6 3a       .:
+    bne loop_caae3                                                    ; aae8: d0 f9       ..
+.caaea
+    jsr sub_ca364                                                     ; aaea: 20 64 a3     d.
+.opcode_subrange1_for_ca_handler
+    lda l0041                                                         ; aaed: a5 41       .A
+    beq cab38                                                         ; aaef: f0 47       .G
+    jsr sub_ca304                                                     ; aaf1: 20 04 a3     ..
+    bne caaf9                                                         ; aaf4: d0 03       ..
+    jmp zero_misc_values                                              ; aaf6: 4c 93 a4    L..
+
+.caaf9
+    clc                                                               ; aaf9: 18          .
+    lda l0040                                                         ; aafa: a5 40       .@
+    adc l0048                                                         ; aafc: 65 48       eH
+    rol l003f                                                         ; aafe: 26 3f       &?
+    sbc #&7f                                                          ; ab00: e9 7f       ..
+    sta l0040                                                         ; ab02: 85 40       .@
+    bcs cab08                                                         ; ab04: b0 02       ..
+    dec l003f                                                         ; ab06: c6 3f       .?
+.cab08
+    ldx #5                                                            ; ab08: a2 05       ..
+    ldy #0                                                            ; ab0a: a0 00       ..
+.loop_cab0c
+    lda l0040,x                                                       ; ab0c: b5 40       .@
+    sta l004d,x                                                       ; ab0e: 95 4d       .M
+    sty l0040,x                                                       ; ab10: 94 40       .@
+    dex                                                               ; ab12: ca          .
+    bne loop_cab0c                                                    ; ab13: d0 f7       ..
+    lda l003e                                                         ; ab15: a5 3e       .>
+    eor l0046                                                         ; ab17: 45 46       EF
+    sta l003e                                                         ; ab19: 85 3e       .>
+    ldy #&20 ; ' '                                                    ; ab1b: a0 20       .
+.loop_cab1d
+    lsr l0049                                                         ; ab1d: 46 49       FI
+    ror l004a                                                         ; ab1f: 66 4a       fJ
+    ror l004b                                                         ; ab21: 66 4b       fK
+    ror l004c                                                         ; ab23: 66 4c       fL
+    ror l004d                                                         ; ab25: 66 4d       fM
+    asl l0051                                                         ; ab27: 06 51       .Q
+    rol l0050                                                         ; ab29: 26 50       &P
+    rol l004f                                                         ; ab2b: 26 4f       &O
+    rol l004e                                                         ; ab2d: 26 4e       &N
+    bcc cab35                                                         ; ab2f: 90 04       ..
+    clc                                                               ; ab31: 18          .
+    jsr sub_c9f03                                                     ; ab32: 20 03 9f     ..
+.cab35
+    dey                                                               ; ab35: 88          .
+    bne loop_cab1d                                                    ; ab36: d0 e5       ..
+.cab38
+    jsr ca428                                                         ; ab38: 20 28 a4     (.
+    jmp ca473                                                         ; ab3b: 4c 73 a4    Ls.
+
+.sub_cab3e
+    jsr sub_ca2d7                                                     ; ab3e: 20 d7 a2     ..
+    jsr sub_ca4fa                                                     ; ab41: 20 fa a4     ..
+.sub_cab44
+    lda l0041                                                         ; ab44: a5 41       .A
+    beq cab53                                                         ; ab46: f0 0b       ..
+    jsr sub_ca331                                                     ; ab48: 20 31 a3     1.
+    jsr ca2a0                                                         ; ab4b: 20 a0 a2     ..
+    bne cab65                                                         ; ab4e: d0 15       ..
+.loop_cab50
+    jmp c8bc5                                                         ; ab50: 4c c5 8b    L..
+
+.cab53
+    rts                                                               ; ab53: 60          `
+
+.lab54
+    equb 2, 8, 8, 8, 8                                                ; ab54: 02 08 08... ...
+
+.sub_cab59
+    lda l0041                                                         ; ab59: a5 41       .A
+    beq loop_cab50                                                    ; ab5b: f0 f3       ..
+    jsr sub_ca304                                                     ; ab5d: 20 04 a3     ..
+    bne cab65                                                         ; ab60: d0 03       ..
+    jmp zero_misc_values                                              ; ab62: 4c 93 a4    L..
+
+.cab65
+    lda l0046                                                         ; ab65: a5 46       .F
+    eor l003e                                                         ; ab67: 45 3e       E>
+    sta l003e                                                         ; ab69: 85 3e       .>
+    sec                                                               ; ab6b: 38          8
+    lda l0048                                                         ; ab6c: a5 48       .H
+    adc #&81                                                          ; ab6e: 69 81       i.
+    rol l003f                                                         ; ab70: 26 3f       &?
+    sbc l0040                                                         ; ab72: e5 40       .@
+    bcs cab78                                                         ; ab74: b0 02       ..
+    dec l003f                                                         ; ab76: c6 3f       .?
+.cab78
+    sta l0040                                                         ; ab78: 85 40       .@
+    clc                                                               ; ab7a: 18          .
+    ldy #4                                                            ; ab7b: a0 04       ..
+    sty l0048                                                         ; ab7d: 84 48       .H
+    lda l0049                                                         ; ab7f: a5 49       .I
+.cab81
+    ldx lab54,y                                                       ; ab81: be 54 ab    .T.
+.cab84
+    bcs cab9c                                                         ; ab84: b0 16       ..
+    cmp l0041                                                         ; ab86: c5 41       .A
+    bne cab9a                                                         ; ab88: d0 10       ..
+    ldy l004a                                                         ; ab8a: a4 4a       .J
+    cpy l0042                                                         ; ab8c: c4 42       .B
+    bne cab9a                                                         ; ab8e: d0 0a       ..
+    ldy l004b                                                         ; ab90: a4 4b       .K
+    cpy l0043                                                         ; ab92: c4 43       .C
+    bne cab9a                                                         ; ab94: d0 04       ..
+    ldy l004c                                                         ; ab96: a4 4c       .L
+    cpy l0044                                                         ; ab98: c4 44       .D
+.cab9a
+    bcc cabb3                                                         ; ab9a: 90 17       ..
+.cab9c
+    tay                                                               ; ab9c: a8          .
+    lda l004c                                                         ; ab9d: a5 4c       .L
+    sbc l0044                                                         ; ab9f: e5 44       .D
+    sta l004c                                                         ; aba1: 85 4c       .L
+    lda l004b                                                         ; aba3: a5 4b       .K
+    sbc l0043                                                         ; aba5: e5 43       .C
+    sta l004b                                                         ; aba7: 85 4b       .K
+    lda l004a                                                         ; aba9: a5 4a       .J
+    sbc l0042                                                         ; abab: e5 42       .B
+    sta l004a                                                         ; abad: 85 4a       .J
+    tya                                                               ; abaf: 98          .
+    sbc l0041                                                         ; abb0: e5 41       .A
+    sec                                                               ; abb2: 38          8
+.cabb3
+    rol l0046                                                         ; abb3: 26 46       &F
+    asl l004c                                                         ; abb5: 06 4c       .L
+    rol l004b                                                         ; abb7: 26 4b       &K
+    rol l004a                                                         ; abb9: 26 4a       &J
+    rol a                                                             ; abbb: 2a          *
+    dex                                                               ; abbc: ca          .
+    bne cab84                                                         ; abbd: d0 c5       ..
+    dec l0048                                                         ; abbf: c6 48       .H
+    ldx l0046                                                         ; abc1: a6 46       .F
+    ldy l0048                                                         ; abc3: a4 48       .H
+    stx l004f,y                                                       ; abc5: 96 4f       .O
+    bpl cab81                                                         ; abc7: 10 b8       ..
+    ora l004a                                                         ; abc9: 05 4a       .J
+    ora l004b                                                         ; abcb: 05 4b       .K
+    ora l004c                                                         ; abcd: 05 4c       .L
+    beq cabd2                                                         ; abcf: f0 01       ..
+    sec                                                               ; abd1: 38          8
+.cabd2
+    txa                                                               ; abd2: 8a          .
+    ror a                                                             ; abd3: 6a          j
+    ror a                                                             ; abd4: 6a          j
+    ror a                                                             ; abd5: 6a          j
+    and #&e0                                                          ; abd6: 29 e0       ).
+    sta l0045                                                         ; abd8: 85 45       .E
+    lda l004f                                                         ; abda: a5 4f       .O
+    sta l0044                                                         ; abdc: 85 44       .D
+    lda l0050                                                         ; abde: a5 50       .P
+    sta l0043                                                         ; abe0: 85 43       .C
+    lda l0051                                                         ; abe2: a5 51       .Q
+    sta l0042                                                         ; abe4: 85 42       .B
+    lda l0052                                                         ; abe6: a5 52       .R
+    sta l0041                                                         ; abe8: 85 41       .A
+    jmp cab38                                                         ; abea: 4c 38 ab    L8.
+
+.sub_cabed
+    lda #&f9                                                          ; abed: a9 f9       ..
+    bne cabf7                                                         ; abef: d0 06       ..
+.sub_cabf1
+    lda #&f4                                                          ; abf1: a9 f4       ..
+    bne cabf7                                                         ; abf3: d0 02       ..
+.sub_cabf5
+    lda #&ef                                                          ; abf5: a9 ef       ..
+.cabf7
+    sta l000a                                                         ; abf7: 85 0a       ..
+    lda #&bf                                                          ; abf9: a9 bf       ..
+    sta l000b                                                         ; abfb: 85 0b       ..
+    rts                                                               ; abfd: 60          `
+
+.sub_cabfe
+    sta l0035                                                         ; abfe: 85 35       .5
+    sty l0031                                                         ; ac00: 84 31       .1
+    jsr sub_ca2d7                                                     ; ac02: 20 d7 a2     ..
+    lda l0031                                                         ; ac05: a5 31       .1
+    sta l000a                                                         ; ac07: 85 0a       ..
+    lda #&bf                                                          ; ac09: a9 bf       ..
+    sta l000b                                                         ; ac0b: 85 0b       ..
+    jsr ca2a0                                                         ; ac0d: 20 a0 a2     ..
+.loop_cac10
+    jsr sub_ca368                                                     ; ac10: 20 68 a3     h.
+    jsr sub_cab59                                                     ; ac13: 20 59 ab     Y.
+    clc                                                               ; ac16: 18          .
+    lda l0031                                                         ; ac17: a5 31       .1
+    adc #5                                                            ; ac19: 69 05       i.
+    sta l0031                                                         ; ac1b: 85 31       .1
+    sta l000a                                                         ; ac1d: 85 0a       ..
+    lda #&bf                                                          ; ac1f: a9 bf       ..
+    sta l000b                                                         ; ac21: 85 0b       ..
+    jsr ca103                                                         ; ac23: 20 03 a1     ..
+    dec l0035                                                         ; ac26: c6 35       .5
+    bne loop_cac10                                                    ; ac28: d0 e6       ..
+    rts                                                               ; ac2a: 60          `
+
+.opcode_subrange1_for_cc_handler
+    jsr sub_cad13                                                     ; ac2b: 20 13 ad     ..
+    inc l003a                                                         ; ac2e: e6 3a       .:
+    jmp cac36                                                         ; ac30: 4c 36 ac    L6.
+
+.opcode_subrange1_for_cb_handler
+    jsr sub_cad13                                                     ; ac33: 20 13 ad     ..
+.cac36
+    lda l003a                                                         ; ac36: a5 3a       .:
+    and #2                                                            ; ac38: 29 02       ).
+    beq cac52                                                         ; ac3a: f0 16       ..
+    jsr cac52                                                         ; ac3c: 20 52 ac     R.
+    jmp c9ee8                                                         ; ac3f: 4c e8 9e    L..
+
+.cac42
+    jsr sub_ca2d3                                                     ; ac42: 20 d3 a2     ..
+    jsr opcode_subrange1_for_ca_handler                               ; ac45: 20 ed aa     ..
+    lda #5                                                            ; ac48: a9 05       ..
+    ldy #&a9                                                          ; ac4a: a0 a9       ..
+    jsr sub_cabfe                                                     ; ac4c: 20 fe ab     ..
+    jmp caaea                                                         ; ac4f: 4c ea aa    L..
+
+.cac52
+    lsr l003a                                                         ; ac52: 46 3a       F:
+    bcc cac42                                                         ; ac54: 90 ec       ..
+    jsr cac42                                                         ; ac56: 20 42 ac     B.
+    jsr sub_ca2d7                                                     ; ac59: 20 d7 a2     ..
+    jsr opcode_subrange1_for_ca_handler                               ; ac5c: 20 ed aa     ..
+    jsr ca2df                                                         ; ac5f: 20 df a2     ..
+    jsr sub_ca4fa                                                     ; ac62: 20 fa a4     ..
+    jsr sub_caa1b                                                     ; ac65: 20 1b aa     ..
+.opcode_subrange1_for_cf_handler
+    jsr sub_ca4d6                                                     ; ac68: 20 d6 a4     ..
+    beq cac97                                                         ; ac6b: f0 2a       .*
+    bmi cac98                                                         ; ac6d: 30 29       0)
+    jsr sub_ca2d7                                                     ; ac6f: 20 d7 a2     ..
+    lda l0040                                                         ; ac72: a5 40       .@
+    lsr a                                                             ; ac74: 4a          J
+    adc #&40 ; '@'                                                    ; ac75: 69 40       i@
+    sta l0040                                                         ; ac77: 85 40       .@
+    lda #5                                                            ; ac79: a9 05       ..
+    sta l0038                                                         ; ac7b: 85 38       .8
+    jsr sub_ca360                                                     ; ac7d: 20 60 a3     `.
+.loop_cac80
+    jsr ca2df                                                         ; ac80: 20 df a2     ..
+    lda #&53 ; 'S'                                                    ; ac83: a9 53       .S
+    sta l000a                                                         ; ac85: 85 0a       ..
+    jsr sub_cab59                                                     ; ac87: 20 59 ab     Y.
+    lda #&58 ; 'X'                                                    ; ac8a: a9 58       .X
+    sta l000a                                                         ; ac8c: 85 0a       ..
+    jsr ca103                                                         ; ac8e: 20 03 a1     ..
+    dec l0040                                                         ; ac91: c6 40       .@
+    dec l0038                                                         ; ac93: c6 38       .8
+    bne loop_cac80                                                    ; ac95: d0 e9       ..
+.cac97
+    rts                                                               ; ac97: 60          `
+
+.cac98
+    brk                                                               ; ac98: 00          .
+
+    equb &18, &2d, &76, &e5                                           ; ac99: 18 2d 76... .-v
     equs "SQRT"                                                       ; ac9d: 53 51 52... SQR
-    equb   0, &19, &4c, &ce, &87,   0, &1a                            ; aca1: 00 19 4c... ..L
+
+.caca1
+    brk                                                               ; aca1: 00          .
+
+    equb &19, &4c, &ce, &87                                           ; aca2: 19 4c ce... .L.
+
+.caca6
+    brk                                                               ; aca6: 00          .
+
+    equb &1a                                                          ; aca7: 1a          .
     equs "Accurac"                                                    ; aca8: 41 63 63... Acc
     equb &f9                                                          ; acaf: f9          .
     equs "lost"                                                       ; acb0: 6c 6f 73... los
-    equb   0, &20, &d6, &a4, &30, &e7, &f0, &e5, &20, &e9, &a4, &a0   ; acb4: 00 20 d6... . .
-    equb &80, &84, &46, &84, &49, &c8, &84, &48, &a6, &40, &f0,   6   ; acc0: 80 84 46... ..F
-    equb &a5, &41, &c9, &b5, &90,   2, &e8, &88, &8a, &48, &84, &40   ; accc: a5 41 c9... .A.
-    equb &20,   8, &a1, &a9, &62, &20, &d9, &a2, &a9,   6, &a0, &54   ; acd8: 20 08 a1...  ..
-    equb &20, &fe, &ab, &20, &5c, &a3, &20, &ed, &aa, &20, &ed, &aa   ; ace4: 20 fe ab...  ..
-    equb &20,   3, &a1, &20, &d7, &a2, &68, &38, &e9, &81, &20, &12   ; acf0: 20 03 a1...  ..
-    equb &a4, &a9, &0e, &85, &0a, &a9, &ad, &85, &0b, &20, &ed, &aa   ; acfc: a4 a9 0e... ...
-    equb &20, &68, &a3, &4c,   3, &a1, &80, &31, &72, &17, &f8, &a5   ; ad08: 20 68 a3...  h.
-    equb &40, &c9, &98, &b0, &8d, &20, &d7, &a2, &20, &ed, &ab, &20   ; ad14: 40 c9 98... @..
-    equb   4, &a3, &a5, &3e, &85, &46, &c6, &48, &20,   8, &a1, &20   ; ad20: 04 a3 a5... ...
-    equb &44, &ab, &20, &71, &a3, &a5, &44, &85, &3a,   5, &43,   5   ; ad2c: 44 ab 20... D.
-    equb &42,   5, &41, &f0, &38, &a9, &a0, &85, &40, &a0,   0, &84   ; ad38: 42 05 41... B.A
-    equb &45, &a5, &41, &85, &3e, &10,   3, &20, &c7, &a3, &20, &28   ; ad44: 45 a5 41... E.A
-    equb &a4, &20, &cf, &a2, &20, &f1, &ab, &20, &ed, &aa, &20, &68   ; ad50: a4 20 cf... . .
-    equb &a3, &20,   3, &a1, &20, &df, &a2, &20, &60, &a3, &20, &a0   ; ad5c: a3 20 03... . .
-    equb &a2, &20, &f5, &ab, &20, &ed, &aa, &20, &68, &a3, &4c,   3   ; ad68: a2 20 f5... . .
-    equb &a1, &4c, &9d, &a2, &20, &d6, &a4, &f0, &0b, &10             ; ad74: a1 4c 9d... .L.
-    equs "+F> "                                                       ; ad7e: 2b 46 3e... +F>
-    equb &aa, &ad, &a9, &80, &85, &3e, &60, &a5, &40, &c9, &73, &90   ; ad82: aa ad a9... ...
-    equb &f9, &20, &d3, &a2, &20, &e9, &a4, &a9, &80, &85, &48, &85   ; ad8e: f9 20 d3... . .
-    equb &49, &85, &46, &20,   8, &a1, &a9,   9, &a0, &77, &20, &fe   ; ad9a: 49 85 46... I.F
-    equb &ab, &4c, &ea, &aa, &a5, &40, &c9, &81, &90, &d9, &20, &3e   ; ada6: ab 4c ea... .L.
-    equb &ab, &20, &89, &ad, &20, &f1, &ab, &20,   3, &a1, &20, &f5   ; adb2: ab 20 89... . .
-    equb &ab, &20,   3, &a1, &4c, &e8, &9e                            ; adbe: ab 20 03... . .
+    equb 0                                                            ; acb4: 00          .
+
+.opcode_subrange1_for_ce_handler
+    jsr sub_ca4d6                                                     ; acb5: 20 d6 a4     ..
+    bmi caca1                                                         ; acb8: 30 e7       0.
+    beq caca1                                                         ; acba: f0 e5       ..
+    jsr sub_ca4e9                                                     ; acbc: 20 e9 a4     ..
+    ldy #&80                                                          ; acbf: a0 80       ..
+    sty l0046                                                         ; acc1: 84 46       .F
+    sty l0049                                                         ; acc3: 84 49       .I
+    iny                                                               ; acc5: c8          .
+    sty l0048                                                         ; acc6: 84 48       .H
+    ldx l0040                                                         ; acc8: a6 40       .@
+    beq cacd2                                                         ; acca: f0 06       ..
+    lda l0041                                                         ; accc: a5 41       .A
+    cmp #&b5                                                          ; acce: c9 b5       ..
+    bcc cacd4                                                         ; acd0: 90 02       ..
+.cacd2
+    inx                                                               ; acd2: e8          .
+    dey                                                               ; acd3: 88          .
+.cacd4
+    txa                                                               ; acd4: 8a          .
+    pha                                                               ; acd5: 48          H
+    sty l0040                                                         ; acd6: 84 40       .@
+    jsr sub_ca108                                                     ; acd8: 20 08 a1     ..
+    lda #&62 ; 'b'                                                    ; acdb: a9 62       .b
+    jsr ca2d9                                                         ; acdd: 20 d9 a2     ..
+    lda #6                                                            ; ace0: a9 06       ..
+    ldy #&54 ; 'T'                                                    ; ace2: a0 54       .T
+    jsr sub_cabfe                                                     ; ace4: 20 fe ab     ..
+    jsr sub_ca35c                                                     ; ace7: 20 5c a3     \.
+    jsr opcode_subrange1_for_ca_handler                               ; acea: 20 ed aa     ..
+    jsr opcode_subrange1_for_ca_handler                               ; aced: 20 ed aa     ..
+    jsr ca103                                                         ; acf0: 20 03 a1     ..
+    jsr sub_ca2d7                                                     ; acf3: 20 d7 a2     ..
+    pla                                                               ; acf6: 68          h
+    sec                                                               ; acf7: 38          8
+    sbc #&81                                                          ; acf8: e9 81       ..
+    jsr sub_ca412                                                     ; acfa: 20 12 a4     ..
+    lda #&0e                                                          ; acfd: a9 0e       ..
+    sta l000a                                                         ; acff: 85 0a       ..
+    lda #&ad                                                          ; ad01: a9 ad       ..
+    sta l000b                                                         ; ad03: 85 0b       ..
+    jsr opcode_subrange1_for_ca_handler                               ; ad05: 20 ed aa     ..
+    jsr sub_ca368                                                     ; ad08: 20 68 a3     h.
+    jmp ca103                                                         ; ad0b: 4c 03 a1    L..
+
+    equb &80, &31, &72, &17, &f8                                      ; ad0e: 80 31 72... .1r
+
+.sub_cad13
+    lda l0040                                                         ; ad13: a5 40       .@
+    cmp #&98                                                          ; ad15: c9 98       ..
+    bcs caca6                                                         ; ad17: b0 8d       ..
+    jsr sub_ca2d7                                                     ; ad19: 20 d7 a2     ..
+    jsr sub_cabed                                                     ; ad1c: 20 ed ab     ..
+    jsr sub_ca304                                                     ; ad1f: 20 04 a3     ..
+    lda l003e                                                         ; ad22: a5 3e       .>
+    sta l0046                                                         ; ad24: 85 46       .F
+    dec l0048                                                         ; ad26: c6 48       .H
+    jsr sub_ca108                                                     ; ad28: 20 08 a1     ..
+    jsr sub_cab44                                                     ; ad2b: 20 44 ab     D.
+    jsr sub_ca371                                                     ; ad2e: 20 71 a3     q.
+    lda l0044                                                         ; ad31: a5 44       .D
+    sta l003a                                                         ; ad33: 85 3a       .:
+    ora l0043                                                         ; ad35: 05 43       .C
+    ora l0042                                                         ; ad37: 05 42       .B
+    ora l0041                                                         ; ad39: 05 41       .A
+    beq cad75                                                         ; ad3b: f0 38       .8
+    lda #&a0                                                          ; ad3d: a9 a0       ..
+    sta l0040                                                         ; ad3f: 85 40       .@
+    ldy #0                                                            ; ad41: a0 00       ..
+    sty l0045                                                         ; ad43: 84 45       .E
+    lda l0041                                                         ; ad45: a5 41       .A
+    sta l003e                                                         ; ad47: 85 3e       .>
+    bpl cad4e                                                         ; ad49: 10 03       ..
+    jsr sub_ca3c7                                                     ; ad4b: 20 c7 a3     ..
+.cad4e
+    jsr ca428                                                         ; ad4e: 20 28 a4     (.
+    jsr sub_ca2cf                                                     ; ad51: 20 cf a2     ..
+    jsr sub_cabf1                                                     ; ad54: 20 f1 ab     ..
+    jsr opcode_subrange1_for_ca_handler                               ; ad57: 20 ed aa     ..
+    jsr sub_ca368                                                     ; ad5a: 20 68 a3     h.
+    jsr ca103                                                         ; ad5d: 20 03 a1     ..
+    jsr ca2df                                                         ; ad60: 20 df a2     ..
+    jsr sub_ca360                                                     ; ad63: 20 60 a3     `.
+    jsr ca2a0                                                         ; ad66: 20 a0 a2     ..
+    jsr sub_cabf5                                                     ; ad69: 20 f5 ab     ..
+    jsr opcode_subrange1_for_ca_handler                               ; ad6c: 20 ed aa     ..
+    jsr sub_ca368                                                     ; ad6f: 20 68 a3     h.
+    jmp ca103                                                         ; ad72: 4c 03 a1    L..
+
+.cad75
+    jmp ca29d                                                         ; ad75: 4c 9d a2    L..
+
+.opcode_subrange1_for_d0_handler
+    jsr sub_ca4d6                                                     ; ad78: 20 d6 a4     ..
+    beq cad88                                                         ; ad7b: f0 0b       ..
+    bpl cadaa                                                         ; ad7d: 10 2b       .+
+    lsr l003e                                                         ; ad7f: 46 3e       F>
+    jsr cadaa                                                         ; ad81: 20 aa ad     ..
+    lda #&80                                                          ; ad84: a9 80       ..
+    sta l003e                                                         ; ad86: 85 3e       .>
+.cad88
+    rts                                                               ; ad88: 60          `
+
+.cad89
+    lda l0040                                                         ; ad89: a5 40       .@
+    cmp #&73 ; 's'                                                    ; ad8b: c9 73       .s
+    bcc cad88                                                         ; ad8d: 90 f9       ..
+    jsr sub_ca2d3                                                     ; ad8f: 20 d3 a2     ..
+    jsr sub_ca4e9                                                     ; ad92: 20 e9 a4     ..
+    lda #&80                                                          ; ad95: a9 80       ..
+    sta l0048                                                         ; ad97: 85 48       .H
+    sta l0049                                                         ; ad99: 85 49       .I
+    sta l0046                                                         ; ad9b: 85 46       .F
+    jsr sub_ca108                                                     ; ad9d: 20 08 a1     ..
+    lda #9                                                            ; ada0: a9 09       ..
+    ldy #&77 ; 'w'                                                    ; ada2: a0 77       .w
+    jsr sub_cabfe                                                     ; ada4: 20 fe ab     ..
+    jmp caaea                                                         ; ada7: 4c ea aa    L..
+
+.cadaa
+    lda l0040                                                         ; adaa: a5 40       .@
+    cmp #&81                                                          ; adac: c9 81       ..
+    bcc cad89                                                         ; adae: 90 d9       ..
+    jsr sub_cab3e                                                     ; adb0: 20 3e ab     >.
+    jsr cad89                                                         ; adb3: 20 89 ad     ..
+    jsr sub_cabf1                                                     ; adb6: 20 f1 ab     ..
+    jsr ca103                                                         ; adb9: 20 03 a1     ..
+    jsr sub_cabf5                                                     ; adbc: 20 f5 ab     ..
+    jsr ca103                                                         ; adbf: 20 03 a1     ..
+    jmp c9ee8                                                         ; adc2: 4c e8 9e    L..
 
 .bytecode_opcode_d9_handler
     jsr sub_c9ac4                                                     ; adc5: 20 c4 9a     ..
@@ -9856,6 +10275,7 @@ la951 = sub_ca94f+2
 ;     c8b69
 ;     c8b81
 ;     c8bb3
+;     c8bc5
 ;     c8c3e
 ;     c8cb0
 ;     c8cbb
@@ -10062,6 +10482,7 @@ la951 = sub_ca94f+2
 ;     ca08a
 ;     ca0e3
 ;     ca0ff
+;     ca103
 ;     ca13d
 ;     ca152
 ;     ca176
@@ -10074,16 +10495,20 @@ la951 = sub_ca94f+2
 ;     ca214
 ;     ca226
 ;     ca232
+;     ca29d
 ;     ca2a0
 ;     ca2cc
+;     ca2d9
 ;     ca2df
 ;     ca32e
+;     ca36a
 ;     ca391
 ;     ca3c3
 ;     ca3e0
 ;     ca3e1
 ;     ca3e7
 ;     ca3f9
+;     ca422
 ;     ca428
 ;     ca438
 ;     ca45b
@@ -10094,6 +10519,10 @@ la951 = sub_ca94f+2
 ;     ca49f
 ;     ca4a5
 ;     ca4a6
+;     ca4ca
+;     ca4cc
+;     ca4cf
+;     ca4d2
 ;     ca4e8
 ;     ca799
 ;     ca7a5
@@ -10122,6 +10551,38 @@ la951 = sub_ca94f+2
 ;     caa77
 ;     caa8f
 ;     caa95
+;     caaae
+;     caab5
+;     caad9
+;     caaea
+;     caaf9
+;     cab08
+;     cab35
+;     cab38
+;     cab53
+;     cab65
+;     cab78
+;     cab81
+;     cab84
+;     cab9a
+;     cab9c
+;     cabb3
+;     cabd2
+;     cabf7
+;     cac36
+;     cac42
+;     cac52
+;     cac97
+;     cac98
+;     caca1
+;     caca6
+;     cacd2
+;     cacd4
+;     cad4e
+;     cad75
+;     cad88
+;     cad89
+;     cadaa
 ;     cadf2
 ;     cadfb
 ;     cadfd
@@ -10513,6 +10974,7 @@ la951 = sub_ca94f+2
 ;     la73e
 ;     la786
 ;     la951
+;     lab54
 ;     laf70
 ;     lb26e
 ;     lb343
@@ -10610,6 +11072,13 @@ la951 = sub_ca94f+2
 ;     loop_ca901
 ;     loop_caa32
 ;     loop_caa3f
+;     loop_caa98
+;     loop_caae3
+;     loop_cab0c
+;     loop_cab1d
+;     loop_cab50
+;     loop_cac10
+;     loop_cac80
 ;     loop_cadff
 ;     loop_cae0e
 ;     loop_caea4
@@ -10777,21 +11246,30 @@ la951 = sub_ca94f+2
 ;     sub_ca07d
 ;     sub_ca08b
 ;     sub_ca09a
+;     sub_ca0eb
 ;     sub_ca100
-;     sub_ca103
+;     sub_ca108
 ;     sub_ca10e
 ;     sub_ca202
 ;     sub_ca227
 ;     sub_ca27e
 ;     sub_ca297
+;     sub_ca2cf
+;     sub_ca2d3
 ;     sub_ca2d7
 ;     sub_ca304
 ;     sub_ca331
 ;     sub_ca34e
 ;     sub_ca351
+;     sub_ca35c
+;     sub_ca360
+;     sub_ca364
 ;     sub_ca368
 ;     sub_ca371
+;     sub_ca3c7
 ;     sub_ca3ea
+;     sub_ca412
+;     sub_ca4a9
 ;     sub_ca4d6
 ;     sub_ca4e9
 ;     sub_ca4fa
@@ -10802,6 +11280,14 @@ la951 = sub_ca94f+2
 ;     sub_ca94f
 ;     sub_ca973
 ;     sub_caa1b
+;     sub_cab3e
+;     sub_cab44
+;     sub_cab59
+;     sub_cabed
+;     sub_cabf1
+;     sub_cabf5
+;     sub_cabfe
+;     sub_cad13
 ;     sub_caee9
 ;     sub_cafd9
 ;     sub_caffc
@@ -11158,6 +11644,13 @@ la951 = sub_ca94f+2
     assert <input_buffer == &1a
     assert <interpreter_size == &af
     assert <interpreter_start == &a3
+    assert <opcode_subrange1_for_ca_handler == &ed
+    assert <opcode_subrange1_for_cb_handler == &33
+    assert <opcode_subrange1_for_cc_handler == &2b
+    assert <opcode_subrange1_for_cd_handler == &a0
+    assert <opcode_subrange1_for_ce_handler == &b5
+    assert <opcode_subrange1_for_cf_handler == &68
+    assert <opcode_subrange1_for_d0_handler == &78
     assert <something2 == &16
     assert <something_00_handler == &58
     assert <something_01_handler == &41
@@ -11473,6 +11966,13 @@ la951 = sub_ca94f+2
     assert >input_buffer == &05
     assert >interpreter_size == &1f
     assert >interpreter_start == &87
+    assert >opcode_subrange1_for_ca_handler == &aa
+    assert >opcode_subrange1_for_cb_handler == &ac
+    assert >opcode_subrange1_for_cc_handler == &ac
+    assert >opcode_subrange1_for_cd_handler == &aa
+    assert >opcode_subrange1_for_ce_handler == &ac
+    assert >opcode_subrange1_for_cf_handler == &ac
+    assert >opcode_subrange1_for_d0_handler == &ad
     assert >something2 == &aa
     assert >something_00_handler == &b8
     assert >something_01_handler == &b7

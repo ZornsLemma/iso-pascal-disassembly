@@ -294,6 +294,13 @@ label(0xa9e3, "opcode_subrange1_jump_table_low")
 label(0xa920+0xca, "opcode_subrange1_jump_table_high")
 expr(0xa9ce, make_subtract("opcode_subrange1_jump_table_low", 0xca))
 expr(0xa9d3, make_subtract("opcode_subrange1_jump_table_high", 0xca))
+for i in range(7):
+    target = get_u8_binary(0xa9e3+i) + (get_u8_binary(0xa9ea+i) << 8)
+    target_label = entry(target, "opcode_subrange1_for_%02x_handler" % (0xca + i))
+    byte(0xa9e3+i)
+    expr(0xa9e3+i, make_lo(target_label))
+    byte(0xa9ea+i)
+    expr(0xa9ea+i, make_hi(target_label))
 
 # TODO: opcode_d0_handler has some kind of jump table but it's not clear to me what X range is - ditto 7b_handler - ditto 76_handler
 # TODO: ed_handler is doing some kind of indirect jump
