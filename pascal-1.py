@@ -40,5 +40,6 @@ comment(0x8085, "Read the byte at &100 in the I/O processor and store it at &6E.
 
 label(0x8670, "actual_compiler_bytecode_start")
 # TODO: We'd like to emit an assertion that actual_compiler_bytecode_start == compiler_bytecode_start
+# TODO: May want to rename this bytecode_start stuff in all .py files to bytecode_entry - there is probably code/data before this point, this is just where we start executing
 
 go()
