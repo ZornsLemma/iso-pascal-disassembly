@@ -383,7 +383,7 @@ oscli                           = &fff7
     nop                                                               ; 810e: ea          .
     ldx line_number_low                                               ; 810f: ae 5b 06    .[.
     ldy line_number_high                                              ; 8112: ac 5c 06    .\.
-    jsr sub_cb30c                                                     ; 8115: 20 0c b3     ..
+    jsr print_yx_as_decimal                                           ; 8115: 20 0c b3     ..
     jsr fancy_print_nop_terminated_inline                             ; 8118: 20 84 b2     ..
     equs " i"                                                         ; 811b: 20 69        i
     equb 128 + ('n')                                                  ; 811d: ee          .              ; "n "
@@ -6460,7 +6460,7 @@ oscli                           = &fff7
     nop                                                               ; a8c2: ea          .
     ldx line_number_low                                               ; a8c3: ae 5b 06    .[.
     ldy line_number_high                                              ; a8c6: ac 5c 06    .\.
-    jsr sub_cb30c                                                     ; a8c9: 20 0c b3     ..
+    jsr print_yx_as_decimal                                           ; a8c9: 20 0c b3     ..
     jsr fancy_print_nop_terminated_inline                             ; a8cc: 20 84 b2     ..
     equb 128 + (']')                                                  ; a8cf: dd          .              ; "] "
 
@@ -7485,7 +7485,7 @@ la951 = sub_ca94f+2
     tya                                                               ; b308: 98          .
     jmp oswrch                                                        ; b309: 4c ee ff    L..            ; Write character
 
-.sub_cb30c
+.print_yx_as_decimal
     stx l000c                                                         ; b30c: 86 0c       ..
     sty l000d                                                         ; b30e: 84 0d       ..
     ldx #4                                                            ; b310: a2 04       ..
@@ -9350,7 +9350,6 @@ la951 = sub_ca94f+2
 ;     sub_cb2f5
 ;     sub_cb2fb
 ;     sub_cb2fd
-;     sub_cb30c
 ;     sub_cb34d
 ;     sub_cb359
 ;     sub_cb39b

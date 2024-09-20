@@ -156,6 +156,7 @@ def fpnti_hook(target, addr):
 
 hook_subroutine(0xb284, "fancy_print_nop_terminated_inline", fpnti_hook)
 
+entry(0xb30c, "print_yx_as_decimal")
 entry(0xb374, "something_to_do_with_finding_cr")
 entry(0xb45c, "bulk_copy_from_l0000_to_l0002")
 entry(0xb634, "maybe_clear_part_of_screen")
