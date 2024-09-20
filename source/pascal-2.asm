@@ -513,7 +513,6 @@ oscli                           = &fff7
     jsr osasci                                                        ; 81bc: 20 e3 ff     ..            ; Write character 32
     jmp print_loop                                                    ; 81bf: 4c 80 81    L..
 
-; overlapping: lsr sub_ca06f                                          ; 81c2: 4e 6f a0    No.
 .token_table
     equs "No", &80+' '                                                ; 81c2: 4e 6f a0    No.
     equs "onl", &80+'y'                                               ; 81c5: 6f 6e 6c... onl
@@ -3436,7 +3435,8 @@ oscli                           = &fff7
     jmp language_entry_common                                         ; 952c: 4c 44 83    LD.
 
 ; TODO: Why do we do this indirect OSCLI via ROM? We could save a few bytes by doing
-; LDX#/LDY# and getting rid of the pointer.
+; LDX#/LDY# and getting rid of the pointer. AFAICS we do not rely on this do vary the
+; command depending on which of our two ROMs is paged in, but maybe we do.
 .c952f
     ldx oscli_ptr                                                     ; 952f: ae 39 95    .9.
     ldy oscli_ptr + 1                                                 ; 9532: ac 3a 95    .:.
@@ -5242,7 +5242,6 @@ oscli                           = &fff7
     sec                                                               ; a06d: 38          8
 .loop_ca06e
     inx                                                               ; a06e: e8          .
-.sub_ca06f
     sbc #&0a                                                          ; a06f: e9 0a       ..
     bcs loop_ca06e                                                    ; a071: b0 fb       ..
     adc #&0a                                                          ; a073: 69 0a       i.
@@ -10774,7 +10773,6 @@ la951 = sub_ca94f+2
 ;     sub_c9ef3
 ;     sub_c9f03
 ;     sub_c9f3c
-;     sub_ca06f
 ;     sub_ca07b
 ;     sub_ca07d
 ;     sub_ca08b

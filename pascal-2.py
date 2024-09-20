@@ -62,7 +62,7 @@ entry(0x8180, "print_loop")
 entry(0x81b7, "oswrch_a_space_and_loop")
 entry(0x81bc, "osasci_a_and_loop")
 
-entry(0x81c2, "token_table")
+label(0x81c2, "token_table")
 pc = 0x81c2
 for i in range(18):
     pc = stringhi(pc, lambda x: True)
