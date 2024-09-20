@@ -1613,7 +1613,7 @@ oscli                           = &fff7
 .bytecode_opcode_23_handler
 .bytecode_opcode_24_handler
 .bytecode_opcode_25_handler
-    lda la713,x                                                       ; 894c: bd 13 a7    ...
+    lda opcode_21_to_25_table - 33,x                                  ; 894c: bd 13 a7    ...
     sta l004c                                                         ; 894f: 85 4c       .L
     jsr sub_c892d                                                     ; 8951: 20 2d 89     -.
     jsr sub_c9ae2                                                     ; 8954: 20 e2 9a     ..
@@ -6621,7 +6621,6 @@ oscli                           = &fff7
     equb >opcode_76_sub_handler                                       ; a710: 8c          .
 .something_table
     equb 2, 5                                                         ; a711: 02 05       ..
-.la713
     equb 6, 3, 4, 1                                                   ; a713: 06 03 04... ...
 .la717
     equb &ff, &fe, &fc, &f8, &f0                                      ; a717: ff fe fc... ...
@@ -6645,6 +6644,7 @@ oscli                           = &fff7
 .something_else_table
 .opcode_05_06_table
 .opcode_1d_1e_table
+.opcode_21_to_25_table
     equb   0,   1,   3,   4, &1f, &1a,   5, &ff, &20, &ff             ; a734: 00 01 03... ...
 .la73e
     equs "pas___#"                                                    ; a73e: 70 61 73... pas
@@ -11104,7 +11104,6 @@ oscli                           = &fff7
 ;     l803c
 ;     l9998
 ;     l9999
-;     la713
 ;     la717
 ;     la71c
 ;     la71e
@@ -12193,6 +12192,7 @@ oscli                           = &fff7
     assert fx163_192_2 == &a746
     assert opcode_05_06_table - 5 == &a72f
     assert opcode_1d_1e_table - 29 == &a717
+    assert opcode_21_to_25_table - 33 == &a713
     assert opcode_subrange1_jump_table_high - 202 == &a920
     assert opcode_subrange1_jump_table_low - 202 == &a919
     assert opcode_subrange2_jump_table_high - 120 == &a951

@@ -344,6 +344,9 @@ expr(0x88fc, make_subtract("opcode_05_06_table", 0x5))
 label(0xa717+0x1d, "opcode_1d_1e_table")
 expr(0x88f0, make_subtract("opcode_1d_1e_table", 0x1d))
 
+label(0xa713+0x21, "opcode_21_to_25_table")
+expr(0x894d, make_subtract("opcode_21_to_25_table", 0x21))
+
 nonentry(0xa882)
 
 # TODO: The "stray" labels inside the high opcode handler table probably indicate subtables offset by opcodes
