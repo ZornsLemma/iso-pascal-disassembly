@@ -1,5 +1,5 @@
 ; Constants
-compiler_bytecode_size                 = 8111
+interpreter_size                       = 8111
 osbyte_acknowledge_escape              = 126
 osbyte_enter_language                  = 142
 osbyte_inkey                           = 129
@@ -1183,10 +1183,10 @@ oscli                           = &fff7
     sta l062d                                                         ; 86ad: 8d 2d 06    .-.
     sec                                                               ; 86b0: 38          8
     lda himem_low                                                     ; 86b1: ad 02 04    ...
-    sbc #<compiler_bytecode_size                                      ; 86b4: e9 af       ..
+    sbc #<interpreter_size                                            ; 86b4: e9 af       ..
     sta l062e                                                         ; 86b6: 8d 2e 06    ...
     lda himem_high                                                    ; 86b9: ad 03 04    ...
-    sbc #>compiler_bytecode_size                                      ; 86bc: e9 1f       ..
+    sbc #>interpreter_size                                            ; 86bc: e9 1f       ..
     sta l062f                                                         ; 86be: 8d 2f 06    ./.
     jsr sub_c9814                                                     ; 86c1: 20 14 98     ..
     lda #<something1                                                  ; 86c4: a9 a3       ..
@@ -1196,14 +1196,14 @@ oscli                           = &fff7
     sec                                                               ; 86cc: 38          8
     lda l062e                                                         ; 86cd: ad 2e 06    ...
     sta l000e                                                         ; 86d0: 85 0e       ..
-    sbc #&a3                                                          ; 86d2: e9 a3       ..
+    sbc #<something1                                                  ; 86d2: e9 a3       ..
     sta l004a                                                         ; 86d4: 85 4a       .J
     lda l062f                                                         ; 86d6: ad 2f 06    ./.
     sta l000f                                                         ; 86d9: 85 0f       ..
-    sbc #&87                                                          ; 86db: e9 87       ..
+    sbc #>something1                                                  ; 86db: e9 87       ..
     sta l004b                                                         ; 86dd: 85 4b       .K
-    ldx #&af                                                          ; 86df: a2 af       ..
-    ldy #&1f                                                          ; 86e1: a0 1f       ..
+    ldx #<interpreter_size                                            ; 86df: a2 af       ..
+    ldy #>interpreter_size                                            ; 86e1: a0 1f       ..
     jsr sub_cb42b                                                     ; 86e3: 20 2b b4     +.
 .c86e6
     ldy #0                                                            ; 86e6: a0 00       ..
@@ -11165,8 +11165,8 @@ la951 = sub_ca94f+2
     assert <command_save_handler == &1a
     assert <command_table == &40
     assert <command_trace_handler == &ff
-    assert <compiler_bytecode_size == &af
     assert <input_buffer == &1a
+    assert <interpreter_size == &af
     assert <something1 == &a3
     assert <something_00_handler == &58
     assert <something_01_handler == &41
@@ -11475,8 +11475,8 @@ la951 = sub_ca94f+2
     assert >command_save_handler == &84
     assert >command_table == &84
     assert >command_trace_handler == &84
-    assert >compiler_bytecode_size == &1f
     assert >input_buffer == &05
+    assert >interpreter_size == &1f
     assert >something1 == &87
     assert >something_00_handler == &b8
     assert >something_01_handler == &b7
