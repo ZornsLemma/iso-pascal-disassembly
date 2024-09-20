@@ -350,7 +350,7 @@ expr(0x890f, make_subtract("another_something_table", 0xe))
 
 nonentry(0xa882)
 
-# TODO: ed_handler is doing some kind of indirect jump
+# TODO: ed_handler is doing some kind of indirect jump - maybe this is the facility for calling 6502 machine code from Pascal?
 
 brk(0x83b9)
 brk(0x8412)
