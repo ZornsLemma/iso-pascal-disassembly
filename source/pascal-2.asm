@@ -7658,8 +7658,8 @@ la951 = sub_ca94f+2
     sty l0016                                                         ; b17d: 84 16       ..
 .loop_cb17f
     ldy l0016                                                         ; b17f: a4 16       ..
-    lda lb193,y                                                       ; b181: b9 93 b1    ...
-    ldx lb19a,y                                                       ; b184: be 9a b1    ...
+    lda osbyte_a_table,y                                              ; b181: b9 93 b1    ...
+    ldx osbyte_x_table,y                                              ; b184: be 9a b1    ...
     ldy #0                                                            ; b187: a0 00       ..
     jsr osbyte                                                        ; b189: 20 f4 ff     ..
     inc l0016                                                         ; b18c: e6 16       ..
@@ -7667,9 +7667,9 @@ la951 = sub_ca94f+2
     bne loop_cb17f                                                    ; b190: d0 ed       ..
     rts                                                               ; b192: 60          `
 
-.lb193
+.osbyte_a_table
     equb   4, &e1, &e2, &e3,   4, &e1, &e2                            ; b193: 04 e1 e2... ...
-.lb19a
+.osbyte_x_table
     equb   2, &80, &90, &a0,   0,   1, &80                            ; b19a: 02 80 90... ...
 
 .sub_cb1a1
@@ -10515,8 +10515,6 @@ la951 = sub_ca94f+2
 ;     la920
 ;     la951
 ;     laf70
-;     lb193
-;     lb19a
 ;     lb26e
 ;     lb343
 ;     lb348

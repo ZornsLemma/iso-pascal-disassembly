@@ -258,4 +258,7 @@ entry(0xb634, "maybe_clear_part_of_screen")
 
 # TODO: I should break out the fpnti_hook string handling code and manually invoke it on the OS error structures after the BRK instructions
 
+label(0xb193, "osbyte_a_table")
+label(0xb19a, "osbyte_x_table")
+
 go()
