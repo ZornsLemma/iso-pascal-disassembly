@@ -133,7 +133,15 @@ expr(0x86d3, make_lo("interpreter_start"))
 expr(0x86dc, make_hi("interpreter_start"))
 
 comment(0x86e6, "TODO: It looks like we now patch the relocated copy of the interpreter to fix up absolute addresses.")
+entry(0x86e6, "relocate_loop")
 entry(0x870e, "relocate_high_byte_of_operand")
+entry(0x8728, "step_by_2_bytes")
+entry(0x872c, "step_by_1_byte")
+entry(0x8730, "step_by_0_bytes")
+entry(0x8732, "step_by_a_bytes")
+comment(0x873b, "TODO: always branch?", inline=True)
+expr(0x874d, make_lo("bytecode_jump_table_high"))
+expr(0x8753, make_hi("bytecode_jump_table_high"))
 
 entry(0x87e2, "jmp_indirect_via_l0008")
 

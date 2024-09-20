@@ -1207,14 +1207,14 @@ oscli                           = &fff7
     jsr copyish_from_l000a_to_l000e                                   ; 86e3: 20 2b b4     +.
 ; TODO: It looks like we now patch the relocated copy of the interpreter to fix up
 ; absolute addresses.
-.c86e6
+.relocate_loop
     ldy #0                                                            ; 86e6: a0 00       ..
     lda (l000e),y                                                     ; 86e8: b1 0e       ..
     beq c873d                                                         ; 86ea: f0 51       .Q
     cmp #&20 ; ' '                                                    ; 86ec: c9 20       .
     beq relocate_high_byte_of_operand                                 ; 86ee: f0 1e       ..
     cmp #&60 ; '`'                                                    ; 86f0: c9 60       .`
-    beq c8730                                                         ; 86f2: f0 3c       .<
+    beq step_by_0_bytes                                               ; 86f2: f0 3c       .<
     cmp #&ff                                                          ; 86f4: c9 ff       ..
     beq c8745                                                         ; 86f6: f0 4d       .M
     and #&1f                                                          ; 86f8: 29 1f       ).
@@ -1224,17 +1224,17 @@ oscli                           = &fff7
     cmp #&0c                                                          ; 8700: c9 0c       ..
     bcs relocate_high_byte_of_operand                                 ; 8702: b0 0a       ..
     cmp #8                                                            ; 8704: c9 08       ..
-    beq c8730                                                         ; 8706: f0 28       .(
+    beq step_by_0_bytes                                               ; 8706: f0 28       .(
     cmp #&0a                                                          ; 8708: c9 0a       ..
-    beq c8730                                                         ; 870a: f0 24       .$
-    bne c872c                                                         ; 870c: d0 1e       ..
+    beq step_by_0_bytes                                               ; 870a: f0 24       .$
+    bne step_by_1_byte                                                ; 870c: d0 1e       ..
 .relocate_high_byte_of_operand
     ldy #2                                                            ; 870e: a0 02       ..
     lda (l000e),y                                                     ; 8710: b1 0e       ..
     cmp #&80                                                          ; 8712: c9 80       ..
-    bcc c8728                                                         ; 8714: 90 12       ..
+    bcc step_by_2_bytes                                               ; 8714: 90 12       ..
     cmp #&c0                                                          ; 8716: c9 c0       ..
-    bcs c8728                                                         ; 8718: b0 0e       ..
+    bcs step_by_2_bytes                                               ; 8718: b0 0e       ..
     dey                                                               ; 871a: 88          .
     lda (l000e),y                                                     ; 871b: b1 0e       ..
     adc l004a                                                         ; 871d: 65 4a       eJ
@@ -1243,37 +1243,37 @@ oscli                           = &fff7
     lda (l000e),y                                                     ; 8722: b1 0e       ..
     adc l004b                                                         ; 8724: 65 4b       eK
     sta (l000e),y                                                     ; 8726: 91 0e       ..
-.c8728
+.step_by_2_bytes
     lda #2                                                            ; 8728: a9 02       ..
-    bne c8732                                                         ; 872a: d0 06       ..
-.c872c
+    bne step_by_a_bytes                                               ; 872a: d0 06       ..
+.step_by_1_byte
     lda #1                                                            ; 872c: a9 01       ..
-    bne c8732                                                         ; 872e: d0 02       ..
-.c8730
+    bne step_by_a_bytes                                               ; 872e: d0 02       ..
+.step_by_0_bytes
     lda #0                                                            ; 8730: a9 00       ..
-.c8732
+.step_by_a_bytes
     sec                                                               ; 8732: 38          8
     adc l000e                                                         ; 8733: 65 0e       e.
     sta l000e                                                         ; 8735: 85 0e       ..
-    bcc c86e6                                                         ; 8737: 90 ad       ..
+    bcc relocate_loop                                                 ; 8737: 90 ad       ..
     inc l000f                                                         ; 8739: e6 0f       ..
-    bne c86e6                                                         ; 873b: d0 a9       ..
+    bne relocate_loop                                                 ; 873b: d0 a9       ..             ; TODO: always branch?
 .c873d
     iny                                                               ; 873d: c8          .
     lda (l000e),y                                                     ; 873e: b1 0e       ..
     bne c873d                                                         ; 8740: d0 fb       ..
     tya                                                               ; 8742: 98          .
-    bne c8732                                                         ; 8743: d0 ed       ..
+    bne step_by_a_bytes                                               ; 8743: d0 ed       ..
 .c8745
     inc l000e                                                         ; 8745: e6 0e       ..
     bne c874b                                                         ; 8747: d0 02       ..
     inc l000f                                                         ; 8749: e6 0f       ..
 .c874b
     clc                                                               ; 874b: 18          .
-    lda #&0c                                                          ; 874c: a9 0c       ..
+    lda #<bytecode_jump_table_high                                    ; 874c: a9 0c       ..
     adc l004a                                                         ; 874e: 65 4a       eJ
     sta l000c                                                         ; 8750: 85 0c       ..
-    lda #&a6                                                          ; 8752: a9 a6       ..
+    lda #>bytecode_jump_table_high                                    ; 8752: a9 a6       ..
     adc l004b                                                         ; 8754: 65 4b       eK
     sta l000d                                                         ; 8756: 85 0d       ..
     ldx #2                                                            ; 8758: a2 02       ..
@@ -9824,11 +9824,6 @@ la951 = sub_ca94f+2
 ;     c8683
 ;     c8698
 ;     c869d
-;     c86e6
-;     c8728
-;     c872c
-;     c8730
-;     c8732
 ;     c873d
 ;     c8745
 ;     c874b
@@ -10903,6 +10898,7 @@ la951 = sub_ca94f+2
     assert <(l8797) == &97
     assert <(laf70) == &70
     assert <brkv_handler == &98
+    assert <bytecode_jump_table_high == &0c
     assert <bytecode_opcode_00_handler == &50
     assert <bytecode_opcode_01_handler == &50
     assert <bytecode_opcode_02_handler == &50
@@ -11213,6 +11209,7 @@ la951 = sub_ca94f+2
     assert >(l8797) == &87
     assert >(laf70) == &af
     assert >brkv_handler == &80
+    assert >bytecode_jump_table_high == &a6
     assert >bytecode_opcode_00_handler == &88
     assert >bytecode_opcode_01_handler == &88
     assert >bytecode_opcode_02_handler == &88
