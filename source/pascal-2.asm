@@ -2026,17 +2026,65 @@ oscli                           = &fff7
     equs "Divisio"                                                    ; 8bc7: 44 69 76... Div
     equb &ee, &62, &f9                                                ; 8bce: ee 62 f9    .b.
     equs "zero"                                                       ; 8bd1: 7a 65 72... zer
-    equb   0, &a5, &46,   5, &47,   5, &48,   5, &49, &f0, &e5, &20   ; 8bd5: 00 a5 46... ..F
-    equb &a9, &8b, &a9,   0, &85, &4a, &85, &4b, &85, &4c, &85, &4d   ; 8be1: a9 8b a9... ...
-    equb &a2, &20,   6                                                ; 8bed: a2 20 06    . .
-    equs "j&k&l&m"                                                    ; 8bf0: 6a 26 6b... j&k
-    equb &b0, &0d, &ca, &d0, &f3, &f0, &57,   6                       ; 8bf7: b0 0d ca... ...
-    equs "j&k&l&m&J&K&L&M8"                                           ; 8bff: 6a 26 6b... j&k
-    equb &a5, &4a, &e5, &46, &85, &0c, &a5, &4b, &e5, &47, &85, &0d   ; 8c0f: a5 4a e5... .J.
-    equb &a5, &4c, &e5, &48, &a8, &a5, &4d, &e5, &49, &90, &0e, &85   ; 8c1b: a5 4c e5... .L.
-    equb &4d, &84, &4c, &a5, &0d, &85, &4b, &a5, &0c, &85, &4a, &e6   ; 8c27: 4d 84 4c... M.L
-    equb &6a, &ca, &d0, &c7, &ad, &61,   6, &10, &19                  ; 8c33: 6a ca d0... j..
+    equb 0                                                            ; 8bd5: 00          .
 
+.opcode_subrange1_for_75_handler
+    lda l0046                                                         ; 8bd6: a5 46       .F
+    ora l0047                                                         ; 8bd8: 05 47       .G
+    ora l0048                                                         ; 8bda: 05 48       .H
+    ora l0049                                                         ; 8bdc: 05 49       .I
+    beq c8bc5                                                         ; 8bde: f0 e5       ..
+    jsr sub_c8ba9                                                     ; 8be0: 20 a9 8b     ..
+    lda #0                                                            ; 8be3: a9 00       ..
+    sta l004a                                                         ; 8be5: 85 4a       .J
+    sta l004b                                                         ; 8be7: 85 4b       .K
+    sta l004c                                                         ; 8be9: 85 4c       .L
+    sta l004d                                                         ; 8beb: 85 4d       .M
+    ldx #&20 ; ' '                                                    ; 8bed: a2 20       .
+.loop_c8bef
+    asl l006a                                                         ; 8bef: 06 6a       .j
+    rol l006b                                                         ; 8bf1: 26 6b       &k
+    rol l006c                                                         ; 8bf3: 26 6c       &l
+    rol l006d                                                         ; 8bf5: 26 6d       &m
+    bcs c8c06                                                         ; 8bf7: b0 0d       ..
+    dex                                                               ; 8bf9: ca          .
+    bne loop_c8bef                                                    ; 8bfa: d0 f3       ..
+    beq c8c55                                                         ; 8bfc: f0 57       .W
+.c8bfe
+    asl l006a                                                         ; 8bfe: 06 6a       .j
+    rol l006b                                                         ; 8c00: 26 6b       &k
+    rol l006c                                                         ; 8c02: 26 6c       &l
+    rol l006d                                                         ; 8c04: 26 6d       &m
+.c8c06
+    rol l004a                                                         ; 8c06: 26 4a       &J
+    rol l004b                                                         ; 8c08: 26 4b       &K
+    rol l004c                                                         ; 8c0a: 26 4c       &L
+    rol l004d                                                         ; 8c0c: 26 4d       &M
+    sec                                                               ; 8c0e: 38          8
+    lda l004a                                                         ; 8c0f: a5 4a       .J
+    sbc l0046                                                         ; 8c11: e5 46       .F
+    sta l000c                                                         ; 8c13: 85 0c       ..
+    lda l004b                                                         ; 8c15: a5 4b       .K
+    sbc l0047                                                         ; 8c17: e5 47       .G
+    sta l000d                                                         ; 8c19: 85 0d       ..
+    lda l004c                                                         ; 8c1b: a5 4c       .L
+    sbc l0048                                                         ; 8c1d: e5 48       .H
+    tay                                                               ; 8c1f: a8          .
+    lda l004d                                                         ; 8c20: a5 4d       .M
+    sbc l0049                                                         ; 8c22: e5 49       .I
+    bcc c8c34                                                         ; 8c24: 90 0e       ..
+    sta l004d                                                         ; 8c26: 85 4d       .M
+    sty l004c                                                         ; 8c28: 84 4c       .L
+    lda l000d                                                         ; 8c2a: a5 0d       ..
+    sta l004b                                                         ; 8c2c: 85 4b       .K
+    lda l000c                                                         ; 8c2e: a5 0c       ..
+    sta l004a                                                         ; 8c30: 85 4a       .J
+    inc l006a                                                         ; 8c32: e6 6a       .j
+.c8c34
+    dex                                                               ; 8c34: ca          .
+    bne c8bfe                                                         ; 8c35: d0 c7       ..
+    lda l0661                                                         ; 8c37: ad 61 06    .a.
+    bpl c8c55                                                         ; 8c3a: 10 19       ..
 .sub_c8c3c
     lda #&6a ; 'j'                                                    ; 8c3c: a9 6a       .j
 .c8c3e
@@ -2055,17 +2103,44 @@ oscli                           = &fff7
     dex                                                               ; 8c50: ca          .
     bne loop_c8c49                                                    ; 8c51: d0 f6       ..
     bvs c8cbb                                                         ; 8c53: 70 66       pf
+.c8c55
     rts                                                               ; 8c55: 60          `
 
-    equb   0, &17, &82                                                ; 8c56: 00 17 82    ...
-    equs "MOD"                                                        ; 8c59: 4d 4f 44    MOD
-    equb   0, &a5, &49, &30, &f5, &20, &d6, &8b, &20, &13, &8d,   5   ; 8c5c: 00 a5 49... ..I
-    equb &6b,   5, &6c,   5, &6d, &f0, &1c, &ad, &61,   6, &10, &17   ; 8c68: 6b 05 6c... k.l
-    equb &20, &3c, &8c, &18, &a2,   4, &a0,   0, &b9, &6a,   0, &79   ; 8c74: 20 3c 8c...  <.
-    equb &46,   0, &99, &6a,   0, &c8, &ca, &d0, &f3                  ; 8c80: 46 00 99... F..
-    equs "p0`"                                                        ; 8c89: 70 30 60    p0`
+.loop_c8c56
+    brk                                                               ; 8c56: 00          .
 
-.sub_c8c8c
+    equb &17, &82                                                     ; 8c57: 17 82       ..
+    equs "MOD"                                                        ; 8c59: 4d 4f 44    MOD
+    equb 0                                                            ; 8c5c: 00          .
+
+.opcode_subrange1_for_76_handler
+    lda l0049                                                         ; 8c5d: a5 49       .I
+    bmi loop_c8c56                                                    ; 8c5f: 30 f5       0.
+    jsr opcode_subrange1_for_75_handler                               ; 8c61: 20 d6 8b     ..
+    jsr c8d13                                                         ; 8c64: 20 13 8d     ..
+    ora l006b                                                         ; 8c67: 05 6b       .k
+    ora l006c                                                         ; 8c69: 05 6c       .l
+    ora l006d                                                         ; 8c6b: 05 6d       .m
+    beq c8c8b                                                         ; 8c6d: f0 1c       ..
+    lda l0661                                                         ; 8c6f: ad 61 06    .a.
+    bpl c8c8b                                                         ; 8c72: 10 17       ..
+    jsr sub_c8c3c                                                     ; 8c74: 20 3c 8c     <.
+.opcode_subrange1_for_72_handler
+    clc                                                               ; 8c77: 18          .
+    ldx #4                                                            ; 8c78: a2 04       ..
+    ldy #0                                                            ; 8c7a: a0 00       ..
+.loop_c8c7c
+    lda l006a,y                                                       ; 8c7c: b9 6a 00    .j.
+    adc l0046,y                                                       ; 8c7f: 79 46 00    yF.
+    sta l006a,y                                                       ; 8c82: 99 6a 00    .j.
+    iny                                                               ; 8c85: c8          .
+    dex                                                               ; 8c86: ca          .
+    bne loop_c8c7c                                                    ; 8c87: d0 f3       ..
+    bvs c8cbb                                                         ; 8c89: 70 30       p0
+.c8c8b
+    rts                                                               ; 8c8b: 60          `
+
+.opcode_subrange1_for_74_handler
     jsr sub_c8ba9                                                     ; 8c8c: 20 a9 8b     ..
     lda l0046                                                         ; 8c8f: a5 46       .F
     cmp l006a                                                         ; 8c91: c5 6a       .j
@@ -2154,17 +2229,28 @@ oscli                           = &fff7
     bpl loop_c8d15                                                    ; 8d1c: 10 f7       ..
     rts                                                               ; 8d1e: 60          `
 
-    equb &38, &a2,   4, &a0,   0, &b9, &6a,   0, &f9, &46,   0, &99   ; 8d1f: 38 a2 04... 8..
-    equb &6a,   0, &c8, &ca, &d0, &f3, &70, &88, &60                  ; 8d2b: 6a 00 c8... j..
+.opcode_subrange1_for_73_handler
+    sec                                                               ; 8d1f: 38          8
+    ldx #4                                                            ; 8d20: a2 04       ..
+    ldy #0                                                            ; 8d22: a0 00       ..
+.loop_c8d24
+    lda l006a,y                                                       ; 8d24: b9 6a 00    .j.
+    sbc l0046,y                                                       ; 8d27: f9 46 00    .F.
+    sta l006a,y                                                       ; 8d2a: 99 6a 00    .j.
+    iny                                                               ; 8d2d: c8          .
+    dex                                                               ; 8d2e: ca          .
+    bne loop_c8d24                                                    ; 8d2f: d0 f3       ..
+    bvs c8cbb                                                         ; 8d31: 70 88       p.
+    rts                                                               ; 8d33: 60          `
 
 .bytecode_opcode_72_handler
 .bytecode_opcode_73_handler
 .bytecode_opcode_74_handler
 .bytecode_opcode_75_handler
 .bytecode_opcode_76_handler
-    lda la595,x                                                       ; 8d34: bd 95 a5    ...
+    lda opcode_subrange3_jump_table_low - 114,x                       ; 8d34: bd 95 a5    ...
     sta l0008                                                         ; 8d37: 85 08       ..
-    lda la69a,x                                                       ; 8d39: bd 9a a6    ...
+    lda opcode_subrange3_jump_table_high - 114,x                      ; 8d39: bd 9a a6    ...
     sta l0009                                                         ; 8d3c: 85 09       ..
     jsr sub_c9a68                                                     ; 8d3e: 20 68 9a     h.
     jsr sub_c8b96                                                     ; 8d41: 20 96 8b     ..
@@ -2193,7 +2279,7 @@ oscli                           = &fff7
     jsr sub_c9a46                                                     ; 8d66: 20 46 9a     F.
     jsr sub_c8b96                                                     ; 8d69: 20 96 8b     ..
     jsr sub_c8b8b                                                     ; 8d6c: 20 8b 8b     ..
-    jsr sub_c8c8c                                                     ; 8d6f: 20 8c 8c     ..
+    jsr opcode_subrange1_for_74_handler                               ; 8d6f: 20 8c 8c     ..
     jsr sub_c9d96                                                     ; 8d72: 20 96 9d     ..
     lda #1                                                            ; 8d75: a9 01       ..
     rts                                                               ; 8d77: 60          `
@@ -6097,7 +6183,6 @@ oscli                           = &fff7
     equb <bytecode_opcode_8b_handler                                  ; a592: cb          .
     equb <bytecode_opcode_8c_handler                                  ; a593: 00          .
     equb <bytecode_opcode_8d_handler                                  ; a594: 94          .
-.la595
     equb <bytecode_opcode_8e_handler                                  ; a595: f7          .
     equb <bytecode_opcode_8f_handler                                  ; a596: f0          .
     equb <bytecode_opcode_90_handler                                  ; a597: 6b          k
@@ -6212,7 +6297,12 @@ oscli                           = &fff7
     equb <bytecode_opcode_fd_handler                                  ; a604: 9e          .
     equb <bytecode_opcode_fe_handler                                  ; a605: 48          H
     equb <bytecode_opcode_ff_handler                                  ; a606: 4e          N
-    equb &77, &1f, &8c, &d6, &5d                                      ; a607: 77 1f 8c... w..
+.opcode_subrange3_jump_table_low
+    equb <opcode_subrange1_for_72_handler                             ; a607: 77          w
+    equb <opcode_subrange1_for_73_handler                             ; a608: 1f          .
+    equb <opcode_subrange1_for_74_handler                             ; a609: 8c          .
+    equb <opcode_subrange1_for_75_handler                             ; a60a: d6          .
+    equb <opcode_subrange1_for_76_handler                             ; a60b: 5d          ]
 .bytecode_jump_table_high
     equb >bytecode_opcode_00_handler                                  ; a60c: 88          .
     equb >bytecode_opcode_01_handler                                  ; a60d: 88          .
@@ -6356,7 +6446,6 @@ oscli                           = &fff7
     equb >bytecode_opcode_8b_handler                                  ; a697: 92          .
     equb >bytecode_opcode_8c_handler                                  ; a698: 94          .
     equb >bytecode_opcode_8d_handler                                  ; a699: 92          .
-.la69a
     equb >bytecode_opcode_8e_handler                                  ; a69a: 93          .
     equb >bytecode_opcode_8f_handler                                  ; a69b: 92          .
     equb >bytecode_opcode_90_handler                                  ; a69c: 94          .
@@ -6482,9 +6571,14 @@ oscli                           = &fff7
     equb >bytecode_opcode_fd_handler                                  ; a709: a8          .
     equb >bytecode_opcode_fe_handler                                  ; a70a: 8e          .
     equb >bytecode_opcode_ff_handler                                  ; a70b: 8b          .
-    equb &8c, &8d                                                     ; a70c: 8c 8d       ..
+.opcode_subrange3_jump_table_high
+    equb >opcode_subrange1_for_72_handler                             ; a70c: 8c          .
+    equb >opcode_subrange1_for_73_handler                             ; a70d: 8d          .
 .la70e
-    equb &8c, &8b, &8c,   2,   5                                      ; a70e: 8c 8b 8c... ...
+    equb >opcode_subrange1_for_74_handler                             ; a70e: 8c          .
+    equb >opcode_subrange1_for_75_handler                             ; a70f: 8b          .
+    equb >opcode_subrange1_for_76_handler                             ; a710: 8c          .
+    equb 2, 5                                                         ; a711: 02 05       ..
 .la713
     equb 6, 3, 4, 1                                                   ; a713: 06 03 04... ...
 .la717
@@ -10284,7 +10378,12 @@ oscli                           = &fff7
 ;     c8b81
 ;     c8bb3
 ;     c8bc5
+;     c8bfe
+;     c8c06
+;     c8c34
 ;     c8c3e
+;     c8c55
+;     c8c8b
 ;     c8cb0
 ;     c8cbb
 ;     c8cc6
@@ -10954,8 +11053,6 @@ oscli                           = &fff7
 ;     l803c
 ;     l9998
 ;     l9999
-;     la595
-;     la69a
 ;     la6a3
 ;     la6a5
 ;     la6a9
@@ -11011,11 +11108,15 @@ oscli                           = &fff7
 ;     loop_c8b8d
 ;     loop_c8b98
 ;     loop_c8ba8
+;     loop_c8bef
 ;     loop_c8c49
+;     loop_c8c56
+;     loop_c8c7c
 ;     loop_c8ca3
 ;     loop_c8cb2
 ;     loop_c8cd1
 ;     loop_c8d15
+;     loop_c8d24
 ;     loop_c8d7b
 ;     loop_c8d8a
 ;     loop_c8d9b
@@ -11147,7 +11248,6 @@ oscli                           = &fff7
 ;     sub_c8bc1
 ;     sub_c8c3c
 ;     sub_c8c44
-;     sub_c8c8c
 ;     sub_c8e50
 ;     sub_c8f99
 ;     sub_c8faa
@@ -11647,6 +11747,11 @@ oscli                           = &fff7
     assert <input_buffer == &1a
     assert <interpreter_size == &af
     assert <interpreter_start == &a3
+    assert <opcode_subrange1_for_72_handler == &77
+    assert <opcode_subrange1_for_73_handler == &1f
+    assert <opcode_subrange1_for_74_handler == &8c
+    assert <opcode_subrange1_for_75_handler == &d6
+    assert <opcode_subrange1_for_76_handler == &5d
     assert <opcode_subrange1_for_78_handler == &03
     assert <opcode_subrange1_for_79_handler == &00
     assert <opcode_subrange1_for_7a_handler == &ed
@@ -11973,6 +12078,11 @@ oscli                           = &fff7
     assert >input_buffer == &05
     assert >interpreter_size == &1f
     assert >interpreter_start == &87
+    assert >opcode_subrange1_for_72_handler == &8c
+    assert >opcode_subrange1_for_73_handler == &8d
+    assert >opcode_subrange1_for_74_handler == &8c
+    assert >opcode_subrange1_for_75_handler == &8b
+    assert >opcode_subrange1_for_76_handler == &8c
     assert >opcode_subrange1_for_78_handler == &a1
     assert >opcode_subrange1_for_79_handler == &a1
     assert >opcode_subrange1_for_7a_handler == &aa
@@ -12029,6 +12139,8 @@ oscli                           = &fff7
     assert opcode_subrange1_jump_table_low - 202 == &a919
     assert opcode_subrange2_jump_table_high - 120 == &a951
     assert opcode_subrange2_jump_table_low - 120 == &a94d
+    assert opcode_subrange3_jump_table_high - 114 == &a69a
+    assert opcode_subrange3_jump_table_low - 114 == &a595
     assert osbyte_163_192_x_minus_1_table - 1 == &8094
     assert osbyte_acknowledge_escape == &7e
     assert osbyte_enter_language == &8e

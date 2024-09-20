@@ -310,6 +310,12 @@ expr(0xa9ad, make_subtract("opcode_subrange2_jump_table_low", 0x78))
 expr(0xa9b2, make_subtract("opcode_subrange2_jump_table_high", 0x78))
 subrange(0xa9c5, 0xa9c9, 4, 0x78)
 
+label(0xa607, "opcode_subrange3_jump_table_low")
+label(0xa70c, "opcode_subrange3_jump_table_high")
+expr(0x8d35, make_subtract("opcode_subrange3_jump_table_low", 0x72))
+expr(0x8d3a, make_subtract("opcode_subrange3_jump_table_high", 0x72))
+subrange(0xa607, 0xa70c, 5, 0x72)
+
 # TODO: opcode_d0_handler has some kind of jump table but it's not clear to me what X range is - ditto 7b_handler - ditto 76_handler
 # TODO: ed_handler is doing some kind of indirect jump
 
