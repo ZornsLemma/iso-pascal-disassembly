@@ -7400,7 +7400,7 @@ la951 = sub_ca94f+2
 .lb26e
     equb &20, &2a                                                     ; b26e: 20 2a        *
 
-.sub_cb270
+.extra_fancy_print_nop_terminated_inlne
     ldy l0030                                                         ; b270: a4 30       .0
     jsr maybe_clear_part_of_screen                                    ; b272: 20 34 b6     4.
     jsr sub_cb2f5                                                     ; b275: 20 f5 b2     ..
@@ -8119,10 +8119,10 @@ la951 = sub_ca94f+2
     lda #3                                                            ; b741: a9 03       ..
     sta l0416                                                         ; b743: 8d 16 04    ...
     jsr sub_cb172                                                     ; b746: 20 72 b1     r.
-    jsr sub_cb270                                                     ; b749: 20 70 b2     p.
-    equs "Star"                                                       ; b74c: 53 74 61... Sta
-    equb &0d, &ea                                                     ; b750: 0d ea       ..
+    jsr extra_fancy_print_nop_terminated_inlne                        ; b749: 20 70 b2     p.
+    equs "Star", &0d                                                  ; b74c: 53 74 61... Sta
 
+    nop                                                               ; b751: ea          .
 .cb752
     lda #&2a ; '*'                                                    ; b752: a9 2a       .*
     jsr oswrch                                                        ; b754: 20 ee ff     ..            ; Write character 42
@@ -9345,7 +9345,6 @@ la951 = sub_ca94f+2
 ;     sub_cb1eb
 ;     sub_cb207
 ;     sub_cb229
-;     sub_cb270
 ;     sub_cb29d
 ;     sub_cb2f5
 ;     sub_cb2fb
