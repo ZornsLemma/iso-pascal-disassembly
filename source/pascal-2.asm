@@ -1419,7 +1419,7 @@ oscli                           = &fff7
 .bytecode_opcode_35_handler
 .bytecode_opcode_36_handler
 .bytecode_opcode_37_handler
-    lda opcode_33_to_37_table - 51,x                                  ; 883a: bd 01 a7    ...
+    lda something_else_table - 51,x                                   ; 883a: bd 01 a7    ...
     jsr sub_c87f9                                                     ; 883d: 20 f9 87     ..
     ldx #3                                                            ; 8840: a2 03       ..
     bne c886b                                                         ; 8842: d0 27       .'
@@ -1437,7 +1437,7 @@ oscli                           = &fff7
 .bytecode_opcode_01_handler
 .bytecode_opcode_02_handler
 .bytecode_opcode_03_handler
-    lda opcode_26_27_table,x                                          ; 8850: bd 34 a7    .4.
+    lda something_else_table,x                                        ; 8850: bd 34 a7    .4.
     sta l004c                                                         ; 8853: 85 4c       .L
     jsr sub_c9a9c                                                     ; 8855: 20 9c 9a     ..
     ldx l004c                                                         ; 8858: a6 4c       .L
@@ -1541,7 +1541,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_38_handler
 .bytecode_opcode_39_handler
-    lda opcode_38_39_table - 56,x                                     ; 88e5: bd fc a6    ...
+    lda something_else_table - 56,x                                   ; 88e5: bd fc a6    ...
     jsr sub_c87f9                                                     ; 88e8: 20 f9 87     ..
     ldx #3                                                            ; 88eb: a2 03       ..
     bne c8916                                                         ; 88ed: d0 27       .'
@@ -1603,7 +1603,7 @@ oscli                           = &fff7
 .bytecode_opcode_3d_handler
 .bytecode_opcode_3e_handler
 .bytecode_opcode_3f_handler
-    lda opcode_3b_to_3f_table - 59,x                                  ; 893f: bd f9 a6    ...
+    lda something_else_table - 59,x                                   ; 893f: bd f9 a6    ...
     jsr sub_c87f9                                                     ; 8942: 20 f9 87     ..
     jsr sub_c892d                                                     ; 8945: 20 2d 89     -.
     ldx #3                                                            ; 8948: a2 03       ..
@@ -1647,14 +1647,14 @@ oscli                           = &fff7
     bne c8966                                                         ; 897c: d0 e8       ..
 .bytecode_opcode_40_handler
 .bytecode_opcode_41_handler
-    lda opcode_40_41_table - 64,x                                     ; 897e: bd f4 a6    ...
+    lda something_else_table - 64,x                                   ; 897e: bd f4 a6    ...
     jsr sub_c87f9                                                     ; 8981: 20 f9 87     ..
     jsr sub_c9a68                                                     ; 8984: 20 68 9a     h.
     ldx #3                                                            ; 8987: a2 03       ..
     bne c8966                                                         ; 8989: d0 db       ..
 .bytecode_opcode_26_handler
 .bytecode_opcode_27_handler
-    lda opcode_26_27_table - 38,x                                     ; 898b: bd 0e a7    ...
+    lda something_else_table - 38,x                                   ; 898b: bd 0e a7    ...
     sta l004c                                                         ; 898e: 85 4c       .L
     jsr sub_c9a68                                                     ; 8990: 20 68 9a     h.
     jsr sub_c9ae2                                                     ; 8993: 20 e2 9a     ..
@@ -3405,7 +3405,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_91_handler
 .bytecode_opcode_92_handler
-    lda opcode_91_92_table - 145,x                                    ; 9418: bd a3 a6    ...
+    lda something_else_table - 145,x                                  ; 9418: bd a3 a6    ...
     sta l004c                                                         ; 941b: 85 4c       .L
     jsr sub_c91a8                                                     ; 941d: 20 a8 91     ..
     lda #0                                                            ; 9420: a9 00       ..
@@ -6643,12 +6643,7 @@ oscli                           = &fff7
     equb &45                                                          ; a72f: 45          E
 .string_true
     equs "TRUE"                                                       ; a730: 54 52 55... TRU
-.opcode_26_27_table
-.opcode_91_92_table
-.opcode_40_41_table
-.opcode_3b_to_3f_table
-.opcode_38_39_table
-.opcode_33_to_37_table
+.something_else_table
     equb   0,   1,   3,   4, &1f, &1a,   5, &ff, &20, &ff             ; a734: 00 01 03... ...
 .la73e
     equs "pas___#"                                                    ; a73e: 70 61 73... pas
@@ -12196,12 +12191,6 @@ oscli                           = &fff7
     assert >string_true == &a7
     assert copyright - rom_header == &14
     assert fx163_192_2 == &a746
-    assert opcode_26_27_table - 38 == &a70e
-    assert opcode_33_to_37_table - 51 == &a701
-    assert opcode_38_39_table - 56 == &a6fc
-    assert opcode_3b_to_3f_table - 59 == &a6f9
-    assert opcode_40_41_table - 64 == &a6f4
-    assert opcode_91_92_table - 145 == &a6a3
     assert opcode_subrange1_jump_table_high - 202 == &a920
     assert opcode_subrange1_jump_table_low - 202 == &a919
     assert opcode_subrange2_jump_table_high - 120 == &a951
@@ -12231,6 +12220,12 @@ oscli                           = &fff7
     assert osword_read_line == &00
     assert our_osbyte_a == &a3
     assert our_osbyte_x == &c0
+    assert something_else_table - 145 == &a6a3
+    assert something_else_table - 38 == &a70e
+    assert something_else_table - 51 == &a701
+    assert something_else_table - 56 == &a6fc
+    assert something_else_table - 59 == &a6f9
+    assert something_else_table - 64 == &a6f4
     assert something_jump_table_high_minus_128-128 == &b072
     assert something_jump_table_low_minus_128-128 == &b04e
     assert something_table - 104 == &a6a9
