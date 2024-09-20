@@ -9,6 +9,8 @@ config.set_label_references(False)
 load(0x8000, "orig/pascal-2.rom", "6502", "63d8f8041dbb844ba10ecd36d8ff2511")
 is_sideways_rom()
 
+constant(0xff, "escape_flag")
+
 label(0x400, "machine_high_order_address_low")
 label(0x401, "machine_high_order_address_high")
 # TODO: Why all these copies of OSHWM?
@@ -134,7 +136,7 @@ expr(0x86dc, make_hi("interpreter_start"))
 
 comment(0x86e6, "TODO: It looks like we now patch the relocated copy of the interpreter to fix up absolute addresses.")
 entry(0x86e6, "relocate_loop")
-entry(0x870e, "relocate_high_byte_of_operand")
+entry(0x870e, "relocate_absolute_operand")
 entry(0x8728, "step_by_2_bytes")
 entry(0x872c, "step_by_1_byte")
 entry(0x8730, "step_by_0_bytes")
@@ -173,6 +175,8 @@ for i in range(256):
 entry(0x855d, "set_himem") # TODO: here and elsewhere we may mean "himem_prime" (and rename himem_{low,high})
 entry(0x8562, "set_himem_to_yx")
 entry(0x85fc, "set_yx_to_himem_minus_2")
+
+entry(0x9976, "escape")
 
 tokens = [
     "No ",

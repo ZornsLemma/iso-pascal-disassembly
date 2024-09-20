@@ -1,5 +1,6 @@
 ; Constants
 compiler_bytecode_start                = 34416
+escape_flag                            = 255
 interpreter_size                       = 8111
 osbyte_acknowledge_escape              = 126
 osbyte_enter_language                  = 142
@@ -1213,23 +1214,23 @@ oscli                           = &fff7
     lda (l000e),y                                                     ; 86e8: b1 0e       ..
     beq c873d                                                         ; 86ea: f0 51       .Q
     cmp #&20 ; ' '                                                    ; 86ec: c9 20       .
-    beq relocate_high_byte_of_operand                                 ; 86ee: f0 1e       ..
+    beq relocate_absolute_operand                                     ; 86ee: f0 1e       ..
     cmp #&60 ; '`'                                                    ; 86f0: c9 60       .`
     beq step_by_0_bytes                                               ; 86f2: f0 3c       .<
     cmp #&ff                                                          ; 86f4: c9 ff       ..
     beq c8745                                                         ; 86f6: f0 4d       .M
     and #&1f                                                          ; 86f8: 29 1f       ).
     cmp #&19                                                          ; 86fa: c9 19       ..
-    beq relocate_high_byte_of_operand                                 ; 86fc: f0 10       ..
+    beq relocate_absolute_operand                                     ; 86fc: f0 10       ..
     and #&0f                                                          ; 86fe: 29 0f       ).
     cmp #&0c                                                          ; 8700: c9 0c       ..
-    bcs relocate_high_byte_of_operand                                 ; 8702: b0 0a       ..
+    bcs relocate_absolute_operand                                     ; 8702: b0 0a       ..
     cmp #8                                                            ; 8704: c9 08       ..
     beq step_by_0_bytes                                               ; 8706: f0 28       .(
     cmp #&0a                                                          ; 8708: c9 0a       ..
     beq step_by_0_bytes                                               ; 870a: f0 24       .$
     bne step_by_1_byte                                                ; 870c: d0 1e       ..
-.relocate_high_byte_of_operand
+.relocate_absolute_operand
     ldy #2                                                            ; 870e: a0 02       ..
     lda (l000e),y                                                     ; 8710: b1 0e       ..
     cmp #&80                                                          ; 8712: c9 80       ..
@@ -1347,7 +1348,7 @@ oscli                           = &fff7
     bne loop_c87be                                                    ; 87d9: d0 e3       ..
     bit l00ff                                                         ; 87db: 24 ff       $.
     bpl c87c7                                                         ; 87dd: 10 e8       ..
-    jmp c9976                                                         ; 87df: 4c 76 99    Lv.
+    jmp escape                                                        ; 87df: 4c 76 99    Lv.
 
 .jmp_indirect_via_l0008
     jmp (l0008)                                                       ; 87e2: 6c 08 00    l..
@@ -4101,10 +4102,10 @@ oscli                           = &fff7
     jsr sub_c998c                                                     ; 996e: 20 8c 99     ..
 .c9971
     bit l00ff                                                         ; 9971: 24 ff       $.
-    bmi c9976                                                         ; 9973: 30 01       0.
+    bmi escape                                                        ; 9973: 30 01       0.
     rts                                                               ; 9975: 60          `
 
-.c9976
+.escape
     lda #osbyte_acknowledge_escape                                    ; 9976: a9 7e       .~
     jsr osbyte                                                        ; 9978: 20 f4 ff     ..            ; Clear escape condition and perform escape effects
     lda l0416                                                         ; 997b: ad 16 04    ...
@@ -9972,7 +9973,6 @@ la951 = sub_ca94f+2
 ;     c996b
 ;     c996e
 ;     c9971
-;     c9976
 ;     c9988
 ;     c99c8
 ;     c99d1
