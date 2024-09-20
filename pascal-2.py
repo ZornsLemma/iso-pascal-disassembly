@@ -162,5 +162,6 @@ entry(0xb374, "something_to_do_with_finding_cr")
 entry(0xb45c, "bulk_copy_from_l0000_to_l0002")
 entry(0xb634, "maybe_clear_part_of_screen")
 
+# TODO: I should break out the fpnti_hook string handling code and manually invoke it on the OS error structures after the BRK instructions
 
 go()
