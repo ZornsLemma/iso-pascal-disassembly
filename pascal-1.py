@@ -38,4 +38,7 @@ entry(0x803f, "rts")
 
 comment(0x8085, "Read the byte at &100 in the I/O processor and store it at &6E.")
 
+label(0x8670, "actual_compiler_bytecode_start")
+# TODO: We'd like to emit an assertion that actual_compiler_bytecode_start == compiler_bytecode_start
+
 go()

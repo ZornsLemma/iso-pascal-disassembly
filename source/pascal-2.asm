@@ -1,4 +1,5 @@
 ; Constants
+compiler_bytecode_start                = 34416
 interpreter_size                       = 8111
 osbyte_acknowledge_escape              = 126
 osbyte_enter_language                  = 142
@@ -1303,15 +1304,15 @@ oscli                           = &fff7
     sty l0659                                                         ; 8781: 8c 59 06    .Y.
     lda #4                                                            ; 8784: a9 04       ..
     sta (l0018),y                                                     ; 8786: 91 18       ..
-    lda #&70 ; 'p'                                                    ; 8788: a9 70       .p
+    lda #<compiler_bytecode_start                                     ; 8788: a9 70       .p
     sta l001e                                                         ; 878a: 85 1e       ..
-    lda #&86                                                          ; 878c: a9 86       ..
+    lda #>compiler_bytecode_start                                     ; 878c: a9 86       ..
     sta l001f                                                         ; 878e: 85 1f       ..
-    ldx #<(l8797)                                                     ; 8790: a2 97       ..
-    ldy #>(l8797)                                                     ; 8792: a0 87       ..
+    ldx #<(fx163_192_0)                                               ; 8790: a2 97       ..
+    ldy #>(fx163_192_0)                                               ; 8792: a0 87       ..
     jmp oscli                                                         ; 8794: 4c f7 ff    L..
 
-.l8797
+.fx163_192_0
     equs "fx163,192,0"                                                ; 8797: 66 78 31... fx1
     equb &0d                                                          ; 87a2: 0d          .
 
@@ -10482,7 +10483,6 @@ la951 = sub_ca94f+2
 ;     l0678
 ;     l8036
 ;     l803c
-;     l8797
 ;     l9539
 ;     l953a
 ;     l9998
@@ -10893,9 +10893,9 @@ la951 = sub_ca94f+2
     assert 128 + 14 == &8e
     assert 128 + 16 == &90
     assert 128 + 17 == &91
+    assert <(fx163_192_0) == &97
     assert <(input_buffer) == &1a
     assert <(l003e) == &3e
-    assert <(l8797) == &97
     assert <(laf70) == &70
     assert <brkv_handler == &98
     assert <bytecode_jump_table_high == &0c
@@ -11165,6 +11165,7 @@ la951 = sub_ca94f+2
     assert <command_save_handler == &1a
     assert <command_table == &40
     assert <command_trace_handler == &ff
+    assert <compiler_bytecode_start == &70
     assert <input_buffer == &1a
     assert <interpreter_size == &af
     assert <interpreter_start == &a3
@@ -11204,9 +11205,9 @@ la951 = sub_ca94f+2
     assert <something_21_handler == &04
     assert <something_22_handler == &18
     assert <something_23_handler == &0d
+    assert >(fx163_192_0) == &87
     assert >(input_buffer) == &05
     assert >(l003e) == &00
-    assert >(l8797) == &87
     assert >(laf70) == &af
     assert >brkv_handler == &80
     assert >bytecode_jump_table_high == &a6
@@ -11476,6 +11477,7 @@ la951 = sub_ca94f+2
     assert >command_save_handler == &84
     assert >command_table == &84
     assert >command_trace_handler == &84
+    assert >compiler_bytecode_start == &86
     assert >input_buffer == &05
     assert >interpreter_size == &1f
     assert >interpreter_start == &87

@@ -142,8 +142,11 @@ entry(0x8732, "step_by_a_bytes")
 comment(0x873b, "TODO: always branch?", inline=True)
 expr(0x874d, make_lo("bytecode_jump_table_high"))
 expr(0x8753, make_hi("bytecode_jump_table_high"))
+expr(0x8789, make_lo("compiler_bytecode_start"))
+expr(0x878d, make_hi("compiler_bytecode_start"))
 
 entry(0x87e2, "jmp_indirect_via_l0008")
+label(0x8797, "fx163_192_0")
 
 entry(0x89d5, "some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes")
 comment(0x89dc, "Set l0014=-l0012=-(X on entry), unless the result is zero in which case jump to the test at the end of the copy loop.")

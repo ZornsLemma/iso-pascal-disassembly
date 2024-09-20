@@ -36,3 +36,5 @@ label(0xf0, "osbyte_x")
 label(0xf1, "osbyte_y")
 constant(163, "our_osbyte_a")
 constant(192, "our_osbyte_x")
+
+constant(0x8670, "compiler_bytecode_start")
