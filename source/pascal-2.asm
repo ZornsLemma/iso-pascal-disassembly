@@ -165,8 +165,8 @@ l0657                           = &0657
 l0658                           = &0658
 l0659                           = &0659
 l065a                           = &065a
-l065b                           = &065b
-l065c                           = &065c
+line_number_low                 = &065b
+line_number_high                = &065c
 l065d                           = &065d
 l065f                           = &065f
 l0660                           = &0660
@@ -183,7 +183,6 @@ l066b                           = &066b
 lc001                           = &c001
 lc002                           = &c002
 lc003                           = &c003
-le8e8                           = &e8e8
 osfind                          = &ffce
 osbput                          = &ffd4
 osbget                          = &ffd7
@@ -305,6 +304,7 @@ oscli                           = &fff7
 
 .unrecognised_osbyte_handler_done
     lda #7                                                            ; 8092: a9 07       ..
+.unrecognised_osbyte_handler_rts
     rts                                                               ; 8094: 60          `
 
 .osbyte_163_192_x_minus_1_table
@@ -318,7 +318,7 @@ oscli                           = &fff7
     bne c80a5                                                         ; 80a0: d0 03       ..
     jsr sub_cb2f5                                                     ; 80a2: 20 f5 b2     ..
 .c80a5
-    jsr sub_c80e5                                                     ; 80a5: 20 e5 80     ..
+    jsr fancy_print_error_at_l00fd                                    ; 80a5: 20 e5 80     ..
     ldx l0416                                                         ; 80a8: ae 16 04    ...
     beq c80dc                                                         ; 80ab: f0 2f       ./
     dex                                                               ; 80ad: ca          .
@@ -357,7 +357,7 @@ oscli                           = &fff7
 .c80e2
     jmp language_entry_common                                         ; 80e2: 4c 44 83    LD.
 
-.sub_c80e5
+.fancy_print_error_at_l00fd
     ldx l00fd                                                         ; 80e5: a6 fd       ..
     ldy l00fe                                                         ; 80e7: a4 fe       ..
 .sub_c80e9
@@ -366,8 +366,8 @@ oscli                           = &fff7
     jsr fancy_print_at_yx_with_terminator_a                           ; 80ee: 20 7a 81     z.
     lda l0416                                                         ; 80f1: ad 16 04    ...
     bne c8101                                                         ; 80f4: d0 0b       ..
-    lda l065b                                                         ; 80f6: ad 5b 06    .[.
-    ora l065c                                                         ; 80f9: 0d 5c 06    .\.
+    lda line_number_low                                               ; 80f6: ad 5b 06    .[.
+    ora line_number_high                                              ; 80f9: 0d 5c 06    .\.
     beq c8101                                                         ; 80fc: f0 03       ..
     jsr sub_c8104                                                     ; 80fe: 20 04 81     ..
 .c8101
@@ -381,8 +381,8 @@ oscli                           = &fff7
     equb 128 + ('e')                                                  ; 810d: e5          .              ; "e "
 
     nop                                                               ; 810e: ea          .
-    ldx l065b                                                         ; 810f: ae 5b 06    .[.
-    ldy l065c                                                         ; 8112: ac 5c 06    .\.
+    ldx line_number_low                                               ; 810f: ae 5b 06    .[.
+    ldy line_number_high                                              ; 8112: ac 5c 06    .\.
     jsr sub_cb30c                                                     ; 8115: 20 0c b3     ..
     jsr fancy_print_nop_terminated_inline                             ; 8118: 20 84 b2     ..
     equs " i"                                                         ; 811b: 20 69        i
@@ -1079,8 +1079,8 @@ oscli                           = &fff7
     ldx #0                                                            ; 87a3: a2 00       ..
     stx l0416                                                         ; 87a5: 8e 16 04    ...
     ldx #0                                                            ; 87a8: a2 00       ..
-    stx l065b                                                         ; 87aa: 8e 5b 06    .[.
-    stx l065c                                                         ; 87ad: 8e 5c 06    .\.
+    stx line_number_low                                               ; 87aa: 8e 5b 06    .[.
+    stx line_number_high                                              ; 87ad: 8e 5c 06    .\.
     inx                                                               ; 87b0: e8          .
     stx l065a                                                         ; 87b1: 8e 5a 06    .Z.
     lda l001e                                                         ; 87b4: a5 1e       ..
@@ -1308,14 +1308,9 @@ oscli                           = &fff7
     lda la72f,x                                                       ; 88fb: bd 2f a7    ./.
     sta l004c                                                         ; 88fe: 85 4c       .L
     jsr sub_c9a9c                                                     ; 8900: 20 9c 9a     ..
-; overlapping: ldx l004c                                              ; 8903: a6 4c       .L
-    equb &a6                                                          ; 8903: a6          .
-
-.unrecognised_osbyte_handler_rts
-    jmp le8e8                                                         ; 8904: 4c e8 e8    L..
-
-; overlapping: inx                                                    ; 8905: e8          .
-; overlapping: inx                                                    ; 8906: e8          .
+    ldx l004c                                                         ; 8903: a6 4c       .L
+    inx                                                               ; 8905: e8          .
+    inx                                                               ; 8906: e8          .
     bne c8916                                                         ; 8907: d0 0d       ..
 .bytecode_opcode_f8_handler
     jsr bytecode_opcode_2f_handler                                    ; 8909: 20 11 8a     ..
@@ -6454,8 +6449,8 @@ oscli                           = &fff7
     iny                                                               ; a8ae: c8          .
     lda (l0002),y                                                     ; a8af: b1 02       ..
 .sub_ca8b1
-    stx l065b                                                         ; a8b1: 8e 5b 06    .[.
-    sta l065c                                                         ; a8b4: 8d 5c 06    .\.
+    stx line_number_low                                               ; a8b1: 8e 5b 06    .[.
+    sta line_number_high                                              ; a8b4: 8d 5c 06    .\.
     lda l0418                                                         ; a8b7: ad 18 04    ...
     cmp #2                                                            ; a8ba: c9 02       ..
     bcc ca8d1                                                         ; a8bc: 90 13       ..
@@ -6463,8 +6458,8 @@ oscli                           = &fff7
     equs "["                                                          ; a8c1: 5b          [
 
     nop                                                               ; a8c2: ea          .
-    ldx l065b                                                         ; a8c3: ae 5b 06    .[.
-    ldy l065c                                                         ; a8c6: ac 5c 06    .\.
+    ldx line_number_low                                               ; a8c3: ae 5b 06    .[.
+    ldy line_number_high                                              ; a8c6: ac 5c 06    .\.
     jsr sub_cb30c                                                     ; a8c9: 20 0c b3     ..
     jsr fancy_print_nop_terminated_inline                             ; a8cc: 20 84 b2     ..
     equb 128 + (']')                                                  ; a8cf: dd          .              ; "] "
@@ -9005,8 +9000,6 @@ la951 = sub_ca94f+2
 ;     l0658
 ;     l0659
 ;     l065a
-;     l065b
-;     l065c
 ;     l065d
 ;     l065f
 ;     l0660
@@ -9068,7 +9061,6 @@ la951 = sub_ca94f+2
 ;     lc001
 ;     lc002
 ;     lc003
-;     le8e8
 ;     loop_c8028
 ;     loop_c8047
 ;     loop_c80d6
@@ -9177,7 +9169,6 @@ la951 = sub_ca94f+2
 ;     loop_cb5a8
 ;     loop_cb68e
 ;     loop_cbdb4
-;     sub_c80e5
 ;     sub_c80e9
 ;     sub_c8104
 ;     sub_c8494
