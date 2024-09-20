@@ -78,9 +78,13 @@ label(0x417, "simplified_machine_type")
 comment(0x82f5, "Read the command tail pointed to by host &F2? Looking for a ' @\r' suffix? TODO: Did the service handler tweak this? How do we know what 'Y' is? How do we know we didn't enter via language entry rather than a * command? Is the command tail set up by the OS here?")
 entry(0x8324, "language_entry_with_at_symbol")
 entry(0x860a, "set_up_for_cold_start") # TODO: guessing
-entry(0x8344, "language_entry_common")
+entry(0x8344, "language_entry_common") # TODO: language_entry_warm_start?
 
 entry(0x8482, "read_io_memory_at_l003e_and_advance")
+
+label(0x51a, "input_buffer") # TODO: bit of a guess
+expr(0x84b4, make_lo("input_buffer"))
+expr(0x84b8, make_hi("input_buffer"))
 
 entry(0x834c, "user_interface_command_line_loop")
 entry(0x8494, "probably_read_input_line_to_l051a")

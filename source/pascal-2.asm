@@ -152,7 +152,7 @@ l041a                           = &041a
 l041b                           = &041b
 l0420                           = &0420
 l0519                           = &0519
-l051a                           = &051a
+input_buffer                    = &051a
 l0619                           = &0619
 l061a                           = &061a
 l061b                           = &061b
@@ -716,8 +716,8 @@ oscli                           = &fff7
     beq user_interface_command_line_loop                              ; 8354: f0 f6       ..
     cmp #&2a ; '*'                                                    ; 8356: c9 2a       .*
     bne c8364                                                         ; 8358: d0 0a       ..
-    ldx #<(l051a)                                                     ; 835a: a2 1a       ..
-    ldy #>(l051a)                                                     ; 835c: a0 05       ..
+    ldx #<(input_buffer)                                              ; 835a: a2 1a       ..
+    ldy #>(input_buffer)                                              ; 835c: a0 05       ..
     jsr oscli                                                         ; 835e: 20 f7 ff     ..
     jmp user_interface_command_line_loop                              ; 8361: 4c 4c 83    LL.
 
@@ -788,7 +788,7 @@ oscli                           = &fff7
     inx                                                               ; 83cc: e8          .
 .c83cd
     iny                                                               ; 83cd: c8          .
-    lda l051a,y                                                       ; 83ce: b9 1a 05    ...
+    lda input_buffer,y                                                ; 83ce: b9 1a 05    ...
     cmp #&22 ; '"'                                                    ; 83d1: c9 22       ."
     beq loop_c83cc                                                    ; 83d3: f0 f7       ..
     cmp #&20 ; ' '                                                    ; 83d5: c9 20       .
@@ -893,7 +893,7 @@ oscli                           = &fff7
     bne loop_c849a                                                    ; 84a2: d0 f6       ..
 .c84a4
     lda #&0d                                                          ; 84a4: a9 0d       ..
-    sta l051a,y                                                       ; 84a6: 99 1a 05    ...
+    sta input_buffer,y                                                ; 84a6: 99 1a 05    ...
     ldy #0                                                            ; 84a9: a0 00       ..
     jsr sub_c84b3                                                     ; 84ab: 20 b3 84     ..
     lda (l000c),y                                                     ; 84ae: b1 0c       ..
@@ -901,9 +901,9 @@ oscli                           = &fff7
     rts                                                               ; 84b2: 60          `
 
 .sub_c84b3
-    lda #&1a                                                          ; 84b3: a9 1a       ..
+    lda #<input_buffer                                                ; 84b3: a9 1a       ..
     sta l000c                                                         ; 84b5: 85 0c       ..
-    lda #5                                                            ; 84b7: a9 05       ..
+    lda #>input_buffer                                                ; 84b7: a9 05       ..
     sta l000d                                                         ; 84b9: 85 0d       ..
 .c84bb
     lda (l000c),y                                                     ; 84bb: b1 0c       ..
@@ -4084,7 +4084,7 @@ oscli                           = &fff7
     jsr c996e                                                         ; 995c: 20 6e 99     n.
     ldx #0                                                            ; 995f: a2 00       ..
 .c9961
-    lda l051a,x                                                       ; 9961: bd 1a 05    ...
+    lda input_buffer,x                                                ; 9961: bd 1a 05    ...
     inx                                                               ; 9964: e8          .
     cmp #&0d                                                          ; 9965: c9 0d       ..
     bne c996b                                                         ; 9967: d0 02       ..
@@ -8571,8 +8571,8 @@ la951 = sub_ca94f+2
     jsr oswrch                                                        ; b754: 20 ee ff     ..            ; Write character 42
     jsr probably_read_input_line_to_l051a                             ; b757: 20 94 84     ..
     beq cb766                                                         ; b75a: f0 0a       ..
-    ldx #<(l051a)                                                     ; b75c: a2 1a       ..
-    ldy #>(l051a)                                                     ; b75e: a0 05       ..
+    ldx #<(input_buffer)                                              ; b75c: a2 1a       ..
+    ldy #>(input_buffer)                                              ; b75e: a0 05       ..
     jsr oscli                                                         ; b760: 20 f7 ff     ..
     jmp cb752                                                         ; b763: 4c 52 b7    LR.
 
@@ -8692,7 +8692,7 @@ la951 = sub_ca94f+2
     beq cb842                                                         ; b835: f0 0b       ..
 .loop_cb837
     lda l0678,y                                                       ; b837: b9 78 06    .x.
-    sta l051a,y                                                       ; b83a: 99 1a 05    ...
+    sta input_buffer,y                                                ; b83a: 99 1a 05    ...
     iny                                                               ; b83d: c8          .
     cmp #&0d                                                          ; b83e: c9 0d       ..
     bne loop_cb837                                                    ; b840: d0 f5       ..
@@ -8700,7 +8700,7 @@ la951 = sub_ca94f+2
     ldx l0017                                                         ; b842: a6 17       ..
     ldy #0                                                            ; b844: a0 00       ..
 .loop_cb846
-    lda l051a,x                                                       ; b846: bd 1a 05    ...
+    lda input_buffer,x                                                ; b846: bd 1a 05    ...
     sta l0678,y                                                       ; b849: 99 78 06    .x.
     inx                                                               ; b84c: e8          .
     iny                                                               ; b84d: c8          .
@@ -8818,7 +8818,7 @@ la951 = sub_ca94f+2
     jsr cb9f2                                                         ; b908: 20 f2 b9     ..
 .sub_cb90b
     ldy l0041                                                         ; b90b: a4 41       .A
-    lda l051a,y                                                       ; b90d: b9 1a 05    ...
+    lda input_buffer,y                                                ; b90d: b9 1a 05    ...
     sta l0014                                                         ; b910: 85 14       ..
     inc l0041                                                         ; b912: e6 41       .A
     cmp #&0d                                                          ; b914: c9 0d       ..
@@ -10431,7 +10431,6 @@ la951 = sub_ca94f+2
 ;     l041b
 ;     l0420
 ;     l0519
-;     l051a
 ;     l0619
 ;     l061a
 ;     l061b
@@ -10895,8 +10894,8 @@ la951 = sub_ca94f+2
     assert 128 + 14 == &8e
     assert 128 + 16 == &90
     assert 128 + 17 == &91
+    assert <(input_buffer) == &1a
     assert <(l003e) == &3e
-    assert <(l051a) == &1a
     assert <(l8797) == &97
     assert <(laf70) == &70
     assert <brkv_handler == &98
@@ -11166,6 +11165,7 @@ la951 = sub_ca94f+2
     assert <command_save_handler == &1a
     assert <command_table == &40
     assert <command_trace_handler == &ff
+    assert <input_buffer == &1a
     assert <something_00_handler == &58
     assert <something_01_handler == &41
     assert <something_02_handler == &96
@@ -11202,8 +11202,8 @@ la951 = sub_ca94f+2
     assert <something_21_handler == &04
     assert <something_22_handler == &18
     assert <something_23_handler == &0d
+    assert >(input_buffer) == &05
     assert >(l003e) == &00
-    assert >(l051a) == &05
     assert >(l8797) == &87
     assert >(laf70) == &af
     assert >brkv_handler == &80
@@ -11473,6 +11473,7 @@ la951 = sub_ca94f+2
     assert >command_save_handler == &84
     assert >command_table == &84
     assert >command_trace_handler == &84
+    assert >input_buffer == &05
     assert >something_00_handler == &b8
     assert >something_01_handler == &b7
     assert >something_02_handler == &b7
