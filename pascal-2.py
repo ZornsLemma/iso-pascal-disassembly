@@ -181,6 +181,11 @@ entry(0x855d, "set_himem") # TODO: here and elsewhere we may mean "himem_prime" 
 entry(0x8562, "set_himem_to_yx")
 entry(0x85fc, "set_yx_to_himem_minus_2")
 
+entry(0x9335, "oswrch_or_osbput_aligned_string_yx") # TODO: guessing a bit
+label(0xa730, "string_true")
+expr(0xaa90, make_lo("string_true"))
+expr(0xaa92, make_hi("string_true"))
+
 entry(0x9976, "escape")
 
 label(0xaa16, "something2")
@@ -269,7 +274,5 @@ entry(0xb163, "set_tab_char_to_x_if_not_electron")
 entry(0xb17f, "do_x_osbyte_calls_from_table_starting_at_y")
 entry(0xb172, "set_tab_char_to_9_if_not_electron_and_do_cleanup_osbyte_calls")
 comment(0xb15a, "Do 'setup' OSBYTE calls")
-
-# TODO: C9335 MAY BE SOME KIND OF INDIRECT CALL
 
 go()

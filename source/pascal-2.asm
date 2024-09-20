@@ -3141,7 +3141,7 @@ oscli                           = &fff7
     ldx l0000                                                         ; 932f: a6 00       ..
     ldy l0001                                                         ; 9331: a4 01       ..
     lda #1                                                            ; 9333: a9 01       ..
-.c9335
+.oswrch_or_osbput_aligned_string_yx
     cmp l0657                                                         ; 9335: cd 57 06    .W.
     bcc c933d                                                         ; 9338: 90 03       ..
     lda l0657                                                         ; 933a: ad 57 06    .W.
@@ -3195,7 +3195,7 @@ oscli                           = &fff7
 .c9397
     ldx l000a                                                         ; 9397: a6 0a       ..
     ldy l000b                                                         ; 9399: a4 0b       ..
-    jsr c9335                                                         ; 939b: 20 35 93     5.
+    jsr oswrch_or_osbput_aligned_string_yx                            ; 939b: 20 35 93     5.
 .c939e
     lda #3                                                            ; 939e: a9 03       ..
     rts                                                               ; 93a0: 60          `
@@ -6457,7 +6457,9 @@ oscli                           = &fff7
 .la72b
     equs "FALS"                                                       ; a72b: 46 41 4c... FAL
 .la72f
-    equs "ETRUE"                                                      ; a72f: 45 54 52... ETR
+    equb &45                                                          ; a72f: 45          E
+.string_true
+    equs "TRUE"                                                       ; a730: 54 52 55... TRU
 .la734
     equb   0,   1,   3,   4, &1f, &1a,   5, &ff, &20, &ff             ; a734: 00 01 03... ...
 .la73e
@@ -6994,11 +6996,11 @@ la951 = sub_ca94f+2
     lda #5                                                            ; aa8b: a9 05       ..
     bne caa95                                                         ; aa8d: d0 06       ..
 .caa8f
-    ldx #&30 ; '0'                                                    ; aa8f: a2 30       .0
-    ldy #&a7                                                          ; aa91: a0 a7       ..
+    ldx #<string_true                                                 ; aa8f: a2 30       .0
+    ldy #>string_true                                                 ; aa91: a0 a7       ..
     lda #4                                                            ; aa93: a9 04       ..
 .caa95
-    jmp c9335                                                         ; aa95: 4c 35 93    L5.
+    jmp oswrch_or_osbput_aligned_string_yx                            ; aa95: 4c 35 93    L5.
 
     equb &4c, &50, &9e, &82, &2d, &f8, &54, &58, &a5, &40, &c9, &87   ; aa98: 4c 50 9e... LP.
     equb &90, &0f, &d0,   6, &a4, &41, &c0, &b3, &90,   7, &a5, &3e   ; aaa4: 90 0f d0... ...
@@ -9925,7 +9927,6 @@ la951 = sub_ca94f+2
 ;     c9308
 ;     c931b
 ;     c931e
-;     c9335
 ;     c933d
 ;     c9340
 ;     c9356
@@ -11199,6 +11200,7 @@ la951 = sub_ca94f+2
     assert <something_21_handler == &04
     assert <something_22_handler == &18
     assert <something_23_handler == &0d
+    assert <string_true == &30
     assert >(fx163_192_0) == &87
     assert >(input_buffer) == &05
     assert >(l003e) == &00
@@ -11512,6 +11514,7 @@ la951 = sub_ca94f+2
     assert >something_21_handler == &b7
     assert >something_22_handler == &b7
     assert >something_23_handler == &b7
+    assert >string_true == &a7
     assert copyright - rom_header == &14
     assert osbyte_163_192_x_minus_1_table - 1 == &8094
     assert osbyte_acknowledge_escape == &7e
