@@ -34,8 +34,11 @@ entry(0x808b, "pascal_command_handler")
 comment(0x8235, "Set last break type to 0 and get old value in X")
 entry(0x82a7, "real_language_entry") # TODO: guess
 comment(0x823e, "Branch if b7 of original last break type clear")
-comment(0x8253, "Branch if b6 of original last break type clear")
+comment(0x8245, "Set output stream to saved value at &100 in I/O processor")
+comment(0x8252, "Branch if b6 of original last break type clear")
 comment(0x8256, "Branch if b5 of original last break type clear")
+
+entry(0x8482, "read_io_memory_at_l003e_and_advance")
 
 entry(0x89d5, "some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes")
 comment(0x89dc, "Set l0014=-l0012=-(X on entry), unless the result is zero in which case jump to the test at the end of the copy loop.")

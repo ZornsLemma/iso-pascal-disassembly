@@ -435,14 +435,15 @@ oscli       = &fff7
     bpl real_language_entry                                           ; 823f: 10 66       .f
     pha                                                               ; 8241: 48          H
     jsr zero_misc_values                                              ; 8242: 20 93 a4     ..
+; Set output stream to saved value at &100 in I/O processor
     lda #1                                                            ; 8245: a9 01       ..
     sta l003f                                                         ; 8247: 85 3f       .?
-    jsr sub_c8482                                                     ; 8249: 20 82 84     ..
+    jsr read_io_memory_at_l003e_and_advance                           ; 8249: 20 82 84     ..
     tax                                                               ; 824c: aa          .
     lda #osbyte_select_output_stream                                  ; 824d: a9 03       ..
     jsr osbyte                                                        ; 824f: 20 f4 ff     ..            ; Select output stream based on X
-    pla                                                               ; 8252: 68          h
 ; Branch if b6 of original last break type clear
+    pla                                                               ; 8252: 68          h
     rol a                                                             ; 8253: 2a          *
     bpl real_language_entry                                           ; 8254: 10 51       .Q
 ; Branch if b5 of original last break type clear
@@ -540,20 +541,20 @@ oscli       = &fff7
     jsr zero_misc_values                                              ; 82f2: 20 93 a4     ..
     lda #&f2                                                          ; 82f5: a9 f2       ..
     sta l003e                                                         ; 82f7: 85 3e       .>
-    jsr sub_c8482                                                     ; 82f9: 20 82 84     ..
+    jsr read_io_memory_at_l003e_and_advance                           ; 82f9: 20 82 84     ..
     pha                                                               ; 82fc: 48          H
-    jsr sub_c8482                                                     ; 82fd: 20 82 84     ..
+    jsr read_io_memory_at_l003e_and_advance                           ; 82fd: 20 82 84     ..
     sta l003f                                                         ; 8300: 85 3f       .?
     pla                                                               ; 8302: 68          h
     sta l003e                                                         ; 8303: 85 3e       .>
 .loop_c8305
-    jsr sub_c8482                                                     ; 8305: 20 82 84     ..
+    jsr read_io_memory_at_l003e_and_advance                           ; 8305: 20 82 84     ..
     cmp #&20 ; ' '                                                    ; 8308: c9 20       .
     bne c831a                                                         ; 830a: d0 0e       ..
-    jsr sub_c8482                                                     ; 830c: 20 82 84     ..
+    jsr read_io_memory_at_l003e_and_advance                           ; 830c: 20 82 84     ..
     cmp #&40 ; '@'                                                    ; 830f: c9 40       .@
     bne c831a                                                         ; 8311: d0 07       ..
-    jsr sub_c8482                                                     ; 8313: 20 82 84     ..
+    jsr read_io_memory_at_l003e_and_advance                           ; 8313: 20 82 84     ..
     cmp #&0d                                                          ; 8316: c9 0d       ..
     beq c8324                                                         ; 8318: f0 0a       ..
 .c831a
@@ -713,7 +714,7 @@ oscli       = &fff7
 .l8479
     equb &85, &86, &af, &83, &85, &85, &83, &84, &84                  ; 8479: 85 86 af... ...
 
-.sub_c8482
+.read_io_memory_at_l003e_and_advance
     lda #osword_read_io_memory                                        ; 8482: a9 05       ..
     ldx #<(l003e)                                                     ; 8484: a2 3e       .>
     ldy #>(l003e)                                                     ; 8486: a0 00       ..
@@ -3854,7 +3855,6 @@ oscli       = &fff7
 ;     sub_c80e9
 ;     sub_c8104
 ;     sub_c817a
-;     sub_c8482
 ;     sub_c8494
 ;     sub_c84b3
 ;     sub_c855d
