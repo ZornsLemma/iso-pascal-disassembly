@@ -32,13 +32,15 @@ The interpreter ROM also has some other relevant behaviour which will be invoked
 *FX163,192,3 is executed:
 - (this is executed by the compiler ROM's BRKV handler)
 - this is recognised by the interpreter ROM's service handler
-- set last break type to &E0
+- set last break type to &E0 (%11100000)
 - *FX3,%00010110 is executed to disable the RS423, VDU and printer drivers and spooled output. I believe the idea here is to hide the OS printing the language name when we...
 - enter ourself as the current language using *FX142
 
-TODO: *FX163,192,2
-
-
+*FX163,192,2 is executed:
+- (this is executed by the compiler ROM when the compiler finishes execution)
+- this is recognised by the interpreter ROM's service handler
+- set last break type to &C0 (%11000000)
+- enter ourself as the current language using *FX142
 
 "COMPILE" entered at interpreter prompt:
 - this code is at command_compile_handler in the interpreter ROM
@@ -49,7 +51,7 @@ TODO: *FX163,192,2
 
 *FX163,192,0 is executed:
 - this is recognised by the compiler ROM's service handler
-- the last break type is set to &80
+- the last break type is set to &80 (%10000000)
 - *FX3,%00010110 is executed to disable the RS423, VDU and printer drivers and spooled output. I believe the idea here is to hide the OS printing the language name when we...
 - enter ourself as the current language using *FX142
 
@@ -57,13 +59,17 @@ Compiler ROM's language entry point:
 - sets up BRKV handler
 - sets last break type to 0
 - if b7 of the last break type (before it was set to 0) is clear (i.e. the "normal" case for any language), execute (with OSCLI) *FX163,192,1. This effectively enters the interpreter ROM as the current language without showing its startup banner, which means that if the compiler ROM is entered as the default language by the OS or via the user executing *FX142, the interpreter ROM will start up as well. This means the order of the two ROMs doesn't matter, even in a BBC B/B+ where one of the ROMs is the higher priority language in the system.
-- execute *FX3 with the X value stored at &100 in the I/O processor, i.e. reinstating TODO WHERE DID WE STORE the *FX3 state we temporarily changed to hide the language startup banner
-- jmp (&62e) TODO: WHICH IS SET UP WHERE? BUT I GUESS THIS IS THE VM INTEPRETER ENTRY POINT
+- execute *FX3 with the X value stored at &100 in the I/O processor, i.e. reinstating TODO WHERE DID WE STORE THIS the *FX3 state we temporarily changed to hide the language startup banner
+- jmp (&62e) which TODO: seems to be maintained by some slightly complex logic but appears to point to the interpreter entry point at interpreter_start (wherever the interpreter is actually located)
 
 Compiler ROM's BRKV handler:
 - copies the error details to &41A, presumably because when we enter a new language in what follows the OS will overwrite the error with the language's copyright string
 - executes *FX163,192,3 via OSCLI
 
+VM opcode &B0:
+- this appears to be the "program finished, return to command prompt" opcode
+- checks &659 - if it's zero, we are executing bytecode from the interpreter ROM's "GO" command (which sets it to 0 explicitly) and transfer control directly to language_entry+common
+- if it's not zero, we execute *FX163,192,2 (via OSCLI)
 
 
 
