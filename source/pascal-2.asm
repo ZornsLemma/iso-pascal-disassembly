@@ -771,7 +771,7 @@ oscli                           = &fff7
     jmp user_interface_command_line_loop                              ; 83b1: 4c 4c 83    LL.
 
 .c83b4
-    jsr sub_c999a                                                     ; 83b4: 20 9a 99     ..
+    jsr clear_c_iff_tape_or_rom_filing_system                         ; 83b4: 20 9a 99     ..
     bcs command_run_handler                                           ; 83b7: b0 0b       ..
 .c83b9
     brk                                                               ; 83b9: 00          .
@@ -1041,7 +1041,7 @@ oscli                           = &fff7
     sta l0009                                                         ; 859b: 85 09       ..
     stx l000a                                                         ; 859d: 86 0a       ..
     sty l000b                                                         ; 859f: 84 0b       ..
-    jsr sub_c999a                                                     ; 85a1: 20 9a 99     ..
+    jsr clear_c_iff_tape_or_rom_filing_system                         ; 85a1: 20 9a 99     ..
     bcc c85b5                                                         ; 85a4: 90 0f       ..
     lda #5                                                            ; 85a6: a9 05       ..
     jsr sub_c9189                                                     ; 85a8: 20 89 91     ..
@@ -4271,7 +4271,8 @@ oscli                           = &fff7
 .l9999
     equb &a7                                                          ; 9999: a7          .
 
-.sub_c999a
+; Return with C clear iff the current filing system is tape or ROM.
+.clear_c_iff_tape_or_rom_filing_system
     ldy #0                                                            ; 999a: a0 00       ..
     tya                                                               ; 999c: 98          .
     jsr osargs                                                        ; 999d: 20 da ff     ..            ; Get filing system number (A=0, Y=0)
@@ -11323,7 +11324,6 @@ oscli                           = &fff7
 ;     sub_c9940
 ;     sub_c9958
 ;     sub_c998c
-;     sub_c999a
 ;     sub_c99ac
 ;     sub_c99d5
 ;     sub_c99e4
