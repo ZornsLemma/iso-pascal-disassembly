@@ -13,6 +13,17 @@ Interpreter ROM real_language_entry:
 
 So in short (as you might expect) the compiler ROM plays no part in entering the interpreter and there is no back-and-forth between the two ROMs in these basic situations. I assume this means you can run pre-compiled Pascal code without having the compiler ROM present with no problems at all.
 
+The interpreter ROM also has some other relevant behaviour which will be invoked below.
+
+*FX163,192,1 is executed:
+- this is recognised by the interpreter ROM's service handler
+- the last break type is set to &80
+- *FX3,%00010110 is executed to disable the RS423, VDU and printer drivers and spooled output. I believe the idea here is to hide the OS printing the language name when we...
+- enter ourself as the current language using *FX142
+
+TODO: *FX163,192,2
+TODO: *FX163,192,3
+
 
 
 "COMPILE" entered at interpreter prompt:
@@ -29,8 +40,8 @@ So in short (as you might expect) the compiler ROM plays no part in entering the
 - enter ourself as the current language using *FX142
 
 Compiler ROM's language entry point:
-
-
+- sets up BRKV handler
+- if b7 of the last break type is clear (i.e. the "normal" case for any language), execute (with OSCLI) *FX163,192,1. This effectively enters the interpreter ROM as the current language without showing its startup banner, which means that if the compiler ROM is entered as the default language by the OS or via the user executing *FX142, the interpreter ROM will start up as well. This means the order of the two ROMs doesn't matter, even in a BBC B/B+ where one of the ROMs is the higher priority language in the system.
 - TODO
 
 
