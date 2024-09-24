@@ -4271,7 +4271,6 @@ oscli                           = &fff7
 .l9999
     equb &a7                                                          ; 9999: a7          .
 
-; Return with C clear iff the current filing system is tape or ROM.
 .clear_c_iff_tape_or_rom_filing_system
     ldy #0                                                            ; 999a: a0 00       ..
     tya                                                               ; 999c: 98          .

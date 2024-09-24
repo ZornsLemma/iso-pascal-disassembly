@@ -196,7 +196,6 @@ label_and_expr(0xa72b, "string_false", 0xaa88, 0xaa8a)
 string(0xa72b, 5)
 
 entry(0x9976, "escape")
-comment(0x999a, "Return with C clear iff the current filing system is tape or ROM.")
 entry(0x999a, "clear_c_iff_tape_or_rom_filing_system")
 
 label(0xaa16, "something2")
