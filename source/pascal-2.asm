@@ -1305,6 +1305,8 @@ oscli                           = &fff7
     sty l0411                                                         ; 8779: 8c 11 04    ...
     lda #&0d                                                          ; 877c: a9 0d       ..
     sta (l0018),y                                                     ; 877e: 91 18       ..
+; Set l0659 to 1, to indicate to the interpreter that it is executing from RAM with the
+; compiler ROM paged in and needs to re-enter the command prompt loop via *FX163,192,2.
     iny                                                               ; 8780: c8          .
     sty l0659                                                         ; 8781: 8c 59 06    .Y.
     lda #4                                                            ; 8784: a9 04       ..
@@ -3568,7 +3570,11 @@ oscli                           = &fff7
 
 ; TODO: Why do we do this indirect OSCLI via ROM? We could save a few bytes by doing
 ; LDX#/LDY# and getting rid of the pointer. AFAICS we do not rely on this do vary the
-; command depending on which of our two ROMs is paged in, but maybe we do.
+; command depending on which of our two ROMs is paged in, but maybe we do. I suspect
+; the reason for this is that this code executes only when the interpreter has been
+; copied into main RAM to run the compiler, and the relocation code used to copy the
+; interpreter will relocate LDX/LDY abs but has no way to know LDX #/LDY # operands are
+; actually parts of an absoloute address.
 .c952f
     ldx oscli_ptr                                                     ; 952f: ae 39 95    .9.
     ldy oscli_ptr + 1                                                 ; 9532: ac 3a 95    .:.
