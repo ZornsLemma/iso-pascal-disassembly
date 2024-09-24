@@ -1,0 +1,52 @@
+Entering via *PASCAL command:
+- recognised by service handler of interpreter ROM
+- this uses OSBYTE 142 to enter itself with no additional fuss
+
+Entering interpreter ROM's language entry point:
+- sets up BRKV handler
+- if b7 of last break type is clear (i.e. the "normal" case for any language), control transfer to real_language_entry
+- TODO: other cases
+
+Interpreter ROM real_language_entry:
+ - seems to have some "command tail" parsing of a string in the I/O processor to recognise " @ ", but I'm not currently sure where this command tail comes from
+ - enters a command line reading loop
+
+So in short (as you might expect) the compiler ROM plays no part in entering the interpreter and there is no back-and-forth between the two ROMs in these basic situations. I assume this means you can run pre-compiled Pascal code without having the compiler ROM present with no problems at all.
+
+
+
+"COMPILE" entered at interpreter prompt:
+- this code is at command_compile_handler in the interpreter ROM
+- memory addresses are set up to reflect the start and end available RAM after allowing space for the interpreter code
+- the interpreter code is copied to RAM and patched up to fix absolute addresses and so on (I haven't gone into full detail on this code, at least yet)
+- the 16-bit pointer at &1e is set to the hard-coded address of the compile bytecode in the compiler ROM. &1e is presumably the VM program counter. TODO: JUST ASSIGN A LABEL TO THIS?
+- *FX163,192,0 is executed (literally, via OSCLI)
+
+*FX163,192,0 is executed:
+- this is recognised by the compiler ROM's service handler
+- the last break type is set to &80
+- *FX3,%00010110 is executed to disable the RS423, VDU and printer drivers and spooled output. I believe the idea here is to hide the OS printing the language name when we...
+- enter ourself as the current language using *FX142
+
+Compiler ROM's language entry point:
+
+
+- TODO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TODO: What about entering the compiler ROM as a language because it's the default language on reset or because the user explicitly *FX142 enters it?
