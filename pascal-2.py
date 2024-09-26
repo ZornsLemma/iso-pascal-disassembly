@@ -40,6 +40,7 @@ entry(0x80e9, "fancy_print_error_at_yx")
 label(0x65b, "line_number_low") # TODO GUESS
 label(0x65c, "line_number_high") # TODO GUESS
 
+label(0x0, "vm_stack_ptr") # TODO: guess
 label(0x2, "vm_pc")
 
 label(0x8095, "osbyte_163_192_x_minus_1_table")
@@ -166,6 +167,14 @@ entry(0x8a07, "bulk_copy_loop_x_test")
 entry(0x9184, "set_yx_to_41a")
 
 entry(0x92d9, "oswrch_or_osbput")
+
+entry(0x9a11, "subtract_1_from_vm_stack_ptr")
+entry(0x9a15, "subtract_2_from_vm_stack_ptr")
+entry(0x9a19, "subtract_4_from_vm_stack_ptr")
+entry(0x9a1d, "subtract_8_from_vm_stack_ptr")
+comment(0x9a21, "TODO: dead code?")
+entry(0x9a25, "subtract_16_from_vm_stack_ptr")
+entry(0x9a27, "subtract_a_from_vm_stack_ptr")
 
 entry(0x9a9c, "set_l008_to_vm_pc_plus_1")
 entry(0x9aa0, "set_l008_to_vm_pc_plus_2")
@@ -349,14 +358,14 @@ expr(0x8940, make_subtract("something_else_table", 0x3b))
 expr(0x88e6, make_subtract("something_else_table", 0x38))
 expr(0x883b, make_subtract("something_else_table", 0x33))
 
-label(0xa72f+0x5, "another_something_table")
-expr(0x88fc, make_subtract("another_something_table", 0x5))
-expr(0x88f0, make_subtract("another_something_table", 0x1d))
-expr(0x894d, make_subtract("another_something_table", 0x21))
-expr(0x8845, make_subtract("another_something_table", 0x18))
-expr(0x8792, make_subtract("another_something_table", 0x16))
-expr(0x895c, make_subtract("another_something_table", 0x11))
-expr(0x890f, make_subtract("another_something_table", 0xe))
+label(0xa72f+0x5, "operand_size_minus_1_table") # TODO: guessing
+expr(0x88fc, make_subtract("operand_size_minus_1_table", 0x5))
+expr(0x88f0, make_subtract("operand_size_minus_1_table", 0x1d))
+expr(0x894d, make_subtract("operand_size_minus_1_table", 0x21))
+expr(0x8845, make_subtract("operand_size_minus_1_table", 0x18))
+expr(0x8792, make_subtract("operand_size_minus_1_table", 0x16))
+expr(0x895c, make_subtract("operand_size_minus_1_table", 0x11))
+expr(0x890f, make_subtract("operand_size_minus_1_table", 0xe))
 
 nonentry(0xa882)
 
