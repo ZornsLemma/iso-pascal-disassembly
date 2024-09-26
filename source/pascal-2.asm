@@ -27,7 +27,7 @@ our_osbyte_x                           = 192
 ; Memory locations
 l0000                           = &0000
 l0001                           = &0001
-l0002                           = &0002
+vm_pc                           = &0002
 l0003                           = &0003
 oshwm_low_zp                    = &0004
 oshwm_high_zp                   = &0005
@@ -432,7 +432,7 @@ oscli                           = &fff7
     adc (l001c),y                                                     ; 8134: 71 1c       q.
     sta l000d                                                         ; 8136: 85 0d       ..
     bcs c816b                                                         ; 8138: b0 31       .1
-    cpx l0002                                                         ; 813a: e4 02       ..
+    cpx vm_pc                                                         ; 813a: e4 02       ..
     sbc l0003                                                         ; 813c: e5 03       ..
     bcs c8165                                                         ; 813e: b0 25       .%
     ldy #1                                                            ; 8140: a0 01       ..
@@ -1112,7 +1112,7 @@ oscli                           = &fff7
     cpx l0000                                                         ; 8619: e4 00       ..
     sbc l0001                                                         ; 861b: e5 01       ..
     bcc c8655                                                         ; 861d: 90 36       .6
-    ldx l0002                                                         ; 861f: a6 02       ..
+    ldx vm_pc                                                         ; 861f: a6 02       ..
     cpx l0027                                                         ; 8621: e4 27       .'
     lda l0003                                                         ; 8623: a5 03       ..
     sbc l0028                                                         ; 8625: e5 28       .(
@@ -1332,19 +1332,19 @@ oscli                           = &fff7
     inx                                                               ; 87b0: e8          .
     stx l065a                                                         ; 87b1: 8e 5a 06    .Z.
     lda l001e                                                         ; 87b4: a5 1e       ..
-    sta l0002                                                         ; 87b6: 85 02       ..
+    sta vm_pc                                                         ; 87b6: 85 02       ..
     lda l001f                                                         ; 87b8: a5 1f       ..
     sta l0003                                                         ; 87ba: 85 03       ..
     bne interpreter_loop_no_advance                                   ; 87bc: d0 09       ..
 .interpreter_loop_advance_by_a
     clc                                                               ; 87be: 18          .
-    adc l0002                                                         ; 87bf: 65 02       e.
-    sta l0002                                                         ; 87c1: 85 02       ..
+    adc vm_pc                                                         ; 87bf: 65 02       e.
+    sta vm_pc                                                         ; 87c1: 85 02       ..
     bcc interpreter_loop_no_advance                                   ; 87c3: 90 02       ..
     inc l0003                                                         ; 87c5: e6 03       ..
 .interpreter_loop_no_advance
     ldy #0                                                            ; 87c7: a0 00       ..
-    lda (l0002),y                                                     ; 87c9: b1 02       ..
+    lda (vm_pc),y                                                     ; 87c9: b1 02       ..
     tax                                                               ; 87cb: aa          .
     lda bytecode_jump_table_low,x                                     ; 87cc: bd 07 a5    ...
     sta l0008                                                         ; 87cf: 85 08       ..
@@ -1363,7 +1363,7 @@ oscli                           = &fff7
     sta l004c                                                         ; 87e5: 85 4c       .L
 .sub_c87e7
     ldy #1                                                            ; 87e7: a0 01       ..
-    lda (l0002),y                                                     ; 87e9: b1 02       ..
+    lda (vm_pc),y                                                     ; 87e9: b1 02       ..
 .sub_c87eb
     ldx l0020                                                         ; 87eb: a6 20       .
     clc                                                               ; 87ed: 18          .
@@ -1381,11 +1381,11 @@ oscli                           = &fff7
     clc                                                               ; 87fd: 18          .
     ldy #1                                                            ; 87fe: a0 01       ..
     lda l0021,x                                                       ; 8800: b5 21       .!
-    adc (l0002),y                                                     ; 8802: 71 02       q.
+    adc (vm_pc),y                                                     ; 8802: 71 02       q.
     sta l0008                                                         ; 8804: 85 08       ..
     iny                                                               ; 8806: c8          .
     lda l0029,x                                                       ; 8807: b5 29       .)
-    adc (l0002),y                                                     ; 8809: 71 02       q.
+    adc (vm_pc),y                                                     ; 8809: 71 02       q.
     sta l0009                                                         ; 880b: 85 09       ..
     rts                                                               ; 880d: 60          `
 
@@ -1441,7 +1441,7 @@ oscli                           = &fff7
 .bytecode_opcode_03_handler
     lda something_else_table,x                                        ; 8850: bd 34 a7    .4.
     sta l004c                                                         ; 8853: 85 4c       .L
-    jsr set_l008_to_l002_plus_1                                       ; 8855: 20 9c 9a     ..
+    jsr set_l008_to_vm_pc_plus_1                                      ; 8855: 20 9c 9a     ..
     ldx l004c                                                         ; 8858: a6 4c       .L
     inx                                                               ; 885a: e8          .
     inx                                                               ; 885b: e8          .
@@ -1500,14 +1500,14 @@ oscli                           = &fff7
     jsr sub_c8a1e                                                     ; 889d: 20 1e 8a     ..
     jsr sub_c87fb                                                     ; 88a0: 20 fb 87     ..
     ldy #3                                                            ; 88a3: a0 03       ..
-    lda (l0002),y                                                     ; 88a5: b1 02       ..
+    lda (vm_pc),y                                                     ; 88a5: b1 02       ..
     tax                                                               ; 88a7: aa          .
     dex                                                               ; 88a8: ca          .
     stx l004c                                                         ; 88a9: 86 4c       .L
     jsr bytecode_opcode_7d_handler                                    ; 88ab: 20 24 96     $.
     tax                                                               ; 88ae: aa          .
     tay                                                               ; 88af: a8          .
-    lda (l0002),y                                                     ; 88b0: b1 02       ..
+    lda (vm_pc),y                                                     ; 88b0: b1 02       ..
     cmp #&ef                                                          ; 88b2: c9 ef       ..
     bne c8887                                                         ; 88b4: d0 d1       ..
     jsr bytecode_opcode_ef_handler                                    ; 88b6: 20 b2 ae     ..
@@ -1515,10 +1515,10 @@ oscli                           = &fff7
     bne c8887                                                         ; 88ba: d0 cb       ..
 .bytecode_opcode_04_handler
     iny                                                               ; 88bc: c8          .
-    lda (l0002),y                                                     ; 88bd: b1 02       ..
+    lda (vm_pc),y                                                     ; 88bd: b1 02       ..
     sta l0012                                                         ; 88bf: 85 12       ..
     lda #2                                                            ; 88c1: a9 02       ..
-    jsr set_l008_to_l002_plus_a                                       ; 88c3: 20 aa 9a     ..
+    jsr set_l008_to_vm_pc_plus_a                                      ; 88c3: 20 aa 9a     ..
     ldy #&ff                                                          ; 88c6: a0 ff       ..
 .loop_c88c8
     iny                                                               ; 88c8: c8          .
@@ -1558,7 +1558,7 @@ oscli                           = &fff7
 .bytecode_opcode_06_handler
     lda another_something_table - 5,x                                 ; 88fb: bd 2f a7    ./.
     sta l004c                                                         ; 88fe: 85 4c       .L
-    jsr set_l008_to_l002_plus_1                                       ; 8900: 20 9c 9a     ..
+    jsr set_l008_to_vm_pc_plus_1                                      ; 8900: 20 9c 9a     ..
     ldx l004c                                                         ; 8903: a6 4c       .L
     inx                                                               ; 8905: e8          .
     inx                                                               ; 8906: e8          .
@@ -1753,7 +1753,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_2e_handler
     iny                                                               ; 8a16: c8          .
-    lda (l0002),y                                                     ; 8a17: b1 02       ..
+    lda (vm_pc),y                                                     ; 8a17: b1 02       ..
     sta l0020                                                         ; 8a19: 85 20       .
     lda #2                                                            ; 8a1b: a9 02       ..
     rts                                                               ; 8a1d: 60          `
@@ -1768,7 +1768,7 @@ oscli                           = &fff7
     jsr sub_c9a42                                                     ; 8a25: 20 42 9a     B.
     clc                                                               ; 8a28: 18          .
     iny                                                               ; 8a29: c8          .
-    lda (l0002),y                                                     ; 8a2a: b1 02       ..
+    lda (vm_pc),y                                                     ; 8a2a: b1 02       ..
     ldy #0                                                            ; 8a2c: a0 00       ..
     adc (l000a),y                                                     ; 8a2e: 71 0a       q.
     sta (l000a),y                                                     ; 8a30: 91 0a       ..
@@ -1783,11 +1783,11 @@ oscli                           = &fff7
     jsr sub_c9a46                                                     ; 8a3b: 20 46 9a     F.
     clc                                                               ; 8a3e: 18          .
     iny                                                               ; 8a3f: c8          .
-    lda (l0002),y                                                     ; 8a40: b1 02       ..
+    lda (vm_pc),y                                                     ; 8a40: b1 02       ..
     iny                                                               ; 8a42: c8          .
     adc (l000a),y                                                     ; 8a43: 71 0a       q.
     sta (l000a),y                                                     ; 8a45: 91 0a       ..
-    lda (l0002),y                                                     ; 8a47: b1 02       ..
+    lda (vm_pc),y                                                     ; 8a47: b1 02       ..
     iny                                                               ; 8a49: c8          .
     adc (l000a),y                                                     ; 8a4a: 71 0a       q.
     sta (l000a),y                                                     ; 8a4c: 91 0a       ..
@@ -1817,12 +1817,12 @@ oscli                           = &fff7
     ldx #2                                                            ; 8a70: a2 02       ..
 .c8a72
     txa                                                               ; 8a72: 8a          .
-    jsr set_l008_to_l002_plus_a                                       ; 8a73: 20 aa 9a     ..
+    jsr set_l008_to_vm_pc_plus_a                                      ; 8a73: 20 aa 9a     ..
     jsr sub_c99d5                                                     ; 8a76: 20 d5 99     ..
     clc                                                               ; 8a79: 18          .
-    lda l0002                                                         ; 8a7a: a5 02       ..
+    lda vm_pc                                                         ; 8a7a: a5 02       ..
     adc l0012                                                         ; 8a7c: 65 12       e.
-    sta l0002                                                         ; 8a7e: 85 02       ..
+    sta vm_pc                                                         ; 8a7e: 85 02       ..
     lda l0003                                                         ; 8a80: a5 03       ..
     adc l0013                                                         ; 8a82: 65 13       e.
     sta l0003                                                         ; 8a84: 85 03       ..
@@ -1899,7 +1899,7 @@ oscli                           = &fff7
     jsr bytecode_opcode_b1_handler                                    ; 8af1: 20 3b 95     ;.
     ldx #5                                                            ; 8af4: a2 05       ..
     jsr bytecode_opcode_05_handler                                    ; 8af6: 20 fb 88     ..
-    jsr set_l008_to_l002_plus_2                                       ; 8af9: 20 a0 9a     ..
+    jsr set_l008_to_vm_pc_plus_2                                      ; 8af9: 20 a0 9a     ..
     ldx #3                                                            ; 8afc: a2 03       ..
     jmp c9560                                                         ; 8afe: 4c 60 95    L`.
 
@@ -1922,7 +1922,7 @@ oscli                           = &fff7
     jsr sub_c9a11                                                     ; 8b1b: 20 11 9a     ..
     lda (l0000),y                                                     ; 8b1e: b1 00       ..
     iny                                                               ; 8b20: c8          .
-    cmp (l0002),y                                                     ; 8b21: d1 02       ..
+    cmp (vm_pc),y                                                     ; 8b21: d1 02       ..
     jsr sub_c8e50                                                     ; 8b23: 20 50 8e     P.
 .loop_c8b26
     lda #2                                                            ; 8b26: a9 02       ..
@@ -2803,13 +2803,13 @@ oscli                           = &fff7
 .c905a
     jsr sub_c9ae2                                                     ; 905a: 20 e2 9a     ..
     ldy #3                                                            ; 905d: a0 03       ..
-    lda (l0002),y                                                     ; 905f: b1 02       ..
+    lda (vm_pc),y                                                     ; 905f: b1 02       ..
     dey                                                               ; 9061: 88          .
     sta (l0008),y                                                     ; 9062: 91 08       ..
-    lda (l0002),y                                                     ; 9064: b1 02       ..
+    lda (vm_pc),y                                                     ; 9064: b1 02       ..
     dey                                                               ; 9066: 88          .
     sta (l0008),y                                                     ; 9067: 91 08       ..
-    lda (l0002),y                                                     ; 9069: b1 02       ..
+    lda (vm_pc),y                                                     ; 9069: b1 02       ..
     sta l0046                                                         ; 906b: 85 46       .F
     jsr sub_c8faa                                                     ; 906d: 20 aa 8f     ..
     bcc c9084                                                         ; 9070: 90 12       ..
@@ -3526,18 +3526,18 @@ oscli                           = &fff7
     sty l0658                                                         ; 94d9: 8c 58 06    .X.
     sty l0652                                                         ; 94dc: 8c 52 06    .R.
     iny                                                               ; 94df: c8          .
-    lda (l0002),y                                                     ; 94e0: b1 02       ..
+    lda (vm_pc),y                                                     ; 94e0: b1 02       ..
     bne c94e6                                                         ; 94e2: d0 02       ..
     sta l0017                                                         ; 94e4: 85 17       ..
 .c94e6
     clc                                                               ; 94e6: 18          .
     iny                                                               ; 94e7: c8          .
     lda l001e                                                         ; 94e8: a5 1e       ..
-    adc (l0002),y                                                     ; 94ea: 71 02       q.
+    adc (vm_pc),y                                                     ; 94ea: 71 02       q.
     sta l001c                                                         ; 94ec: 85 1c       ..
     iny                                                               ; 94ee: c8          .
     lda l001f                                                         ; 94ef: a5 1f       ..
-    adc (l0002),y                                                     ; 94f1: 71 02       q.
+    adc (vm_pc),y                                                     ; 94f1: 71 02       q.
     sta l001d                                                         ; 94f3: 85 1d       ..
     lda machine_high_order_address_low                                ; 94f5: ad 00 04    ...
     bne c9510                                                         ; 94f8: d0 16       ..
@@ -3602,7 +3602,7 @@ oscli                           = &fff7
 .bytecode_opcode_df_handler
     jsr bytecode_opcode_b1_handler                                    ; 9558: 20 3b 95     ;.
 .bytecode_opcode_7c_handler
-    jsr set_l008_to_l002_plus_1                                       ; 955b: 20 9c 9a     ..
+    jsr set_l008_to_vm_pc_plus_1                                      ; 955b: 20 9c 9a     ..
     ldx #2                                                            ; 955e: a2 02       ..
 .c9560
     ldy #0                                                            ; 9560: a0 00       ..
@@ -3617,7 +3617,7 @@ oscli                           = &fff7
     clc                                                               ; 9571: 18          .
     ldy #4                                                            ; 9572: a0 04       ..
     txa                                                               ; 9574: 8a          .
-    adc l0002                                                         ; 9575: 65 02       e.
+    adc vm_pc                                                         ; 9575: 65 02       e.
     sta (l000c),y                                                     ; 9577: 91 0c       ..
     iny                                                               ; 9579: c8          .
     lda #0                                                            ; 957a: a9 00       ..
@@ -3636,7 +3636,7 @@ oscli                           = &fff7
     ldy l0016                                                         ; 9595: a4 16       ..
     lda l001e                                                         ; 9597: a5 1e       ..
     adc (l001c),y                                                     ; 9599: 71 1c       q.
-    sta l0002                                                         ; 959b: 85 02       ..
+    sta vm_pc                                                         ; 959b: 85 02       ..
     iny                                                               ; 959d: c8          .
     lda l001f                                                         ; 959e: a5 1f       ..
     adc (l001c),y                                                     ; 95a0: 71 1c       q.
@@ -3652,10 +3652,10 @@ oscli                           = &fff7
     ldy #2                                                            ; 95af: a0 02       ..
     jsr sub_c9afb                                                     ; 95b1: 20 fb 9a     ..
     iny                                                               ; 95b4: c8          .
-    lda (l0002),y                                                     ; 95b5: b1 02       ..
+    lda (vm_pc),y                                                     ; 95b5: b1 02       ..
     sta l004a                                                         ; 95b7: 85 4a       .J
     iny                                                               ; 95b9: c8          .
-    lda (l0002),y                                                     ; 95ba: b1 02       ..
+    lda (vm_pc),y                                                     ; 95ba: b1 02       ..
     sta l004b                                                         ; 95bc: 85 4b       .K
     jsr sub_c95d0                                                     ; 95be: 20 d0 95     ..
     lda #6                                                            ; 95c1: a9 06       ..
@@ -3666,11 +3666,11 @@ oscli                           = &fff7
     ldy #2                                                            ; 95c6: a0 02       ..
     jsr sub_c9b07                                                     ; 95c8: 20 07 9b     ..
     iny                                                               ; 95cb: c8          .
-    lda (l0002),y                                                     ; 95cc: b1 02       ..
+    lda (vm_pc),y                                                     ; 95cc: b1 02       ..
     sta l004a                                                         ; 95ce: 85 4a       .J
 .sub_c95d0
     ldy #1                                                            ; 95d0: a0 01       ..
-    lda (l0002),y                                                     ; 95d2: b1 02       ..
+    lda (vm_pc),y                                                     ; 95d2: b1 02       ..
     ldy #6                                                            ; 95d4: a0 06       ..
     sta (l001a),y                                                     ; 95d6: 91 1a       ..
     tax                                                               ; 95d8: aa          .
@@ -3726,7 +3726,7 @@ oscli                           = &fff7
     sta l0003                                                         ; 9634: 85 03       ..
     dey                                                               ; 9636: 88          .
     lda (l001a),y                                                     ; 9637: b1 1a       ..
-    sta l0002                                                         ; 9639: 85 02       ..
+    sta vm_pc                                                         ; 9639: 85 02       ..
     dey                                                               ; 963b: 88          .
     lda (l001a),y                                                     ; 963c: b1 1a       ..
     sta l0029,x                                                       ; 963e: 95 29       .)
@@ -3884,14 +3884,14 @@ oscli                           = &fff7
     jsr sub_c8a1e                                                     ; 9732: 20 1e 8a     ..
 .c9735
     ldy #2                                                            ; 9735: a0 02       ..
-    lda (l0002),y                                                     ; 9737: b1 02       ..
+    lda (vm_pc),y                                                     ; 9737: b1 02       ..
     tax                                                               ; 9739: aa          .
     dey                                                               ; 973a: 88          .
-    lda (l0002),y                                                     ; 973b: b1 02       ..
+    lda (vm_pc),y                                                     ; 973b: b1 02       ..
 .c973d
     clc                                                               ; 973d: 18          .
     adc l001e                                                         ; 973e: 65 1e       e.
-    sta l0002                                                         ; 9740: 85 02       ..
+    sta vm_pc                                                         ; 9740: 85 02       ..
     txa                                                               ; 9742: 8a          .
     adc l001f                                                         ; 9743: 65 1f       e.
     sta l0003                                                         ; 9745: 85 03       ..
@@ -3910,13 +3910,13 @@ oscli                           = &fff7
 .loop_c9758
     ldy #1                                                            ; 9758: a0 01       ..
     ldx #0                                                            ; 975a: a2 00       ..
-    lda (l0002),y                                                     ; 975c: b1 02       ..
+    lda (vm_pc),y                                                     ; 975c: b1 02       ..
     bpl c9761                                                         ; 975e: 10 01       ..
     dex                                                               ; 9760: ca          .
 .c9761
     clc                                                               ; 9761: 18          .
-    adc l0002                                                         ; 9762: 65 02       e.
-    sta l0002                                                         ; 9764: 85 02       ..
+    adc vm_pc                                                         ; 9762: 65 02       e.
+    sta vm_pc                                                         ; 9764: 85 02       ..
     txa                                                               ; 9766: 8a          .
     adc l0003                                                         ; 9767: 65 03       e.
     sta l0003                                                         ; 9769: 85 03       ..
@@ -3932,19 +3932,19 @@ oscli                           = &fff7
 
 .bytecode_opcode_48_handler
     ldy #3                                                            ; 9779: a0 03       ..
-    lda (l0002),y                                                     ; 977b: b1 02       ..
+    lda (vm_pc),y                                                     ; 977b: b1 02       ..
     sta l0020                                                         ; 977d: 85 20       .
     tax                                                               ; 977f: aa          .
     clc                                                               ; 9780: 18          .
     iny                                                               ; 9781: c8          .
     lda l0021,x                                                       ; 9782: b5 21       .!
     sta l001a                                                         ; 9784: 85 1a       ..
-    adc (l0002),y                                                     ; 9786: 71 02       q.
+    adc (vm_pc),y                                                     ; 9786: 71 02       q.
     sta l0000                                                         ; 9788: 85 00       ..
     iny                                                               ; 978a: c8          .
     lda l0029,x                                                       ; 978b: b5 29       .)
     sta l001b                                                         ; 978d: 85 1b       ..
-    adc (l0002),y                                                     ; 978f: 71 02       q.
+    adc (vm_pc),y                                                     ; 978f: 71 02       q.
     sta l0001                                                         ; 9791: 85 01       ..
     ldx l0000                                                         ; 9793: a6 00       ..
     jsr c90e5                                                         ; 9795: 20 e5 90     ..
@@ -4292,7 +4292,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_50_handler
     iny                                                               ; 99a3: c8          .
-    lda (l0002),y                                                     ; 99a4: b1 02       ..
+    lda (vm_pc),y                                                     ; 99a4: b1 02       ..
     sta l065a                                                         ; 99a6: 8d 5a 06    .Z.
     lda #2                                                            ; 99a9: a9 02       ..
     rts                                                               ; 99ab: 60          `
@@ -4469,20 +4469,20 @@ oscli                           = &fff7
     sta l000d                                                         ; 9a99: 85 0d       ..
     rts                                                               ; 9a9b: 60          `
 
-.set_l008_to_l002_plus_1
+.set_l008_to_vm_pc_plus_1
     lda #1                                                            ; 9a9c: a9 01       ..
-    bne set_l008_to_l002_plus_a                                       ; 9a9e: d0 0a       ..
-.set_l008_to_l002_plus_2
+    bne set_l008_to_vm_pc_plus_a                                      ; 9a9e: d0 0a       ..
+.set_l008_to_vm_pc_plus_2
     lda #2                                                            ; 9aa0: a9 02       ..
-    bne set_l008_to_l002_plus_a                                       ; 9aa2: d0 06       ..
-.set_l008_to_l002_plus_4
+    bne set_l008_to_vm_pc_plus_a                                      ; 9aa2: d0 06       ..
+.set_l008_to_vm_pc_plus_4
     lda #4                                                            ; 9aa4: a9 04       ..
-    bne set_l008_to_l002_plus_a                                       ; 9aa6: d0 02       ..
-.set_l008_to_l002_plus_5
+    bne set_l008_to_vm_pc_plus_a                                      ; 9aa6: d0 02       ..
+.set_l008_to_vm_pc_plus_5
     lda #5                                                            ; 9aa8: a9 05       ..
-.set_l008_to_l002_plus_a
+.set_l008_to_vm_pc_plus_a
     clc                                                               ; 9aaa: 18          .
-    adc l0002                                                         ; 9aab: 65 02       e.
+    adc vm_pc                                                         ; 9aab: 65 02       e.
     sta l0008                                                         ; 9aad: 85 08       ..
     lda #0                                                            ; 9aaf: a9 00       ..
     adc l0003                                                         ; 9ab1: 65 03       e.
@@ -4491,7 +4491,7 @@ oscli                           = &fff7
 
 .sub_c9ab6
     clc                                                               ; 9ab6: 18          .
-    lda l0002                                                         ; 9ab7: a5 02       ..
+    lda vm_pc                                                         ; 9ab7: a5 02       ..
     adc #1                                                            ; 9ab9: 69 01       i.
     sta l000a                                                         ; 9abb: 85 0a       ..
     lda l0003                                                         ; 9abd: a5 03       ..
@@ -4538,17 +4538,17 @@ oscli                           = &fff7
 .sub_c9af9
     ldy #1                                                            ; 9af9: a0 01       ..
 .sub_c9afb
-    lda (l0002),y                                                     ; 9afb: b1 02       ..
+    lda (vm_pc),y                                                     ; 9afb: b1 02       ..
     sta l0012                                                         ; 9afd: 85 12       ..
     iny                                                               ; 9aff: c8          .
-    lda (l0002),y                                                     ; 9b00: b1 02       ..
+    lda (vm_pc),y                                                     ; 9b00: b1 02       ..
     sta l0013                                                         ; 9b02: 85 13       ..
     rts                                                               ; 9b04: 60          `
 
 .sub_c9b05
     ldy #1                                                            ; 9b05: a0 01       ..
 .sub_c9b07
-    lda (l0002),y                                                     ; 9b07: b1 02       ..
+    lda (vm_pc),y                                                     ; 9b07: b1 02       ..
     sta l0012                                                         ; 9b09: 85 12       ..
     lda #0                                                            ; 9b0b: a9 00       ..
     sta l0013                                                         ; 9b0d: 85 13       ..
@@ -4556,10 +4556,10 @@ oscli                           = &fff7
 
 .bytecode_opcode_42_handler
     ldy #1                                                            ; 9b10: a0 01       ..
-    lda (l0002),y                                                     ; 9b12: b1 02       ..
+    lda (vm_pc),y                                                     ; 9b12: b1 02       ..
     jsr c9a27                                                         ; 9b14: 20 27 9a     '.
     iny                                                               ; 9b17: c8          .
-    lda (l0002),y                                                     ; 9b18: b1 02       ..
+    lda (vm_pc),y                                                     ; 9b18: b1 02       ..
 .sub_c9b1a
     sta l0015                                                         ; 9b1a: 85 15       ..
     ldy #0                                                            ; 9b1c: a0 00       ..
@@ -4683,11 +4683,11 @@ oscli                           = &fff7
     rts                                                               ; 9bd4: 60          `
 
 .bytecode_opcode_d6_handler
-    jsr set_l008_to_l002_plus_4                                       ; 9bd5: 20 a4 9a     ..
+    jsr set_l008_to_vm_pc_plus_4                                      ; 9bd5: 20 a4 9a     ..
     jsr sub_c9af1                                                     ; 9bd8: 20 f1 9a     ..
     sta l0014                                                         ; 9bdb: 85 14       ..
     ldy #3                                                            ; 9bdd: a0 03       ..
-    lda (l0002),y                                                     ; 9bdf: b1 02       ..
+    lda (vm_pc),y                                                     ; 9bdf: b1 02       ..
     tax                                                               ; 9be1: aa          .
     ldy #0                                                            ; 9be2: a0 00       ..
 .loop_c9be4
@@ -4708,13 +4708,13 @@ oscli                           = &fff7
     ldy #2                                                            ; 9bfa: a0 02       ..
     bne c9c1c                                                         ; 9bfc: d0 1e       ..
 .bytecode_opcode_d8_handler
-    jsr set_l008_to_l002_plus_5                                       ; 9bfe: 20 a8 9a     ..
+    jsr set_l008_to_vm_pc_plus_5                                      ; 9bfe: 20 a8 9a     ..
     jsr sub_c8b88                                                     ; 9c01: 20 88 8b     ..
     ldy #3                                                            ; 9c04: a0 03       ..
-    lda (l0002),y                                                     ; 9c06: b1 02       ..
+    lda (vm_pc),y                                                     ; 9c06: b1 02       ..
     tax                                                               ; 9c08: aa          .
     iny                                                               ; 9c09: c8          .
-    lda (l0002),y                                                     ; 9c0a: b1 02       ..
+    lda (vm_pc),y                                                     ; 9c0a: b1 02       ..
     sta l0016                                                         ; 9c0c: 85 16       ..
 .c9c0e
     ldy #3                                                            ; 9c0e: a0 03       ..
@@ -4750,9 +4750,9 @@ oscli                           = &fff7
     bne c9c0e                                                         ; 9c3a: d0 d2       ..
 .c9c3c
     ldy #1                                                            ; 9c3c: a0 01       ..
-    lda (l0002),y                                                     ; 9c3e: b1 02       ..
+    lda (vm_pc),y                                                     ; 9c3e: b1 02       ..
     iny                                                               ; 9c40: c8          .
-    ora (l0002),y                                                     ; 9c41: 11 02       ..
+    ora (vm_pc),y                                                     ; 9c41: 11 02       ..
     beq c9c48                                                         ; 9c43: f0 03       ..
     jmp c9735                                                         ; 9c45: 4c 35 97    L5.
 
@@ -4766,26 +4766,26 @@ oscli                           = &fff7
     equb 0                                                            ; 9c53: 00          .
 
 .bytecode_opcode_d5_handler
-    jsr set_l008_to_l002_plus_5                                       ; 9c54: 20 a8 9a     ..
+    jsr set_l008_to_vm_pc_plus_5                                      ; 9c54: 20 a8 9a     ..
     jsr sub_c9af1                                                     ; 9c57: 20 f1 9a     ..
     sec                                                               ; 9c5a: 38          8
     ldy #3                                                            ; 9c5b: a0 03       ..
-    sbc (l0002),y                                                     ; 9c5d: f1 02       ..
+    sbc (vm_pc),y                                                     ; 9c5d: f1 02       ..
     bcc c9c3c                                                         ; 9c5f: 90 db       ..
     iny                                                               ; 9c61: c8          .
-    cmp (l0002),y                                                     ; 9c62: d1 02       ..
+    cmp (vm_pc),y                                                     ; 9c62: d1 02       ..
     bcs c9c3c                                                         ; 9c64: b0 d6       ..
     bcc c9c9d                                                         ; 9c66: 90 35       .5
 .bytecode_opcode_d7_handler
     lda #9                                                            ; 9c68: a9 09       ..
-    jsr set_l008_to_l002_plus_a                                       ; 9c6a: 20 aa 9a     ..
+    jsr set_l008_to_vm_pc_plus_a                                      ; 9c6a: 20 aa 9a     ..
     jsr sub_c8b88                                                     ; 9c6d: 20 88 8b     ..
     sec                                                               ; 9c70: 38          8
     ldx #4                                                            ; 9c71: a2 04       ..
     ldy #3                                                            ; 9c73: a0 03       ..
 .loop_c9c75
     lda l0067,y                                                       ; 9c75: b9 67 00    .g.
-    sbc (l0002),y                                                     ; 9c78: f1 02       ..
+    sbc (vm_pc),y                                                     ; 9c78: f1 02       ..
     sta l0067,y                                                       ; 9c7a: 99 67 00    .g.
     iny                                                               ; 9c7d: c8          .
     dex                                                               ; 9c7e: ca          .
@@ -4795,10 +4795,10 @@ oscli                           = &fff7
     bne c9c3c                                                         ; 9c85: d0 b5       ..
     ldy #7                                                            ; 9c87: a0 07       ..
     lda l006a                                                         ; 9c89: a5 6a       .j
-    cmp (l0002),y                                                     ; 9c8b: d1 02       ..
+    cmp (vm_pc),y                                                     ; 9c8b: d1 02       ..
     iny                                                               ; 9c8d: c8          .
     lda l006b                                                         ; 9c8e: a5 6b       .k
-    sbc (l0002),y                                                     ; 9c90: f1 02       ..
+    sbc (vm_pc),y                                                     ; 9c90: f1 02       ..
     bcs c9c3c                                                         ; 9c92: b0 a8       ..
     lda l006b                                                         ; 9c94: a5 6b       .k
     asl a                                                             ; 9c96: 0a          .
@@ -4839,7 +4839,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_f1_handler
     jsr c9735                                                         ; 9cc6: 20 35 97     5.
-    lda l0002                                                         ; 9cc9: a5 02       ..
+    lda vm_pc                                                         ; 9cc9: a5 02       ..
     sta l001e                                                         ; 9ccb: 85 1e       ..
     lda l0003                                                         ; 9ccd: a5 03       ..
     sta l001f                                                         ; 9ccf: 85 1f       ..
@@ -4946,7 +4946,7 @@ oscli                           = &fff7
     jsr sub_c9ad3                                                     ; 9d75: 20 d3 9a     ..
     ldy #1                                                            ; 9d78: a0 01       ..
 .sub_c9d7a
-    lda (l0002),y                                                     ; 9d7a: b1 02       ..
+    lda (vm_pc),y                                                     ; 9d7a: b1 02       ..
     tay                                                               ; 9d7c: a8          .
     lda #&0d                                                          ; 9d7d: a9 0d       ..
     sta l041a,y                                                       ; 9d7f: 99 1a 04    ...
@@ -6658,7 +6658,7 @@ oscli                           = &fff7
 .interpreter_end
 .bytecode_opcode_e3_handler
     iny                                                               ; a752: c8          .
-    lda (l0002),y                                                     ; a753: b1 02       ..
+    lda (vm_pc),y                                                     ; a753: b1 02       ..
     tax                                                               ; a755: aa          .
     asl a                                                             ; a756: 0a          .
     asl a                                                             ; a757: 0a          .
@@ -6865,7 +6865,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_fd_handler
     iny                                                               ; a89e: c8          .
-    lda (l0002),y                                                     ; a89f: b1 02       ..
+    lda (vm_pc),y                                                     ; a89f: b1 02       ..
     tax                                                               ; a8a1: aa          .
     lda #0                                                            ; a8a2: a9 00       ..
     jsr sub_ca8b1                                                     ; a8a4: 20 b1 a8     ..
@@ -6874,10 +6874,10 @@ oscli                           = &fff7
 
 .bytecode_opcode_4e_handler
     iny                                                               ; a8aa: c8          .
-    lda (l0002),y                                                     ; a8ab: b1 02       ..
+    lda (vm_pc),y                                                     ; a8ab: b1 02       ..
     tax                                                               ; a8ad: aa          .
     iny                                                               ; a8ae: c8          .
-    lda (l0002),y                                                     ; a8af: b1 02       ..
+    lda (vm_pc),y                                                     ; a8af: b1 02       ..
 .sub_ca8b1
     stx line_number_low                                               ; a8b1: 8e 5b 06    .[.
     sta line_number_high                                              ; a8b4: 8d 5c 06    .\.
@@ -6902,7 +6902,7 @@ oscli                           = &fff7
 .bytecode_opcode_e0_handler
     jsr sub_c9a3a                                                     ; a8d4: 20 3a 9a     :.
     iny                                                               ; a8d7: c8          .
-    lda (l0002),y                                                     ; a8d8: b1 02       ..
+    lda (vm_pc),y                                                     ; a8d8: b1 02       ..
     beq ca8e6                                                         ; a8da: f0 0a       ..
     tax                                                               ; a8dc: aa          .
 .loop_ca8dd
@@ -6913,7 +6913,7 @@ oscli                           = &fff7
     bne loop_ca8dd                                                    ; a8e4: d0 f7       ..
 .ca8e6
     ldy #2                                                            ; a8e6: a0 02       ..
-    lda (l0002),y                                                     ; a8e8: b1 02       ..
+    lda (vm_pc),y                                                     ; a8e8: b1 02       ..
     tax                                                               ; a8ea: aa          .
 .loop_ca8eb
     inx                                                               ; a8eb: e8          .
@@ -6938,10 +6938,10 @@ oscli                           = &fff7
 .ca908
     lda (l000c),y                                                     ; a908: b1 0c       ..
     iny                                                               ; a90a: c8          .
-    cmp (l0002),y                                                     ; a90b: d1 02       ..
+    cmp (vm_pc),y                                                     ; a90b: d1 02       ..
     bcc ca916                                                         ; a90d: 90 07       ..
     iny                                                               ; a90f: c8          .
-    cmp (l0002),y                                                     ; a910: d1 02       ..
+    cmp (vm_pc),y                                                     ; a910: d1 02       ..
     bcc ca8d1                                                         ; a912: 90 bd       ..
     beq ca8d1                                                         ; a914: f0 bb       ..
 .ca916
@@ -6969,7 +6969,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_4d_handler
     iny                                                               ; a939: c8          .
-    lda (l0002),y                                                     ; a93a: b1 02       ..
+    lda (vm_pc),y                                                     ; a93a: b1 02       ..
     tax                                                               ; a93c: aa          .
     lda l0418                                                         ; a93d: ad 18 04    ...
     beq ca95d                                                         ; a940: f0 1b       ..
@@ -6981,7 +6981,7 @@ oscli                           = &fff7
     ldx l0015                                                         ; a949: a6 15       ..
     ldy #2                                                            ; a94b: a0 02       ..
 .ca94d
-    lda (l0002),y                                                     ; a94d: b1 02       ..
+    lda (vm_pc),y                                                     ; a94d: b1 02       ..
     jsr oswrch                                                        ; a94f: 20 ee ff     ..            ; Write character
     iny                                                               ; a952: c8          .
     dex                                                               ; a953: ca          .
@@ -7663,7 +7663,7 @@ oscli                           = &fff7
     jsr sub_c9ad3                                                     ; adc8: 20 d3 9a     ..
     jsr sub_c9ae2                                                     ; adcb: 20 e2 9a     ..
     ldy #1                                                            ; adce: a0 01       ..
-    lda (l0002),y                                                     ; add0: b1 02       ..
+    lda (vm_pc),y                                                     ; add0: b1 02       ..
     sta l0033                                                         ; add2: 85 33       .3
     and #&7f                                                          ; add4: 29 7f       ).
     sta l0012                                                         ; add6: 85 12       ..
@@ -7732,10 +7732,10 @@ oscli                           = &fff7
 
 .bytecode_opcode_51_handler
     iny                                                               ; ae3b: c8          .
-    lda (l0002),y                                                     ; ae3c: b1 02       ..
+    lda (vm_pc),y                                                     ; ae3c: b1 02       ..
     jsr c9a54                                                         ; ae3e: 20 54 9a     T.
     iny                                                               ; ae41: c8          .
-    lda (l0002),y                                                     ; ae42: b1 02       ..
+    lda (vm_pc),y                                                     ; ae42: b1 02       ..
     sta l0015                                                         ; ae44: 85 15       ..
     lda (l000a),y                                                     ; ae46: b1 0a       ..
     sta l004a                                                         ; ae48: 85 4a       .J
@@ -7892,7 +7892,7 @@ oscli                           = &fff7
     ldx oshwm_low_zp                                                  ; af44: a6 04       ..
     ldy oshwm_high_zp                                                 ; af46: a4 05       ..
 .caf48
-    stx l0002                                                         ; af48: 86 02       ..
+    stx vm_pc                                                         ; af48: 86 02       ..
     sty l0003                                                         ; af4a: 84 03       ..
     jsr sub_cafd9                                                     ; af4c: 20 d9 af     ..
     stx l0000                                                         ; af4f: 86 00       ..
@@ -7901,7 +7901,7 @@ oscli                           = &fff7
     ldy oshwm_high_zp                                                 ; af55: a4 05       ..
     jsr cb404                                                         ; af57: 20 04 b4     ..
     lda l0027                                                         ; af5a: a5 27       .'
-    sta l0002                                                         ; af5c: 85 02       ..
+    sta vm_pc                                                         ; af5c: 85 02       ..
     lda l0028                                                         ; af5e: a5 28       .(
     sta l0003                                                         ; af60: 85 03       ..
     lda simplified_machine_type                                       ; af62: ad 17 04    ...
@@ -8245,7 +8245,7 @@ oscli                           = &fff7
 
 .sub_cb1a1
     lda l0027                                                         ; b1a1: a5 27       .'
-    cmp l0002                                                         ; b1a3: c5 02       ..
+    cmp vm_pc                                                         ; b1a3: c5 02       ..
     lda l0028                                                         ; b1a5: a5 28       .(
     sbc l0003                                                         ; b1a7: e5 03       ..
     rts                                                               ; b1a9: 60          `
@@ -8286,7 +8286,7 @@ oscli                           = &fff7
     tay                                                               ; b1d6: a8          .
     stx l000c                                                         ; b1d7: 86 0c       ..
     sty l000d                                                         ; b1d9: 84 0d       ..
-    cpx l0002                                                         ; b1db: e4 02       ..
+    cpx vm_pc                                                         ; b1db: e4 02       ..
     sbc l0003                                                         ; b1dd: e5 03       ..
     bcc cb1e2                                                         ; b1df: 90 01       ..
     rts                                                               ; b1e1: 60          `
@@ -8582,7 +8582,7 @@ oscli                           = &fff7
     rts                                                               ; b3b0: 60          `
 
 .sub_cb3b1
-    ldx l0002                                                         ; b3b1: a6 02       ..
+    ldx vm_pc                                                         ; b3b1: a6 02       ..
     ldy l0003                                                         ; b3b3: a4 03       ..
     stx l0010                                                         ; b3b5: 86 10       ..
     sty l0011                                                         ; b3b7: 84 11       ..
@@ -8637,9 +8637,9 @@ oscli                           = &fff7
     stx l000a                                                         ; b404: 86 0a       ..
     sty l000b                                                         ; b406: 84 0b       ..
     sec                                                               ; b408: 38          8
-    lda l0002                                                         ; b409: a5 02       ..
+    lda vm_pc                                                         ; b409: a5 02       ..
     sbc l000a                                                         ; b40b: e5 0a       ..
-    stx l0002                                                         ; b40d: 86 02       ..
+    stx vm_pc                                                         ; b40d: 86 02       ..
     tax                                                               ; b40f: aa          .
     lda l0003                                                         ; b410: a5 03       ..
     sbc l000b                                                         ; b412: e5 0b       ..
@@ -8692,12 +8692,12 @@ oscli                           = &fff7
 .cb458
     ldx l0010                                                         ; b458: a6 10       ..
     ldy l0011                                                         ; b45a: a4 11       ..
-.bulk_copy_from_l0000_to_l0002
+.bulk_copy_from_l0000_to_vm_pc
     lda l0000                                                         ; b45c: a5 00       ..
     sta l000a                                                         ; b45e: 85 0a       ..
     lda l0001                                                         ; b460: a5 01       ..
     sta l000b                                                         ; b462: 85 0b       ..
-    lda l0002                                                         ; b464: a5 02       ..
+    lda vm_pc                                                         ; b464: a5 02       ..
     sta l000e                                                         ; b466: 85 0e       ..
     lda l0003                                                         ; b468: a5 03       ..
     sta l000f                                                         ; b46a: 85 0f       ..
@@ -8712,8 +8712,8 @@ oscli                           = &fff7
     tay                                                               ; b478: a8          .
     clc                                                               ; b479: 18          .
     txa                                                               ; b47a: 8a          .
-    adc l0002                                                         ; b47b: 65 02       e.
-    sta l0002                                                         ; b47d: 85 02       ..
+    adc vm_pc                                                         ; b47b: 65 02       e.
+    sta vm_pc                                                         ; b47d: 85 02       ..
     tya                                                               ; b47f: 98          .
     adc l0003                                                         ; b480: 65 03       e.
     sta l0003                                                         ; b482: 85 03       ..
@@ -8733,7 +8733,7 @@ oscli                           = &fff7
     lda #0                                                            ; b497: a9 00       ..
     adc l0001                                                         ; b499: 65 01       e.
     tay                                                               ; b49b: a8          .
-    jmp bulk_copy_from_l0000_to_l0002                                 ; b49c: 4c 5c b4    L\.
+    jmp bulk_copy_from_l0000_to_vm_pc                                 ; b49c: 4c 5c b4    L\.
 
 .sub_cb49f
     sec                                                               ; b49f: 38          8
@@ -9122,7 +9122,7 @@ oscli                           = &fff7
 .sub_cb727
     ldx l0029                                                         ; b727: a6 29       .)
     ldy l002a                                                         ; b729: a4 2a       .*
-    jmp bulk_copy_from_l0000_to_l0002                                 ; b72b: 4c 5c b4    L\.
+    jmp bulk_copy_from_l0000_to_vm_pc                                 ; b72b: 4c 5c b4    L\.
 
 .something_10_handler
     lda l0033                                                         ; b72e: a5 33       .3
@@ -9171,11 +9171,11 @@ oscli                           = &fff7
 
 .sub_cb77e
     lda oshwm_low_zp                                                  ; b77e: a5 04       ..
-    sta l0002                                                         ; b780: 85 02       ..
+    sta vm_pc                                                         ; b780: 85 02       ..
     lda oshwm_high_zp                                                 ; b782: a5 05       ..
     sta l0003                                                         ; b784: 85 03       ..
     jsr sub_cb727                                                     ; b786: 20 27 b7     '.
-    lda l0002                                                         ; b789: a5 02       ..
+    lda vm_pc                                                         ; b789: a5 02       ..
     sta l040b                                                         ; b78b: 8d 0b 04    ...
     lda l0003                                                         ; b78e: a5 03       ..
     sta l040e                                                         ; b790: 8d 0e 04    ...
@@ -9207,16 +9207,16 @@ oscli                           = &fff7
     jsr sub_cb711                                                     ; b7c2: 20 11 b7     ..
     ldx l004c                                                         ; b7c5: a6 4c       .L
     ldy l004d                                                         ; b7c7: a4 4d       .M
-    jsr bulk_copy_from_l0000_to_l0002                                 ; b7c9: 20 5c b4     \.
+    jsr bulk_copy_from_l0000_to_vm_pc                                 ; b7c9: 20 5c b4     \.
 .cb7cc
-    lda l0002                                                         ; b7cc: a5 02       ..
+    lda vm_pc                                                         ; b7cc: a5 02       ..
     sta l000c                                                         ; b7ce: 85 0c       ..
     lda l0003                                                         ; b7d0: a5 03       ..
     sta l000d                                                         ; b7d2: 85 0d       ..
     jsr sub_cb359                                                     ; b7d4: 20 59 b3     Y.
     sta l0014                                                         ; b7d7: 85 14       ..
     sec                                                               ; b7d9: 38          8
-    lda l0002                                                         ; b7da: a5 02       ..
+    lda vm_pc                                                         ; b7da: a5 02       ..
     sbc l0014                                                         ; b7dc: e5 14       ..
     tax                                                               ; b7de: aa          .
     lda l0003                                                         ; b7df: a5 03       ..
@@ -9232,13 +9232,13 @@ oscli                           = &fff7
     nop                                                               ; b7ee: ea          .
     jsr sub_cb810                                                     ; b7ef: 20 10 b8     ..
     jsr sub_cb487                                                     ; b7f2: 20 87 b4     ..
-    lda l0002                                                         ; b7f5: a5 02       ..
+    lda vm_pc                                                         ; b7f5: a5 02       ..
     sta l0008                                                         ; b7f7: 85 08       ..
     lda l0003                                                         ; b7f9: a5 03       ..
     ldx l0000                                                         ; b7fb: a6 00       ..
     ldy l0001                                                         ; b7fd: a4 01       ..
     jsr sub_c859b                                                     ; b7ff: 20 9b 85     ..
-    stx l0002                                                         ; b802: 86 02       ..
+    stx vm_pc                                                         ; b802: 86 02       ..
     sty l0003                                                         ; b804: 84 03       ..
     ldx l0008                                                         ; b806: a6 08       ..
     ldy l0009                                                         ; b808: a4 09       ..
@@ -9650,7 +9650,7 @@ oscli                           = &fff7
     lda l0052                                                         ; bab8: a5 52       .R
     bne cbad5                                                         ; baba: d0 19       ..
     jsr sub_cbc7b                                                     ; babc: 20 7b bc     {.
-    lda l0002                                                         ; babf: a5 02       ..
+    lda vm_pc                                                         ; babf: a5 02       ..
     sta l0050                                                         ; bac1: 85 50       .P
     lda l0003                                                         ; bac3: a5 03       ..
     sta l0051                                                         ; bac5: 85 51       .Q
@@ -9832,7 +9832,7 @@ oscli                           = &fff7
     lda l003c                                                         ; bbe8: a5 3c       .<
     sta l0017                                                         ; bbea: 85 17       ..
 .cbbec
-    lda l0002                                                         ; bbec: a5 02       ..
+    lda vm_pc                                                         ; bbec: a5 02       ..
     cmp l0018                                                         ; bbee: c5 18       ..
     lda l0003                                                         ; bbf0: a5 03       ..
     sbc l0019                                                         ; bbf2: e5 19       ..
@@ -9879,8 +9879,8 @@ oscli                           = &fff7
     lda (l000c),y                                                     ; bc41: b1 0c       ..
 .cbc43
     ldx #0                                                            ; bc43: a2 00       ..
-    sta (l0002,x)                                                     ; bc45: 81 02       ..
-    inc l0002                                                         ; bc47: e6 02       ..
+    sta (vm_pc,x)                                                     ; bc45: 81 02       ..
+    inc vm_pc                                                         ; bc47: e6 02       ..
     bne cbbec                                                         ; bc49: d0 a1       ..
     inc l0003                                                         ; bc4b: e6 03       ..
     bne cbbec                                                         ; bc4d: d0 9d       ..
@@ -9892,15 +9892,15 @@ oscli                           = &fff7
     sta l000a                                                         ; bc55: 85 0a       ..
     lda l005e,y                                                       ; bc57: b9 5e 00    .^.
     sta l000b                                                         ; bc5a: 85 0b       ..
-    lda l0002                                                         ; bc5c: a5 02       ..
+    lda vm_pc                                                         ; bc5c: a5 02       ..
     sta l000e                                                         ; bc5e: 85 0e       ..
     lda l0003                                                         ; bc60: a5 03       ..
     sta l000f                                                         ; bc62: 85 0f       ..
     clc                                                               ; bc64: 18          .
     lda l0634,y                                                       ; bc65: b9 34 06    .4.
     tax                                                               ; bc68: aa          .
-    adc l0002                                                         ; bc69: 65 02       e.
-    sta l0002                                                         ; bc6b: 85 02       ..
+    adc vm_pc                                                         ; bc69: 65 02       e.
+    sta vm_pc                                                         ; bc6b: 85 02       ..
     lda l063c,y                                                       ; bc6d: b9 3c 06    .<.
     tay                                                               ; bc70: a8          .
     adc l0003                                                         ; bc71: 65 03       e.
@@ -9911,7 +9911,7 @@ oscli                           = &fff7
 .sub_cbc7b
     ldx l0018                                                         ; bc7b: a6 18       ..
     ldy l0019                                                         ; bc7d: a4 19       ..
-    jmp bulk_copy_from_l0000_to_l0002                                 ; bc7f: 4c 5c b4    L\.
+    jmp bulk_copy_from_l0000_to_vm_pc                                 ; bc7f: 4c 5c b4    L\.
 
 .something_04_handler
     jsr extra_fancy_print_nop_terminated_inlne                        ; bc82: 20 70 b2     p.
@@ -10120,7 +10120,7 @@ oscli                           = &fff7
     lda l0001                                                         ; bdf1: a5 01       ..
     sbc l0023                                                         ; bdf3: e5 23       .#
     bcc cbdb4                                                         ; bdf5: 90 bd       ..
-    lda l0002                                                         ; bdf7: a5 02       ..
+    lda vm_pc                                                         ; bdf7: a5 02       ..
     sta l0021                                                         ; bdf9: 85 21       .!
     lda l0003                                                         ; bdfb: a5 03       ..
     sta l0023                                                         ; bdfd: 85 23       .#
@@ -10132,7 +10132,7 @@ oscli                           = &fff7
 .sub_cbe06
     sec                                                               ; be06: 38          8
     lda l0000                                                         ; be07: a5 00       ..
-    sbc l0002                                                         ; be09: e5 02       ..
+    sbc vm_pc                                                         ; be09: e5 02       ..
     sta l000c                                                         ; be0b: 85 0c       ..
     lda l0001                                                         ; be0d: a5 01       ..
     sbc l0003                                                         ; be0f: e5 03       ..
@@ -10237,7 +10237,7 @@ oscli                           = &fff7
     sta l000e                                                         ; beb6: 85 0e       ..
     lda l0023                                                         ; beb8: a5 23       .#
     sta l000f                                                         ; beba: 85 0f       ..
-    ldx l0002                                                         ; bebc: a6 02       ..
+    ldx vm_pc                                                         ; bebc: a6 02       ..
     ldy l0003                                                         ; bebe: a4 03       ..
     bne cbed2                                                         ; bec0: d0 10       ..
 .cbec2
@@ -10943,7 +10943,6 @@ oscli                           = &fff7
 ;     cbf4b
 ;     l0000
 ;     l0001
-;     l0002
 ;     l0003
 ;     l0006
 ;     l0007

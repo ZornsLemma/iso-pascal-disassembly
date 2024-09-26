@@ -40,6 +40,8 @@ entry(0x80e9, "fancy_print_error_at_yx")
 label(0x65b, "line_number_low") # TODO GUESS
 label(0x65c, "line_number_high") # TODO GUESS
 
+label(0x2, "vm_pc")
+
 label(0x8095, "osbyte_163_192_x_minus_1_table")
 byte(0x8095, 3)
 comment(0x8075, "Set the last break type to the value from our table corresponding to the OSBYTE 163,192 Y.")
@@ -165,11 +167,11 @@ entry(0x9184, "set_yx_to_41a")
 
 entry(0x92d9, "oswrch_or_osbput")
 
-entry(0x9a9c, "set_l008_to_l002_plus_1")
-entry(0x9aa0, "set_l008_to_l002_plus_2")
-entry(0x9aa4, "set_l008_to_l002_plus_4")
-entry(0x9aa8, "set_l008_to_l002_plus_5")
-entry(0x9aaa, "set_l008_to_l002_plus_a")
+entry(0x9a9c, "set_l008_to_vm_pc_plus_1")
+entry(0x9aa0, "set_l008_to_vm_pc_plus_2")
+entry(0x9aa4, "set_l008_to_vm_pc_plus_4")
+entry(0x9aa8, "set_l008_to_vm_pc_plus_5")
+entry(0x9aaa, "set_l008_to_vm_pc_plus_a")
 
 entry(0xa493, "zero_misc_values")
 
@@ -284,7 +286,7 @@ for i in range(36):
 entry(0xb30c, "print_yx_as_decimal")
 entry(0xb374, "something_to_do_with_finding_cr")
 entry(0xb42b, "copyish_from_l000a_to_l000e")
-entry(0xb45c, "bulk_copy_from_l0000_to_l0002")
+entry(0xb45c, "bulk_copy_from_l0000_to_vm_pc")
 entry(0xb634, "maybe_clear_part_of_screen")
 
 label(0xb193, "osbyte_a_table")
