@@ -158,7 +158,7 @@ entry(0x87e2, "jmp_indirect_via_l0008")
 label(0x8797, "fx163_192_0")
 
 comment(0x8916, "TODO: I think this is zero-extending a value being pushed onto the stack to four bytes")
-comment(0x8921, "TODO: I thnink this is copying the non-zero-extended pasrt of the value onto the stack")
+comment(0x8921, "TODO: I thnink this is copying the non-zero-extended part of the value onto the stack")
 entry(0x89d5, "some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes")
 comment(0x89dc, "Set l0014=-l0012=-(X on entry), unless the result is zero in which case jump to the test at the end of the copy loop.")
 comment(0x89e6, "Subtract 8-bit value at l0014 from 16-bit value at l000a")
@@ -169,6 +169,13 @@ entry(0x8a07, "bulk_copy_loop_x_test")
 entry(0x9184, "set_yx_to_41a")
 
 entry(0x92d9, "oswrch_or_osbput")
+
+entry(0x99e4, "add_4_to_vm_stack_ptr")
+entry(0x99e8, "add_5_to_vm_stack_ptr")
+comment(0x99ec, "TODO: dead code?")
+entry(0x99f0, "add_16_to_vm_stack_ptr")
+entry(0x99f4, "add_32_to_vm_stack_ptr")
+entry(0x99fe, "add_a_to_vm_stack_ptr")
 
 entry(0x9a11, "subtract_1_from_vm_stack_ptr")
 entry(0x9a15, "subtract_2_from_vm_stack_ptr")

@@ -1534,7 +1534,7 @@ oscli                           = &fff7
     iny                                                               ; 88d9: c8          .
     bne loop_c88d3                                                    ; 88da: d0 f7       ..
 .c88dc
-    jsr sub_c99f4                                                     ; 88dc: 20 f4 99     ..
+    jsr add_32_to_vm_stack_ptr                                        ; 88dc: 20 f4 99     ..
     ldx l0012                                                         ; 88df: a6 12       ..
     inx                                                               ; 88e1: e8          .
     inx                                                               ; 88e2: e8          .
@@ -1581,14 +1581,13 @@ oscli                           = &fff7
     dey                                                               ; 891c: 88          .
     cpy l004c                                                         ; 891d: c4 4c       .L
     bne loop_c891a                                                    ; 891f: d0 f9       ..
-; TODO: I thnink this is copying the non-zero-extended pasrt of the value onto the
-; stack
+; TODO: I thnink this is copying the non-zero-extended part of the value onto the stack
 .loop_c8921
     lda (l0008),y                                                     ; 8921: b1 08       ..
     sta (vm_stack_ptr),y                                              ; 8923: 91 00       ..
     dey                                                               ; 8925: 88          .
     bpl loop_c8921                                                    ; 8926: 10 f9       ..
-    jsr sub_c99e4                                                     ; 8928: 20 e4 99     ..
+    jsr add_4_to_vm_stack_ptr                                         ; 8928: 20 e4 99     ..
     txa                                                               ; 892b: 8a          .
     rts                                                               ; 892c: 60          `
 
@@ -2389,7 +2388,7 @@ oscli                           = &fff7
     dey                                                               ; 8de4: 88          .
     bpl loop_c8de2                                                    ; 8de5: 10 fb       ..
     lda #3                                                            ; 8de7: a9 03       ..
-    jsr c99fe                                                         ; 8de9: 20 fe 99     ..
+    jsr add_a_to_vm_stack_ptr                                         ; 8de9: 20 fe 99     ..
     lda #1                                                            ; 8dec: a9 01       ..
     rts                                                               ; 8dee: 60          `
 
@@ -2673,7 +2672,7 @@ oscli                           = &fff7
     and (vm_stack_ptr),y                                              ; 8f8f: 31 00       1.
     sta (vm_stack_ptr),y                                              ; 8f91: 91 00       ..
 .c8f93
-    jsr sub_c99f4                                                     ; 8f93: 20 f4 99     ..
+    jsr add_32_to_vm_stack_ptr                                        ; 8f93: 20 f4 99     ..
     lda #1                                                            ; 8f96: a9 01       ..
     rts                                                               ; 8f98: 60          `
 
@@ -3406,7 +3405,7 @@ oscli                           = &fff7
     dey                                                               ; 940e: 88          .
     bpl loop_c940a                                                    ; 940f: 10 f9       ..
     txa                                                               ; 9411: 8a          .
-    jsr c99fe                                                         ; 9412: 20 fe 99     ..
+    jsr add_a_to_vm_stack_ptr                                         ; 9412: 20 fe 99     ..
     jmp c944f                                                         ; 9415: 4c 4f 94    LO.
 
 .bytecode_opcode_91_handler
@@ -3426,7 +3425,7 @@ oscli                           = &fff7
     sta (vm_stack_ptr),y                                              ; 942d: 91 00       ..
     dey                                                               ; 942f: 88          .
     bpl loop_c942b                                                    ; 9430: 10 f9       ..
-    jsr sub_c99e4                                                     ; 9432: 20 e4 99     ..
+    jsr add_4_to_vm_stack_ptr                                         ; 9432: 20 e4 99     ..
     jmp c944f                                                         ; 9435: 4c 4f 94    LO.
 
 .bytecode_opcode_93_handler
@@ -3599,7 +3598,7 @@ oscli                           = &fff7
     lda l0001                                                         ; 954b: a5 01       ..
     sta l0654                                                         ; 954d: 8d 54 06    .T.
     lda #9                                                            ; 9550: a9 09       ..
-    jsr c99fe                                                         ; 9552: 20 fe 99     ..
+    jsr add_a_to_vm_stack_ptr                                         ; 9552: 20 fe 99     ..
     lda #1                                                            ; 9555: a9 01       ..
     rts                                                               ; 9557: 60          `
 
@@ -4338,27 +4337,28 @@ oscli                           = &fff7
     lda l0008                                                         ; 99dc: a5 08       ..
     sta (vm_stack_ptr),y                                              ; 99de: 91 00       ..
     lda #2                                                            ; 99e0: a9 02       ..
-    bne c99fe                                                         ; 99e2: d0 1a       ..
-.sub_c99e4
+    bne add_a_to_vm_stack_ptr                                         ; 99e2: d0 1a       ..
+.add_4_to_vm_stack_ptr
     lda #4                                                            ; 99e4: a9 04       ..
-    bne c99fe                                                         ; 99e6: d0 16       ..
-.sub_c99e8
+    bne add_a_to_vm_stack_ptr                                         ; 99e6: d0 16       ..
+.add_5_to_vm_stack_ptr
     lda #5                                                            ; 99e8: a9 05       ..
-    bne c99fe                                                         ; 99ea: d0 12       ..
+    bne add_a_to_vm_stack_ptr                                         ; 99ea: d0 12       ..
+; TODO: dead code?
     lda #6                                                            ; 99ec: a9 06       ..
-    bne c99fe                                                         ; 99ee: d0 0e       ..
-.sub_c99f0
+    bne add_a_to_vm_stack_ptr                                         ; 99ee: d0 0e       ..
+.add_16_to_vm_stack_ptr
     lda #&10                                                          ; 99f0: a9 10       ..
-    bne c99fe                                                         ; 99f2: d0 0a       ..
-.sub_c99f4
+    bne add_a_to_vm_stack_ptr                                         ; 99f2: d0 0a       ..
+.add_32_to_vm_stack_ptr
     lda #&20 ; ' '                                                    ; 99f4: a9 20       .
-    bne c99fe                                                         ; 99f6: d0 06       ..
+    bne add_a_to_vm_stack_ptr                                         ; 99f6: d0 06       ..
 .sub_c99f8
     ldy #0                                                            ; 99f8: a0 00       ..
     sta (vm_stack_ptr),y                                              ; 99fa: 91 00       ..
 .sub_c99fc
     lda #1                                                            ; 99fc: a9 01       ..
-.c99fe
+.add_a_to_vm_stack_ptr
     clc                                                               ; 99fe: 18          .
     adc vm_stack_ptr                                                  ; 99ff: 65 00       e.
     sta vm_stack_ptr                                                  ; 9a01: 85 00       ..
@@ -4967,7 +4967,7 @@ oscli                           = &fff7
     rts                                                               ; 9d8f: 60          `
 
 .sub_c9d90
-    jsr sub_c99e4                                                     ; 9d90: 20 e4 99     ..
+    jsr add_4_to_vm_stack_ptr                                         ; 9d90: 20 e4 99     ..
     jsr sub_c9a46                                                     ; 9d93: 20 46 9a     F.
 .sub_c9d96
     ldy #3                                                            ; 9d96: a0 03       ..
@@ -4979,7 +4979,7 @@ oscli                           = &fff7
     rts                                                               ; 9da0: 60          `
 
 .sub_c9da1
-    jsr sub_c99e8                                                     ; 9da1: 20 e8 99     ..
+    jsr add_5_to_vm_stack_ptr                                         ; 9da1: 20 e8 99     ..
     jsr sub_c9a4a                                                     ; 9da4: 20 4a 9a     J.
     jmp ca2df                                                         ; 9da7: 4c df a2    L..
 
@@ -7803,7 +7803,7 @@ oscli                           = &fff7
     sta (vm_stack_ptr),y                                              ; aea7: 91 00       ..
     dey                                                               ; aea9: 88          .
     bpl loop_caea4                                                    ; aeaa: 10 f8       ..
-    jsr sub_c99f0                                                     ; aeac: 20 f0 99     ..
+    jsr add_16_to_vm_stack_ptr                                        ; aeac: 20 f0 99     ..
     lda #1                                                            ; aeaf: a9 01       ..
     rts                                                               ; aeb1: 60          `
 
@@ -10562,7 +10562,6 @@ oscli                           = &fff7
 ;     c9988
 ;     c99c8
 ;     c99d1
-;     c99fe
 ;     c9a07
 ;     c9a34
 ;     c9a54
@@ -11326,10 +11325,6 @@ oscli                           = &fff7
 ;     sub_c998c
 ;     sub_c99ac
 ;     sub_c99d5
-;     sub_c99e4
-;     sub_c99e8
-;     sub_c99f0
-;     sub_c99f4
 ;     sub_c99f8
 ;     sub_c99fc
 ;     sub_c9a08
