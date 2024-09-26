@@ -1571,6 +1571,8 @@ oscli                           = &fff7
     lda operand_size_minus_1_table - 14,x                             ; 890e: bd 26 a7    .&.
     jsr sub_c87e5                                                     ; 8911: 20 e5 87     ..
     ldx #2                                                            ; 8914: a2 02       ..
+; TODO: I think this is zero-extending a value being pushed onto the stack to four
+; bytes
 .c8916
     lda #0                                                            ; 8916: a9 00       ..
     ldy #3                                                            ; 8918: a0 03       ..
@@ -1579,6 +1581,8 @@ oscli                           = &fff7
     dey                                                               ; 891c: 88          .
     cpy l004c                                                         ; 891d: c4 4c       .L
     bne loop_c891a                                                    ; 891f: d0 f9       ..
+; TODO: I thnink this is copying the non-zero-extended pasrt of the value onto the
+; stack
 .loop_c8921
     lda (l0008),y                                                     ; 8921: b1 08       ..
     sta (vm_stack_ptr),y                                              ; 8923: 91 00       ..

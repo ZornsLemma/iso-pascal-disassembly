@@ -157,6 +157,8 @@ entry(0x87c7, "interpreter_loop_no_advance")
 entry(0x87e2, "jmp_indirect_via_l0008")
 label(0x8797, "fx163_192_0")
 
+comment(0x8916, "TODO: I think this is zero-extending a value being pushed onto the stack to four bytes")
+comment(0x8921, "TODO: I thnink this is copying the non-zero-extended pasrt of the value onto the stack")
 entry(0x89d5, "some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes")
 comment(0x89dc, "Set l0014=-l0012=-(X on entry), unless the result is zero in which case jump to the test at the end of the copy loop.")
 comment(0x89e6, "Subtract 8-bit value at l0014 from 16-bit value at l000a")
