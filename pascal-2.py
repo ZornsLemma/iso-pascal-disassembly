@@ -418,3 +418,4 @@ go()
 # TODO: possible opcodes:
 # 0x05 - push immediate single byte onto stack (zero-extending to 4 bytes)
 # 0x06 - push immediate 16-bit word onto stack (zero-extending to 4 bytes)
+# 0x50 - set l065a to 8-bit immediate
