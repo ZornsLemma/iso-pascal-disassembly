@@ -1581,7 +1581,7 @@ oscli                           = &fff7
     dey                                                               ; 891c: 88          .
     cpy l004c                                                         ; 891d: c4 4c       .L
     bne loop_c891a                                                    ; 891f: d0 f9       ..
-; TODO: I thnink this is copying the non-zero-extended part of the value onto the stack
+; TODO: I think this is copying the non-zero-extended part of the value onto the stack
 .loop_c8921
     lda (l0008),y                                                     ; 8921: b1 08       ..
     sta (vm_stack_ptr),y                                              ; 8923: 91 00       ..
