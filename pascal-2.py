@@ -165,6 +165,12 @@ entry(0x9184, "set_yx_to_41a")
 
 entry(0x92d9, "oswrch_or_osbput")
 
+entry(0x9a9c, "set_l008_to_l002_plus_1")
+entry(0x9aa0, "set_l008_to_l002_plus_2")
+entry(0x9aa4, "set_l008_to_l002_plus_4")
+entry(0x9aa8, "set_l008_to_l002_plus_5")
+entry(0x9aaa, "set_l008_to_l002_plus_a")
+
 entry(0xa493, "zero_misc_values")
 
 # TODO: Just guessing this is a bytecode interpreter, but seems likely

@@ -1441,7 +1441,7 @@ oscli                           = &fff7
 .bytecode_opcode_03_handler
     lda something_else_table,x                                        ; 8850: bd 34 a7    .4.
     sta l004c                                                         ; 8853: 85 4c       .L
-    jsr sub_c9a9c                                                     ; 8855: 20 9c 9a     ..
+    jsr set_l008_to_l002_plus_1                                       ; 8855: 20 9c 9a     ..
     ldx l004c                                                         ; 8858: a6 4c       .L
     inx                                                               ; 885a: e8          .
     inx                                                               ; 885b: e8          .
@@ -1518,7 +1518,7 @@ oscli                           = &fff7
     lda (l0002),y                                                     ; 88bd: b1 02       ..
     sta l0012                                                         ; 88bf: 85 12       ..
     lda #2                                                            ; 88c1: a9 02       ..
-    jsr c9aaa                                                         ; 88c3: 20 aa 9a     ..
+    jsr set_l008_to_l002_plus_a                                       ; 88c3: 20 aa 9a     ..
     ldy #&ff                                                          ; 88c6: a0 ff       ..
 .loop_c88c8
     iny                                                               ; 88c8: c8          .
@@ -1558,7 +1558,7 @@ oscli                           = &fff7
 .bytecode_opcode_06_handler
     lda another_something_table - 5,x                                 ; 88fb: bd 2f a7    ./.
     sta l004c                                                         ; 88fe: 85 4c       .L
-    jsr sub_c9a9c                                                     ; 8900: 20 9c 9a     ..
+    jsr set_l008_to_l002_plus_1                                       ; 8900: 20 9c 9a     ..
     ldx l004c                                                         ; 8903: a6 4c       .L
     inx                                                               ; 8905: e8          .
     inx                                                               ; 8906: e8          .
@@ -1817,7 +1817,7 @@ oscli                           = &fff7
     ldx #2                                                            ; 8a70: a2 02       ..
 .c8a72
     txa                                                               ; 8a72: 8a          .
-    jsr c9aaa                                                         ; 8a73: 20 aa 9a     ..
+    jsr set_l008_to_l002_plus_a                                       ; 8a73: 20 aa 9a     ..
     jsr sub_c99d5                                                     ; 8a76: 20 d5 99     ..
     clc                                                               ; 8a79: 18          .
     lda l0002                                                         ; 8a7a: a5 02       ..
@@ -1899,7 +1899,7 @@ oscli                           = &fff7
     jsr bytecode_opcode_b1_handler                                    ; 8af1: 20 3b 95     ;.
     ldx #5                                                            ; 8af4: a2 05       ..
     jsr bytecode_opcode_05_handler                                    ; 8af6: 20 fb 88     ..
-    jsr sub_c9aa0                                                     ; 8af9: 20 a0 9a     ..
+    jsr set_l008_to_l002_plus_2                                       ; 8af9: 20 a0 9a     ..
     ldx #3                                                            ; 8afc: a2 03       ..
     jmp c9560                                                         ; 8afe: 4c 60 95    L`.
 
@@ -3602,7 +3602,7 @@ oscli                           = &fff7
 .bytecode_opcode_df_handler
     jsr bytecode_opcode_b1_handler                                    ; 9558: 20 3b 95     ;.
 .bytecode_opcode_7c_handler
-    jsr sub_c9a9c                                                     ; 955b: 20 9c 9a     ..
+    jsr set_l008_to_l002_plus_1                                       ; 955b: 20 9c 9a     ..
     ldx #2                                                            ; 955e: a2 02       ..
 .c9560
     ldy #0                                                            ; 9560: a0 00       ..
@@ -4469,18 +4469,18 @@ oscli                           = &fff7
     sta l000d                                                         ; 9a99: 85 0d       ..
     rts                                                               ; 9a9b: 60          `
 
-.sub_c9a9c
+.set_l008_to_l002_plus_1
     lda #1                                                            ; 9a9c: a9 01       ..
-    bne c9aaa                                                         ; 9a9e: d0 0a       ..
-.sub_c9aa0
+    bne set_l008_to_l002_plus_a                                       ; 9a9e: d0 0a       ..
+.set_l008_to_l002_plus_2
     lda #2                                                            ; 9aa0: a9 02       ..
-    bne c9aaa                                                         ; 9aa2: d0 06       ..
-.sub_c9aa4
+    bne set_l008_to_l002_plus_a                                       ; 9aa2: d0 06       ..
+.set_l008_to_l002_plus_4
     lda #4                                                            ; 9aa4: a9 04       ..
-    bne c9aaa                                                         ; 9aa6: d0 02       ..
-.sub_c9aa8
+    bne set_l008_to_l002_plus_a                                       ; 9aa6: d0 02       ..
+.set_l008_to_l002_plus_5
     lda #5                                                            ; 9aa8: a9 05       ..
-.c9aaa
+.set_l008_to_l002_plus_a
     clc                                                               ; 9aaa: 18          .
     adc l0002                                                         ; 9aab: 65 02       e.
     sta l0008                                                         ; 9aad: 85 08       ..
@@ -4683,7 +4683,7 @@ oscli                           = &fff7
     rts                                                               ; 9bd4: 60          `
 
 .bytecode_opcode_d6_handler
-    jsr sub_c9aa4                                                     ; 9bd5: 20 a4 9a     ..
+    jsr set_l008_to_l002_plus_4                                       ; 9bd5: 20 a4 9a     ..
     jsr sub_c9af1                                                     ; 9bd8: 20 f1 9a     ..
     sta l0014                                                         ; 9bdb: 85 14       ..
     ldy #3                                                            ; 9bdd: a0 03       ..
@@ -4708,7 +4708,7 @@ oscli                           = &fff7
     ldy #2                                                            ; 9bfa: a0 02       ..
     bne c9c1c                                                         ; 9bfc: d0 1e       ..
 .bytecode_opcode_d8_handler
-    jsr sub_c9aa8                                                     ; 9bfe: 20 a8 9a     ..
+    jsr set_l008_to_l002_plus_5                                       ; 9bfe: 20 a8 9a     ..
     jsr sub_c8b88                                                     ; 9c01: 20 88 8b     ..
     ldy #3                                                            ; 9c04: a0 03       ..
     lda (l0002),y                                                     ; 9c06: b1 02       ..
@@ -4766,7 +4766,7 @@ oscli                           = &fff7
     equb 0                                                            ; 9c53: 00          .
 
 .bytecode_opcode_d5_handler
-    jsr sub_c9aa8                                                     ; 9c54: 20 a8 9a     ..
+    jsr set_l008_to_l002_plus_5                                       ; 9c54: 20 a8 9a     ..
     jsr sub_c9af1                                                     ; 9c57: 20 f1 9a     ..
     sec                                                               ; 9c5a: 38          8
     ldy #3                                                            ; 9c5b: a0 03       ..
@@ -4778,7 +4778,7 @@ oscli                           = &fff7
     bcc c9c9d                                                         ; 9c66: 90 35       .5
 .bytecode_opcode_d7_handler
     lda #9                                                            ; 9c68: a9 09       ..
-    jsr c9aaa                                                         ; 9c6a: 20 aa 9a     ..
+    jsr set_l008_to_l002_plus_a                                       ; 9c6a: 20 aa 9a     ..
     jsr sub_c8b88                                                     ; 9c6d: 20 88 8b     ..
     sec                                                               ; 9c70: 38          8
     ldx #4                                                            ; 9c71: a2 04       ..
@@ -10565,7 +10565,6 @@ oscli                           = &fff7
 ;     c9a72
 ;     c9a8a
 ;     c9a8c
-;     c9aaa
 ;     c9b34
 ;     c9b42
 ;     c9b47
@@ -11350,10 +11349,6 @@ oscli                           = &fff7
 ;     sub_c9a6c
 ;     sub_c9a70
 ;     sub_c9a86
-;     sub_c9a9c
-;     sub_c9aa0
-;     sub_c9aa4
-;     sub_c9aa8
 ;     sub_c9ab6
 ;     sub_c9ac4
 ;     sub_c9ad3
