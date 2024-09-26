@@ -359,14 +359,6 @@ expr(0x8ea1, make_subtract("something_table", 0x5c))
 expr(0x8e57, make_subtract("something_table", 0x5a))
 expr(0x8e28, make_subtract("something_table", 0x54))
 
-label(0xa734, "something_else_table")
-expr(0x898c, make_subtract("something_else_table", 0x26))
-expr(0x9419, make_subtract("something_else_table", 0x91))
-expr(0x897f, make_subtract("something_else_table", 0x40))
-expr(0x8940, make_subtract("something_else_table", 0x3b))
-expr(0x88e6, make_subtract("something_else_table", 0x38))
-expr(0x883b, make_subtract("something_else_table", 0x33))
-
 label(0xa72f+0x5, "operand_size_minus_1_table") # TODO: guessing
 expr(0x88fc, make_subtract("operand_size_minus_1_table", 0x5))
 expr(0x88f0, make_subtract("operand_size_minus_1_table", 0x1d))
@@ -375,6 +367,12 @@ expr(0x8845, make_subtract("operand_size_minus_1_table", 0x18))
 expr(0x8792, make_subtract("operand_size_minus_1_table", 0x16))
 expr(0x895c, make_subtract("operand_size_minus_1_table", 0x11))
 expr(0x890f, make_subtract("operand_size_minus_1_table", 0xe))
+expr(0x898c, make_subtract("operand_size_minus_1_table", 0x26))
+expr(0x9419, make_subtract("operand_size_minus_1_table", 0x91))
+expr(0x897f, make_subtract("operand_size_minus_1_table", 0x40))
+expr(0x8940, make_subtract("operand_size_minus_1_table", 0x3b))
+expr(0x88e6, make_subtract("operand_size_minus_1_table", 0x38))
+expr(0x883b, make_subtract("operand_size_minus_1_table", 0x33))
 
 nonentry(0xa882)
 
