@@ -170,6 +170,7 @@ entry(0x9184, "set_yx_to_41a")
 
 entry(0x92d9, "oswrch_or_osbput")
 
+entry(0x99d5, "push_word_l0008_to_vm_stack")
 entry(0x99e4, "add_4_to_vm_stack_ptr")
 entry(0x99e8, "add_5_to_vm_stack_ptr")
 comment(0x99ec, "TODO: dead code?")
@@ -190,6 +191,9 @@ entry(0x9aa0, "set_l008_to_vm_pc_plus_2")
 entry(0x9aa4, "set_l008_to_vm_pc_plus_4")
 entry(0x9aa8, "set_l008_to_vm_pc_plus_5")
 entry(0x9aaa, "set_l008_to_vm_pc_plus_a")
+
+entry(0x9af9, "copy_16_bit_operand_to_l0012")
+entry(0x9b05, "copy_8_bit_operand_to_l0012")
 
 entry(0xa493, "zero_misc_values")
 

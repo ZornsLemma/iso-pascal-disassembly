@@ -1666,13 +1666,13 @@ oscli                           = &fff7
     ldx #1                                                            ; 8996: a2 01       ..
     bne c8966                                                         ; 8998: d0 cc       ..
 .bytecode_opcode_49_handler
-    jsr sub_c9af9                                                     ; 899a: 20 f9 9a     ..
+    jsr copy_16_bit_operand_to_l0012                                  ; 899a: 20 f9 9a     ..
     jsr sub_c89a6                                                     ; 899d: 20 a6 89     ..
     lda #3                                                            ; 89a0: a9 03       ..
     rts                                                               ; 89a2: 60          `
 
 .bytecode_opcode_1f_handler
-    jsr sub_c9b05                                                     ; 89a3: 20 05 9b     ..
+    jsr copy_8_bit_operand_to_l0012                                   ; 89a3: 20 05 9b     ..
 .sub_c89a6
     jsr sub_c9ac4                                                     ; 89a6: 20 c4 9a     ..
     clc                                                               ; 89a9: 18          .
@@ -1688,13 +1688,13 @@ oscli                           = &fff7
     rts                                                               ; 89bc: 60          `
 
 .bytecode_opcode_52_handler
-    jsr sub_c9af9                                                     ; 89bd: 20 f9 9a     ..
+    jsr copy_16_bit_operand_to_l0012                                  ; 89bd: 20 f9 9a     ..
     jsr sub_c89c9                                                     ; 89c0: 20 c9 89     ..
     lda #3                                                            ; 89c3: a9 03       ..
     rts                                                               ; 89c5: 60          `
 
 .bytecode_opcode_28_handler
-    jsr sub_c9b05                                                     ; 89c6: 20 05 9b     ..
+    jsr copy_8_bit_operand_to_l0012                                   ; 89c6: 20 05 9b     ..
 .sub_c89c9
     jsr sub_c9ac4                                                     ; 89c9: 20 c4 9a     ..
     jsr sub_c9ad3                                                     ; 89cc: 20 d3 9a     ..
@@ -1801,27 +1801,27 @@ oscli                           = &fff7
     jsr bytecode_opcode_b1_handler                                    ; 8a51: 20 3b 95     ;.
 .bytecode_opcode_10_handler
     jsr sub_c87e7                                                     ; 8a54: 20 e7 87     ..
-    jsr sub_c99d5                                                     ; 8a57: 20 d5 99     ..
+    jsr push_word_l0008_to_vm_stack                                   ; 8a57: 20 d5 99     ..
     lda #2                                                            ; 8a5a: a9 02       ..
     rts                                                               ; 8a5c: 60          `
 
 .bytecode_opcode_3a_handler
     jsr sub_c87fb                                                     ; 8a5d: 20 fb 87     ..
-    jsr sub_c99d5                                                     ; 8a60: 20 d5 99     ..
+    jsr push_word_l0008_to_vm_stack                                   ; 8a60: 20 d5 99     ..
     lda #3                                                            ; 8a63: a9 03       ..
     rts                                                               ; 8a65: 60          `
 
 .bytecode_opcode_31_handler
-    jsr sub_c9af9                                                     ; 8a66: 20 f9 9a     ..
+    jsr copy_16_bit_operand_to_l0012                                  ; 8a66: 20 f9 9a     ..
     ldx #3                                                            ; 8a69: a2 03       ..
     bne c8a72                                                         ; 8a6b: d0 05       ..
 .bytecode_opcode_07_handler
-    jsr sub_c9b05                                                     ; 8a6d: 20 05 9b     ..
+    jsr copy_8_bit_operand_to_l0012                                   ; 8a6d: 20 05 9b     ..
     ldx #2                                                            ; 8a70: a2 02       ..
 .c8a72
     txa                                                               ; 8a72: 8a          .
     jsr set_l008_to_vm_pc_plus_a                                      ; 8a73: 20 aa 9a     ..
-    jsr sub_c99d5                                                     ; 8a76: 20 d5 99     ..
+    jsr push_word_l0008_to_vm_stack                                   ; 8a76: 20 d5 99     ..
     clc                                                               ; 8a79: 18          .
     lda vm_pc                                                         ; 8a7a: a5 02       ..
     adc l0012                                                         ; 8a7c: 65 12       e.
@@ -1864,7 +1864,7 @@ oscli                           = &fff7
     bcc c8aba                                                         ; 8ab6: 90 02       ..
     inc l0009                                                         ; 8ab8: e6 09       ..
 .c8aba
-    jsr sub_c99d5                                                     ; 8aba: 20 d5 99     ..
+    jsr push_word_l0008_to_vm_stack                                   ; 8aba: 20 d5 99     ..
     lda #1                                                            ; 8abd: a9 01       ..
     rts                                                               ; 8abf: 60          `
 
@@ -2555,7 +2555,7 @@ oscli                           = &fff7
 .bytecode_opcode_71_handler
     lda something_table - 108,x                                       ; 8ed1: bd a5 a6    ...
     sta l0663                                                         ; 8ed4: 8d 63 06    .c.
-    jsr sub_c9af9                                                     ; 8ed7: 20 f9 9a     ..
+    jsr copy_16_bit_operand_to_l0012                                  ; 8ed7: 20 f9 9a     ..
     jsr sub_c8b88                                                     ; 8eda: 20 88 8b     ..
     ldy #0                                                            ; 8edd: a0 00       ..
 .c8edf
@@ -4175,13 +4175,13 @@ oscli                           = &fff7
     rts                                                               ; 990b: 60          `
 
 .bytecode_opcode_dc_handler
-    jsr sub_c9af9                                                     ; 990c: 20 f9 9a     ..
+    jsr copy_16_bit_operand_to_l0012                                  ; 990c: 20 f9 9a     ..
     jsr sub_c9918                                                     ; 990f: 20 18 99     ..
     lda #3                                                            ; 9912: a9 03       ..
     rts                                                               ; 9914: 60          `
 
 .bytecode_opcode_b2_handler
-    jsr sub_c9b05                                                     ; 9915: 20 05 9b     ..
+    jsr copy_8_bit_operand_to_l0012                                   ; 9915: 20 05 9b     ..
 .sub_c9918
     jsr sub_c9ad3                                                     ; 9918: 20 d3 9a     ..
     jsr sub_c979a                                                     ; 991b: 20 9a 97     ..
@@ -4201,13 +4201,13 @@ oscli                           = &fff7
     rts                                                               ; 9933: 60          `
 
 .bytecode_opcode_de_handler
-    jsr sub_c9af9                                                     ; 9934: 20 f9 9a     ..
+    jsr copy_16_bit_operand_to_l0012                                  ; 9934: 20 f9 9a     ..
     jsr sub_c9940                                                     ; 9937: 20 40 99     @.
     lda #3                                                            ; 993a: a9 03       ..
     rts                                                               ; 993c: 60          `
 
 .bytecode_opcode_b4_handler
-    jsr sub_c9b05                                                     ; 993d: 20 05 9b     ..
+    jsr copy_8_bit_operand_to_l0012                                   ; 993d: 20 05 9b     ..
 .sub_c9940
     jsr sub_c9ae2                                                     ; 9940: 20 e2 9a     ..
     lda l0009                                                         ; 9943: a5 09       ..
@@ -4329,7 +4329,7 @@ oscli                           = &fff7
     bne c99c8                                                         ; 99d2: d0 f4       ..
     rts                                                               ; 99d4: 60          `
 
-.sub_c99d5
+.push_word_l0008_to_vm_stack
     ldy #1                                                            ; 99d5: a0 01       ..
     lda l0009                                                         ; 99d7: a5 09       ..
     sta (vm_stack_ptr),y                                              ; 99d9: 91 00       ..
@@ -4540,7 +4540,7 @@ oscli                           = &fff7
     lda (vm_stack_ptr),y                                              ; 9af6: b1 00       ..
     rts                                                               ; 9af8: 60          `
 
-.sub_c9af9
+.copy_16_bit_operand_to_l0012
     ldy #1                                                            ; 9af9: a0 01       ..
 .sub_c9afb
     lda (vm_pc),y                                                     ; 9afb: b1 02       ..
@@ -4550,7 +4550,7 @@ oscli                           = &fff7
     sta l0013                                                         ; 9b02: 85 13       ..
     rts                                                               ; 9b04: 60          `
 
-.sub_c9b05
+.copy_8_bit_operand_to_l0012
     ldy #1                                                            ; 9b05: a0 01       ..
 .sub_c9b07
     lda (vm_pc),y                                                     ; 9b07: b1 02       ..
@@ -4623,7 +4623,7 @@ oscli                           = &fff7
 .c9b75
     dec l0015                                                         ; 9b75: c6 15       ..
     bne c9b34                                                         ; 9b77: d0 bb       ..
-    jsr sub_c99d5                                                     ; 9b79: 20 d5 99     ..
+    jsr push_word_l0008_to_vm_stack                                   ; 9b79: 20 d5 99     ..
     lda #3                                                            ; 9b7c: a9 03       ..
     rts                                                               ; 9b7e: 60          `
 
@@ -11323,7 +11323,6 @@ oscli                           = &fff7
 ;     sub_c9958
 ;     sub_c998c
 ;     sub_c99ac
-;     sub_c99d5
 ;     sub_c99f8
 ;     sub_c99fc
 ;     sub_c9a08
@@ -11345,9 +11344,7 @@ oscli                           = &fff7
 ;     sub_c9ad3
 ;     sub_c9ae2
 ;     sub_c9af1
-;     sub_c9af9
 ;     sub_c9afb
-;     sub_c9b05
 ;     sub_c9b07
 ;     sub_c9b1a
 ;     sub_c9b7f
