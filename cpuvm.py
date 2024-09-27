@@ -32,6 +32,7 @@ class CpuVM(trace.Cpu):
             0x10: self.OpcodeN("OP10", 1),
             0x50: self.OpcodeN("OP50", 1),
             0xa7: self.OpcodeN("OPA7", 4),
+            0xab: self.OpcodeN("OPAB", 4),
             0xaf: self.OpcodeN("OPAF", 3),
             0xdd: self.OpcodeN("OPDD", 5),
             0xf2: self.OpcodeN("OPF2", 0),
