@@ -85,3 +85,6 @@ VM opcode &B0:
 
 
 
+
+
+VM interpreter in RAM "lda (vm_pc),y" is at &5c77 on stock BBC B

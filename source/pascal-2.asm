@@ -3313,7 +3313,7 @@ oscli                           = &fff7
     jsr sub_c91df                                                     ; 9371: 20 df 91     ..
     jsr sub_c9ac4                                                     ; 9374: 20 c4 9a     ..
     ldy #1                                                            ; 9377: a0 01       ..
-    jsr sub_c9afb                                                     ; 9379: 20 fb 9a     ..
+    jsr copy_16_bit_operand_at_offset_y_to_l0012                      ; 9379: 20 fb 9a     ..
     beq c9391                                                         ; 937c: f0 13       ..
     lda l0657                                                         ; 937e: ad 57 06    .W.
     bne c9397                                                         ; 9381: d0 14       ..
@@ -3653,7 +3653,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_dd_handler
     ldy #2                                                            ; 95af: a0 02       ..
-    jsr sub_c9afb                                                     ; 95b1: 20 fb 9a     ..
+    jsr copy_16_bit_operand_at_offset_y_to_l0012                      ; 95b1: 20 fb 9a     ..
     iny                                                               ; 95b4: c8          .
     lda (vm_pc),y                                                     ; 95b5: b1 02       ..
     sta l004a                                                         ; 95b7: 85 4a       .J
@@ -4542,7 +4542,7 @@ oscli                           = &fff7
 
 .copy_16_bit_operand_to_l0012
     ldy #1                                                            ; 9af9: a0 01       ..
-.sub_c9afb
+.copy_16_bit_operand_at_offset_y_to_l0012
     lda (vm_pc),y                                                     ; 9afb: b1 02       ..
     sta l0012                                                         ; 9afd: 85 12       ..
     iny                                                               ; 9aff: c8          .
@@ -11344,7 +11344,6 @@ oscli                           = &fff7
 ;     sub_c9ad3
 ;     sub_c9ae2
 ;     sub_c9af1
-;     sub_c9afb
 ;     sub_c9b07
 ;     sub_c9b1a
 ;     sub_c9b7f

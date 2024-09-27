@@ -12,6 +12,11 @@ import utils
 
 memory_binary = memorymanager.memory_binary
 
+def get_s16_binary(binary_addr):
+    u16 = memorymanager.get_u16_binary(binary_addr)
+    return 0x10000 - u16 if u16 >= 0x8000 else u16
+
+
 class CpuVM(trace.Cpu):
     """Singleton class representing Pascal bytecode 'CPU'"""
 
@@ -35,12 +40,15 @@ class CpuVM(trace.Cpu):
             0x10: self.OpcodeN("OP10", 1),
             0x28: self.OpcodeN("OP28", 1),
             0x31: self.OpcodeNRel("JSRL", 2),
+            0x3a: self.OpcodeN("OP3A", 2),
+            0x44: self.OpcodeNRel2("BRA", 2),
             0x50: self.OpcodeN("OP50", 1),
             0xa7: self.OpcodeN("OPA7", 4),
             0xab: self.OpcodeN("OPAB", 4),
             0xaf: self.OpcodeN("OPAF", 3),
             0xdd: self.OpcodeN("OPDD", 5),
-            0xf2: self.OpcodeN("OPF2", 0),
+            0xf2: self.OpcodeN("PUSH0B", 0), # TODO: push 0 byte?
+            0xfc: self.OpcodeN("PUSH0W", 0), # TODO: push 0 word?
         }
 
     def hook_subroutine(self, runtime_addr, name, hook, warn=True):
@@ -128,13 +136,35 @@ class CpuVM(trace.Cpu):
             if self.operand_length == 1:
                 return base + 2 + memorymanager.get_u8_binary(binary_addr + 1)
             elif self.operand_length == 2:
-                return base + 3 + self.operamemorymanager.get_s16_binary(binary_addr + 1)
+                return base + 3 + get_s16_binary(binary_addr + 1)
             else:
                 assert False
 
         def disassemble(self, binary_addr):
             # TODO: As elsewhere where exactly do we need to apply_move()? Perhaps we don't need it  here given it's relative, feeling my way..
             return [binary_addr + 1 + self.operand_length] + trace.cpu.apply_move2(self._target(binary_addr), binary_addr)
+
+        def as_string(self, binary_addr):
+            #print("XXX", hex(binary_addr), movemanager.move_id_for_binary_addr[binary_addr])
+            return utils.LazyString("%s%s %s", utils.make_indent(1), utils.force_case(self.mnemonic), disassembly.get_label(self._target(binary_addr), binary_addr))
+
+
+    class OpcodeNRel2(Opcode):
+        def __init__(self, mnemonic, operand_length):
+            super(CpuVM.OpcodeNRel2, self).__init__(mnemonic, operand_length, update=None)
+
+        def _target(self, binary_addr):
+            base = movemanager.b2r(binary_addr)
+            if self.operand_length == 1: # TODO: This case may not even exist
+                return base + memorymanager.get_u8_binary(binary_addr + 1)
+            elif self.operand_length == 2:
+                return base + get_s16_binary(binary_addr + 1)
+            else:
+                assert False
+
+        def disassemble(self, binary_addr):
+            # TODO: As elsewhere where exactly do we need to apply_move()? Perhaps we don't need it  here given it's relative, feeling my way..
+            return trace.cpu.apply_move2(self._target(binary_addr), binary_addr)
 
         def as_string(self, binary_addr):
             #print("XXX", hex(binary_addr), movemanager.move_id_for_binary_addr[binary_addr])
