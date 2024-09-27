@@ -29,7 +29,9 @@ class CpuVM(trace.Cpu):
         self.indent_level_dict = collections.defaultdict(int)
 
         self.opcodes = {
+            0x07: self.OpcodeNRel("JSRS", 1),
             0x10: self.OpcodeN("OP10", 1),
+            0x31: self.OpcodeNRel("JSRL", 2),
             0x50: self.OpcodeN("OP50", 1),
             0xa7: self.OpcodeN("OPA7", 4),
             0xab: self.OpcodeN("OPAB", 4),
@@ -100,30 +102,6 @@ class CpuVM(trace.Cpu):
             return result
 
 
-    class OpcodeImplied(Opcode):
-        def __init__(self, mnemonic, update=None):
-            super(CpuVM.OpcodeImplied, self).__init__(mnemonic, 0, update=update)
-
-        def disassemble(self, binary_addr):
-            return [binary_addr + 1]
-
-
-    class OpcodeImmediate(Opcode):
-        def __init__(self, mnemonic, update=None):
-            super(CpuVM.OpcodeImmediate, self).__init__(mnemonic, 1, update=update)
-
-        def disassemble(self, binary_addr):
-            return [binary_addr + 2]
-
-        def as_string(self, binary_addr):
-            s = "%s%s %s" % (utils.make_indent(1), utils.force_case(self.mnemonic), classification.get_constant8(binary_addr + 1))
-            if (binary_addr + 1) not in classification.expressions and disassembly.format_hint.get(binary_addr + 1) is None:
-                c = memory_binary[binary_addr + 1]
-                if config.get_show_char_literals() and utils.isprint(c):
-                    s += " %s '%s'" % (config.get_assembler().comment_prefix(), chr(c))
-            return s
-
-
     class OpcodeN(Opcode):
         def __init__(self, mnemonic, operand_length):
             super(CpuVM.OpcodeN, self).__init__(mnemonic, operand_length, update=None)
@@ -137,184 +115,30 @@ class CpuVM(trace.Cpu):
             s = "%sEQUB %s ; %s" % (utils.make_indent(1), ", ".join(data), self.mnemonic)
             return s
 
-    class OpcodeImmediate16(Opcode):
-        def __init__(self, mnemonic, update=None):
-            super(CpuVM.OpcodeImmediate16, self).__init__(mnemonic, 2, update=update)
 
-        def disassemble(self, binary_addr):
-            return [binary_addr + 3]
-
-        def as_string(self, binary_addr):
-            s = "%s%s %s" % (utils.make_indent(1), utils.force_case(self.mnemonic), classification.get_constant16(binary_addr + 1))
-            if (binary_addr + 1) not in classification.expressions and disassembly.format_hint.get(binary_addr + 1) is None:
-                c = memory_binary[binary_addr + 1]
-                if config.get_show_char_literals() and utils.isprint(c):
-                    s += " %s '%s'" % (config.get_assembler().comment_prefix(), chr(c))
-            return s
-
-    class OpcodeAddr16(Opcode):
-        def __init__(self, mnemonic, update=None):
-            super(CpuVM.OpcodeAddr16, self).__init__(mnemonic, 2, update=update)
-
-        def abs_operand(self, binary_addr):
-            return memorymanager.get_u16_binary(binary_addr + 1)
-
-        def as_string(self, binary_addr):
-            result1 = utils.force_case(self.mnemonic)
-            result2 = utils.LazyString("%s%s%s", self.prefix, classification.get_address16(binary_addr + 1), utils.force_case(self.suffix))
-            return utils.LazyString("%s%s %s", utils.make_indent(1), result1, result2)
-
-        def update_references(self, binary_addr):
-            trace.cpu.labels[self.abs_operand(binary_addr)].add_reference(binary_addr)
-
-        def disassemble(self, binary_addr):
-            return [binary_addr + 3]
-
-    class OpcodeJmp(Opcode):
-        def __init__(self, mnemonic, update=None):
-            super(CpuVM.OpcodeJmp, self).__init__(mnemonic, 2, update=update)
+    class OpcodeNRel(Opcode):
+        def __init__(self, mnemonic, operand_length):
+            super(CpuVM.OpcodeNRel, self).__init__(mnemonic, operand_length, update=None)
 
         def _target(self, binary_addr):
-            return memorymanager.RuntimeAddr(memorymanager.get_u16_binary(binary_addr + 1))
-
-        def abs_operand(self, binary_addr):
-            return self._target(binary_addr)
-
-        def as_string(self, binary_addr):
-            result1 = utils.force_case(self.mnemonic)
-            result2 = utils.LazyString("%s%s%s", self.prefix, classification.get_address16(binary_addr + 1), utils.force_case(self.suffix))
-            return utils.LazyString("%s%s %s", utils.make_indent(1), result1, result2)
-
-        # TODO: Might want to rename this function to reflect the fact it creates labels as well/instead as updating trace.references
-        def update_references(self, binary_addr):
-            trace.cpu.labels[self._target(binary_addr)].add_reference(binary_addr)
-
-        def is_block_end(self):
-            return True
-
-        def disassemble(self, binary_addr):
-            #print("PCC %s" % apply_move(self._target(binary_addr)))
-            # TODO: Should the apply_move() call be inside _target and/or abs_operand? Still feeling my way here...
-            return [None] + trace.cpu.apply_move2(self._target(binary_addr), binary_addr)
-
-    class OpcodeJmpInd(Opcode):
-        def __init__(self, mnemonic, update=None):
-            super(CpuVM.OpcodeJmpInd, self).__init__(mnemonic, 0, update=update)
-
-        def is_block_end(self):
-            return True
-
-        def disassemble(self, binary_addr):
-            return [None]
-
-
-    class OpcodeConditionalBranch(Opcode):
-        def __init__(self, mnemonic, update=None):
-            super(CpuVM.OpcodeConditionalBranch, self).__init__(mnemonic, 2, update=update)
-
-        def _target(self, binary_addr):
-            return memorymanager.RuntimeAddr(memorymanager.get_u16_binary(binary_addr + 1))
-
-        def abs_operand(self, binary_addr):
-            return self._target(binary_addr)
-
-        def update_references(self, binary_addr):
-            trace.cpu.labels[self._target(binary_addr)].add_reference(binary_addr)
+            base = movemanager.b2r(binary_addr)
+            if self.operand_length == 1:
+                return base + memorymanager.get_u8_binary(binary_addr + 1)
+            elif self.operand_length == 2:
+                return base + memorymanager.get_s16_binary(binary_addr + 1)
+            else:
+                assert False
 
         def disassemble(self, binary_addr):
             # TODO: As elsewhere where exactly do we need to apply_move()? Perhaps we don't need it  here given it's relative, feeling my way..
-            return [binary_addr + 3] + trace.cpu.apply_move2(self._target(binary_addr), binary_addr)
-
-        def update_cpu_state(self, binary_addr, state):
-            # In our optimistic model (at least), a branch invalidates everything.
-            # Consider "ldy #3:.label:dey:bne label" - in the optimistic model we ignore
-            # labels and the only way we don't finish that sequence assuming y=2 is if
-            # the branch invalidates.
-            state.clear()
+            return [binary_addr + 1 + self.operand_length] + trace.cpu.apply_move2(self._target(binary_addr), binary_addr)
 
         def as_string(self, binary_addr):
             #print("XXX", hex(binary_addr), movemanager.move_id_for_binary_addr[binary_addr])
             return utils.LazyString("%s%s %s", utils.make_indent(1), utils.force_case(self.mnemonic), disassembly.get_label(self._target(binary_addr), binary_addr))
 
-    class OpcodeCall(Opcode):
-        def __init__(self, mnemonic, update=None):
-            super(CpuVM.OpcodeCall, self).__init__(mnemonic, 2, update=update)
 
-        def _target(self, binary_addr):
-            return memorymanager.RuntimeAddr(memorymanager.get_u16_binary(binary_addr + 1))
-
-        def abs_operand(self, binary_addr):
-            return self._target(binary_addr)
-
-        def update_references(self, binary_addr):
-            trace.cpu.labels[self._target(binary_addr)].add_reference(binary_addr)
-
-        def disassemble(self, binary_addr):
-            assert isinstance(binary_addr, memorymanager.BinaryAddr)
-            # A hook only gets to return the "straight line" address to continue
-            # tracing from (if there is one; it can return None if it wishes). Some
-            # subroutines (e.g. jsr is_yx_zero:equw target_if_true, target_if_false)
-            # might have no "straight line" case and want to return some labelled
-            # entry points. This is supported by having the hook simply return None
-            # and call entry() itself for the labelled entry points.
-            # TODO: Do we need to apply_move() here or in _target() or in abs_operand() or before/after subroutine_hooks.get()?
-            target_runtime_addr = self._target(binary_addr)
-            def simple_call_hook(target_runtime_addr, caller_runtime_addr):
-                assert isinstance(target_runtime_addr, memorymanager.RuntimeAddr)
-                assert isinstance(caller_runtime_addr, memorymanager.RuntimeAddr)
-                # TODO: It might be possible the following assertion fails if the moves
-                # in effect are sufficiently tricky, but I'll leave it for now as it
-                # may catch bugs - once the code is more trusted it can be removed
-                # if it's technically incorrect.
-                assert movemanager.r2b_checked(caller_runtime_addr)[0] == binary_addr
-                return caller_runtime_addr + 3
-            call_hook = trace.cpu.subroutine_hooks.get(target_runtime_addr, simple_call_hook)
-            caller_runtime_addr = movemanager.b2r(binary_addr)
-            with movemanager.move_id_for_binary_addr[binary_addr]:
-                return_runtime_addr = call_hook(target_runtime_addr, caller_runtime_addr)
-            if return_runtime_addr is not None:
-                return_runtime_addr = memorymanager.RuntimeAddr(return_runtime_addr)
-                result = trace.cpu.apply_move(return_runtime_addr)
-                if len(result) == 0:
-                    # The return runtime address could not be unambiguously converted into a binary
-                    # address. It's highly likely the 'CALL' is returning to the immediately following
-                    # instruction, so if binary_addr+3 maps to the return runtime address, use that,
-                    # otherwise give up and don't trace anything "after" the 'CALL'.
-                    simple_return_binary_addr = binary_addr + 3
-                    if return_runtime_addr == movemanager.b2r(simple_return_binary_addr):
-                        result = [simple_return_binary_addr]
-                    else:
-                        result = [None]
-            else:
-                result = [None]
-            result += trace.cpu.apply_move(target_runtime_addr)
-            return result
-
-        def as_string(self, binary_addr):
-            result1 = utils.force_case(self.mnemonic)
-            result2 = utils.LazyString("%s%s%s", self.prefix, classification.get_address16(binary_addr + 1), utils.force_case(self.suffix))
-            return utils.LazyString("%s%s %s", utils.make_indent(1), result1, result2)
-
-    class OpcodeReturn(Opcode):
-        def __init__(self, mnemonic):
-            super(CpuVM.OpcodeReturn, self).__init__(mnemonic, 0)
-
-        def disassemble(self, binary_addr):
-            return [None]
-
-        def is_block_end(self):
-            return True
-
-    class OpcodeReset(Opcode):
-        def __init__(self, mnemonic):
-            super(CpuVM.OpcodeReset, self).__init__(mnemonic, 0)
-
-        def disassemble(self, binary_addr):
-            return [None]
-
-        def is_block_end(self):
-            return True
-
+    # TODO: DELETE
     class CpuState(object):
         def __init__(self):
             self.clear()
