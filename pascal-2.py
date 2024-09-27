@@ -41,7 +41,9 @@ label(0x65b, "line_number_low") # TODO GUESS
 label(0x65c, "line_number_high") # TODO GUESS
 
 label(0x0, "vm_stack_ptr") # TODO: guess
+expr_label(0x1, make_add("vm_stack_ptr", 1))
 label(0x2, "vm_pc")
+expr_label(0x3, make_add("vm_pc", 1))
 
 label(0x8095, "osbyte_163_192_x_minus_1_table")
 byte(0x8095, 3)

@@ -41,7 +41,7 @@ class CpuVM(trace.Cpu):
             0x28: self.OpcodeN("OP28", 1),
             0x31: self.OpcodeNRel("JSRL", 2),
             0x3a: self.OpcodeN("OP3A", 2),
-            0x44: self.OpcodeNRel2("BRA", 2), # TODO: THIS IMPL IS WRONG, THE OFFSET IS APPLIED TO THE 16-BIT WORD AT &1E, *NOT* THE VM PC - THE FIRST BRA EXECUTES GOES TO BB99
+            0x44: self.OpcodeNRel2("BRA", 2), # TODO: THIS IMPL IS WRONG, THE OFFSET IS APPLIED TO THE 16-BIT WORD AT &1E, *NOT* THE VM PC - THE FIRST BRA EXECUTED GOES TO BB99 - I THINK &1E MAY CONTAIN THE ORIGINAL ENTRY POINT (IE &8670 HERE)
             0x50: self.OpcodeN("OP50", 1),
             0xa7: self.OpcodeN("OPA7", 4),
             0xab: self.OpcodeN("OPAB", 4),

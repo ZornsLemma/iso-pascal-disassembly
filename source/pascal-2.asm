@@ -26,9 +26,7 @@ our_osbyte_x                           = 192
 
 ; Memory locations
 vm_stack_ptr                    = &0000
-l0001                           = &0001
 vm_pc                           = &0002
-l0003                           = &0003
 oshwm_low_zp                    = &0004
 oshwm_high_zp                   = &0005
 l0006                           = &0006
@@ -433,7 +431,7 @@ oscli                           = &fff7
     sta l000d                                                         ; 8136: 85 0d       ..
     bcs c816b                                                         ; 8138: b0 31       .1
     cpx vm_pc                                                         ; 813a: e4 02       ..
-    sbc l0003                                                         ; 813c: e5 03       ..
+    sbc vm_pc + 1                                                     ; 813c: e5 03       ..
     bcs c8165                                                         ; 813e: b0 25       .%
     ldy #1                                                            ; 8140: a0 01       ..
     lda (l000c),y                                                     ; 8142: b1 0c       ..
@@ -687,7 +685,7 @@ oscli                           = &fff7
 .language_entry_with_at_symbol
     ldy #0                                                            ; 8324: a0 00       ..
     sty l0029                                                         ; 8326: 84 29       .)
-    lda l0001                                                         ; 8328: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; 8328: a5 01       ..
     sta l002a                                                         ; 832a: 85 2a       .*
 .c832c
     lda (l0029),y                                                     ; 832c: b1 29       .)
@@ -1110,16 +1108,16 @@ oscli                           = &fff7
     bcc c8639                                                         ; 8614: 90 23       .#
     jsr sub_cafd9                                                     ; 8616: 20 d9 af     ..
     cpx vm_stack_ptr                                                  ; 8619: e4 00       ..
-    sbc l0001                                                         ; 861b: e5 01       ..
+    sbc vm_stack_ptr + 1                                              ; 861b: e5 01       ..
     bcc c8655                                                         ; 861d: 90 36       .6
     ldx vm_pc                                                         ; 861f: a6 02       ..
     cpx l0027                                                         ; 8621: e4 27       .'
-    lda l0003                                                         ; 8623: a5 03       ..
+    lda vm_pc + 1                                                     ; 8623: a5 03       ..
     sbc l0028                                                         ; 8625: e5 28       .(
     bcc c8655                                                         ; 8627: 90 2c       .,
     cpx vm_stack_ptr                                                  ; 8629: e4 00       ..
-    lda l0003                                                         ; 862b: a5 03       ..
-    sbc l0001                                                         ; 862d: e5 01       ..
+    lda vm_pc + 1                                                     ; 862b: a5 03       ..
+    sbc vm_stack_ptr + 1                                              ; 862d: e5 01       ..
     beq c8633                                                         ; 862f: f0 02       ..
     bcs c8655                                                         ; 8631: b0 22       ."
 .c8633
@@ -1334,14 +1332,14 @@ oscli                           = &fff7
     lda l001e                                                         ; 87b4: a5 1e       ..
     sta vm_pc                                                         ; 87b6: 85 02       ..
     lda l001f                                                         ; 87b8: a5 1f       ..
-    sta l0003                                                         ; 87ba: 85 03       ..
+    sta vm_pc + 1                                                     ; 87ba: 85 03       ..
     bne interpreter_loop_no_advance                                   ; 87bc: d0 09       ..
 .interpreter_loop_advance_by_a
     clc                                                               ; 87be: 18          .
     adc vm_pc                                                         ; 87bf: 65 02       e.
     sta vm_pc                                                         ; 87c1: 85 02       ..
     bcc interpreter_loop_no_advance                                   ; 87c3: 90 02       ..
-    inc l0003                                                         ; 87c5: e6 03       ..
+    inc vm_pc + 1                                                     ; 87c5: e6 03       ..
 .interpreter_loop_no_advance
     ldy #0                                                            ; 87c7: a0 00       ..
     lda (vm_pc),y                                                     ; 87c9: b1 02       ..
@@ -1441,7 +1439,7 @@ oscli                           = &fff7
 .bytecode_opcode_03_handler
     lda operand_size_minus_1_table,x                                  ; 8850: bd 34 a7    .4.
     sta l004c                                                         ; 8853: 85 4c       .L
-    jsr set_l008_to_vm_pc_plus_1                                      ; 8855: 20 9c 9a     ..
+    jsr set_l0008_to_vm_pc_plus_1                                     ; 8855: 20 9c 9a     ..
     ldx l004c                                                         ; 8858: a6 4c       .L
     inx                                                               ; 885a: e8          .
     inx                                                               ; 885b: e8          .
@@ -1491,7 +1489,7 @@ oscli                           = &fff7
     adc l004c                                                         ; 8893: 65 4c       eL
     sta vm_stack_ptr                                                  ; 8895: 85 00       ..
     bcc c889b                                                         ; 8897: 90 02       ..
-    inc l0001                                                         ; 8899: e6 01       ..
+    inc vm_stack_ptr + 1                                              ; 8899: e6 01       ..
 .c889b
     txa                                                               ; 889b: 8a          .
     rts                                                               ; 889c: 60          `
@@ -1518,7 +1516,7 @@ oscli                           = &fff7
     lda (vm_pc),y                                                     ; 88bd: b1 02       ..
     sta l0012                                                         ; 88bf: 85 12       ..
     lda #2                                                            ; 88c1: a9 02       ..
-    jsr set_l008_to_vm_pc_plus_a                                      ; 88c3: 20 aa 9a     ..
+    jsr set_l0008_to_vm_pc_plus_a                                     ; 88c3: 20 aa 9a     ..
     ldy #&ff                                                          ; 88c6: a0 ff       ..
 .loop_c88c8
     iny                                                               ; 88c8: c8          .
@@ -1558,7 +1556,7 @@ oscli                           = &fff7
 .bytecode_opcode_06_handler
     lda operand_size_minus_1_table - 5,x                              ; 88fb: bd 2f a7    ./.
     sta l004c                                                         ; 88fe: 85 4c       .L
-    jsr set_l008_to_vm_pc_plus_1                                      ; 8900: 20 9c 9a     ..
+    jsr set_l0008_to_vm_pc_plus_1                                     ; 8900: 20 9c 9a     ..
     ldx l004c                                                         ; 8903: a6 4c       .L
     inx                                                               ; 8905: e8          .
     inx                                                               ; 8906: e8          .
@@ -1597,9 +1595,9 @@ oscli                           = &fff7
     sbc l004c                                                         ; 8930: e5 4c       .L
     sta vm_stack_ptr                                                  ; 8932: 85 00       ..
     sta l000a                                                         ; 8934: 85 0a       ..
-    lda l0001                                                         ; 8936: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; 8936: a5 01       ..
     sbc #0                                                            ; 8938: e9 00       ..
-    sta l0001                                                         ; 893a: 85 01       ..
+    sta vm_stack_ptr + 1                                              ; 893a: 85 01       ..
     sta l000b                                                         ; 893c: 85 0b       ..
     rts                                                               ; 893e: 60          `
 
@@ -1680,10 +1678,10 @@ oscli                           = &fff7
     sta l000e                                                         ; 89ac: 85 0e       ..
     adc l0012                                                         ; 89ae: 65 12       e.
     sta vm_stack_ptr                                                  ; 89b0: 85 00       ..
-    lda l0001                                                         ; 89b2: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; 89b2: a5 01       ..
     sta l000f                                                         ; 89b4: 85 0f       ..
     adc l0013                                                         ; 89b6: 65 13       e.
-    sta l0001                                                         ; 89b8: 85 01       ..
+    sta vm_stack_ptr + 1                                              ; 89b8: 85 01       ..
     bne c89cf                                                         ; 89ba: d0 13       ..
     rts                                                               ; 89bc: 60          `
 
@@ -1820,15 +1818,15 @@ oscli                           = &fff7
     ldx #2                                                            ; 8a70: a2 02       ..
 .c8a72
     txa                                                               ; 8a72: 8a          .
-    jsr set_l008_to_vm_pc_plus_a                                      ; 8a73: 20 aa 9a     ..
+    jsr set_l0008_to_vm_pc_plus_a                                     ; 8a73: 20 aa 9a     ..
     jsr push_word_l0008_to_vm_stack                                   ; 8a76: 20 d5 99     ..
     clc                                                               ; 8a79: 18          .
     lda vm_pc                                                         ; 8a7a: a5 02       ..
     adc l0012                                                         ; 8a7c: 65 12       e.
     sta vm_pc                                                         ; 8a7e: 85 02       ..
-    lda l0003                                                         ; 8a80: a5 03       ..
+    lda vm_pc + 1                                                     ; 8a80: a5 03       ..
     adc l0013                                                         ; 8a82: 65 13       e.
-    sta l0003                                                         ; 8a84: 85 03       ..
+    sta vm_pc + 1                                                     ; 8a84: 85 03       ..
     txa                                                               ; 8a86: 8a          .
     rts                                                               ; 8a87: 60          `
 
@@ -1902,7 +1900,7 @@ oscli                           = &fff7
     jsr bytecode_opcode_b1_handler                                    ; 8af1: 20 3b 95     ;.
     ldx #5                                                            ; 8af4: a2 05       ..
     jsr bytecode_opcode_05_handler                                    ; 8af6: 20 fb 88     ..
-    jsr set_l008_to_vm_pc_plus_2                                      ; 8af9: 20 a0 9a     ..
+    jsr set_l0008_to_vm_pc_plus_2                                     ; 8af9: 20 a0 9a     ..
     ldx #3                                                            ; 8afc: a2 03       ..
     jmp c9560                                                         ; 8afe: 4c 60 95    L`.
 
@@ -3275,7 +3273,7 @@ oscli                           = &fff7
     jsr sub_c9300                                                     ; 9329: 20 00 93     ..
     jsr subtract_1_from_vm_stack_ptr                                  ; 932c: 20 11 9a     ..
     ldx vm_stack_ptr                                                  ; 932f: a6 00       ..
-    ldy l0001                                                         ; 9331: a4 01       ..
+    ldy vm_stack_ptr + 1                                              ; 9331: a4 01       ..
     lda #1                                                            ; 9333: a9 01       ..
 .oswrch_or_osbput_aligned_string_yx
     cmp l0657                                                         ; 9335: cd 57 06    .W.
@@ -3561,7 +3559,7 @@ oscli                           = &fff7
     lda l0019                                                         ; 9519: a5 19       ..
     sta l001b                                                         ; 951b: 85 1b       ..
     adc #0                                                            ; 951d: 69 00       i.
-    sta l0001                                                         ; 951f: 85 01       ..
+    sta vm_stack_ptr + 1                                              ; 951f: 85 01       ..
     lda #4                                                            ; 9521: a9 04       ..
     rts                                                               ; 9523: 60          `
 
@@ -3595,7 +3593,7 @@ oscli                           = &fff7
     sta (vm_stack_ptr),y                                              ; 9544: 91 00       ..
     lda vm_stack_ptr                                                  ; 9546: a5 00       ..
     sta l0653                                                         ; 9548: 8d 53 06    .S.
-    lda l0001                                                         ; 954b: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; 954b: a5 01       ..
     sta l0654                                                         ; 954d: 8d 54 06    .T.
     lda #9                                                            ; 9550: a9 09       ..
     jsr add_a_to_vm_stack_ptr                                         ; 9552: 20 fe 99     ..
@@ -3605,7 +3603,7 @@ oscli                           = &fff7
 .bytecode_opcode_df_handler
     jsr bytecode_opcode_b1_handler                                    ; 9558: 20 3b 95     ;.
 .bytecode_opcode_7c_handler
-    jsr set_l008_to_vm_pc_plus_1                                      ; 955b: 20 9c 9a     ..
+    jsr set_l0008_to_vm_pc_plus_1                                     ; 955b: 20 9c 9a     ..
     ldx #2                                                            ; 955e: a2 02       ..
 .c9560
     ldy #0                                                            ; 9560: a0 00       ..
@@ -3624,7 +3622,7 @@ oscli                           = &fff7
     sta (l000c),y                                                     ; 9577: 91 0c       ..
     iny                                                               ; 9579: c8          .
     lda #0                                                            ; 957a: a9 00       ..
-    adc l0003                                                         ; 957c: 65 03       e.
+    adc vm_pc + 1                                                     ; 957c: 65 03       e.
     sta (l000c),y                                                     ; 957e: 91 0c       ..
     ldy #1                                                            ; 9580: a0 01       ..
     lda (l000c),y                                                     ; 9582: b1 0c       ..
@@ -3643,7 +3641,7 @@ oscli                           = &fff7
     iny                                                               ; 959d: c8          .
     lda l001f                                                         ; 959e: a5 1f       ..
     adc (l001c),y                                                     ; 95a0: 71 1c       q.
-    sta l0003                                                         ; 95a2: 85 03       ..
+    sta vm_pc + 1                                                     ; 95a2: 85 03       ..
     lda l000c                                                         ; 95a4: a5 0c       ..
     sta l001a                                                         ; 95a6: 85 1a       ..
     lda l000d                                                         ; 95a8: a5 0d       ..
@@ -3682,7 +3680,7 @@ oscli                           = &fff7
     lda vm_stack_ptr                                                  ; 95dc: a5 00       ..
     adc l0012                                                         ; 95de: 65 12       e.
     sta l062c                                                         ; 95e0: 8d 2c 06    .,.
-    lda l0001                                                         ; 95e3: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; 95e3: a5 01       ..
     adc l0013                                                         ; 95e5: 65 13       e.
     sta l062d                                                         ; 95e7: 8d 2d 06    .-.
     jsr sub_c981e                                                     ; 95ea: 20 1e 98     ..
@@ -3699,7 +3697,7 @@ oscli                           = &fff7
     lda l065a                                                         ; 9600: ad 5a 06    .Z.
     beq c9614                                                         ; 9603: f0 0f       ..
     ldx vm_stack_ptr                                                  ; 9605: a6 00       ..
-    lda l0001                                                         ; 9607: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; 9607: a5 01       ..
     ldy l004a                                                         ; 9609: a4 4a       .J
     sty l0012                                                         ; 960b: 84 12       ..
     ldy l004b                                                         ; 960d: a4 4b       .K
@@ -3710,9 +3708,9 @@ oscli                           = &fff7
     lda vm_stack_ptr                                                  ; 9615: a5 00       ..
     adc l004a                                                         ; 9617: 65 4a       eJ
     sta vm_stack_ptr                                                  ; 9619: 85 00       ..
-    lda l0001                                                         ; 961b: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; 961b: a5 01       ..
     adc l004b                                                         ; 961d: 65 4b       eK
-    sta l0001                                                         ; 961f: 85 01       ..
+    sta vm_stack_ptr + 1                                              ; 961f: 85 01       ..
     lda #4                                                            ; 9621: a9 04       ..
     rts                                                               ; 9623: 60          `
 
@@ -3720,13 +3718,13 @@ oscli                           = &fff7
     lda l001a                                                         ; 9624: a5 1a       ..
     sta vm_stack_ptr                                                  ; 9626: 85 00       ..
     lda l001b                                                         ; 9628: a5 1b       ..
-    sta l0001                                                         ; 962a: 85 01       ..
+    sta vm_stack_ptr + 1                                              ; 962a: 85 01       ..
     ldy #6                                                            ; 962c: a0 06       ..
     lda (l001a),y                                                     ; 962e: b1 1a       ..
     tax                                                               ; 9630: aa          .
     dey                                                               ; 9631: 88          .
     lda (l001a),y                                                     ; 9632: b1 1a       ..
-    sta l0003                                                         ; 9634: 85 03       ..
+    sta vm_pc + 1                                                     ; 9634: 85 03       ..
     dey                                                               ; 9636: 88          .
     lda (l001a),y                                                     ; 9637: b1 1a       ..
     sta vm_pc                                                         ; 9639: 85 02       ..
@@ -3897,7 +3895,7 @@ oscli                           = &fff7
     sta vm_pc                                                         ; 9740: 85 02       ..
     txa                                                               ; 9742: 8a          .
     adc l001f                                                         ; 9743: 65 1f       e.
-    sta l0003                                                         ; 9745: 85 03       ..
+    sta vm_pc + 1                                                     ; 9745: 85 03       ..
     lda #0                                                            ; 9747: a9 00       ..
     rts                                                               ; 9749: 60          `
 
@@ -3921,8 +3919,8 @@ oscli                           = &fff7
     adc vm_pc                                                         ; 9762: 65 02       e.
     sta vm_pc                                                         ; 9764: 85 02       ..
     txa                                                               ; 9766: 8a          .
-    adc l0003                                                         ; 9767: 65 03       e.
-    sta l0003                                                         ; 9769: 85 03       ..
+    adc vm_pc + 1                                                     ; 9767: 65 03       e.
+    sta vm_pc + 1                                                     ; 9769: 85 03       ..
     lda #0                                                            ; 976b: a9 00       ..
     rts                                                               ; 976d: 60          `
 
@@ -3948,7 +3946,7 @@ oscli                           = &fff7
     lda l0029,x                                                       ; 978b: b5 29       .)
     sta l001b                                                         ; 978d: 85 1b       ..
     adc (vm_pc),y                                                     ; 978f: 71 02       q.
-    sta l0001                                                         ; 9791: 85 01       ..
+    sta vm_stack_ptr + 1                                              ; 9791: 85 01       ..
     ldx vm_stack_ptr                                                  ; 9793: a6 00       ..
     jsr c90e5                                                         ; 9795: 20 e5 90     ..
     bne c9735                                                         ; 9798: d0 9b       ..
@@ -4363,7 +4361,7 @@ oscli                           = &fff7
     adc vm_stack_ptr                                                  ; 99ff: 65 00       e.
     sta vm_stack_ptr                                                  ; 9a01: 85 00       ..
     bcc c9a07                                                         ; 9a03: 90 02       ..
-    inc l0001                                                         ; 9a05: e6 01       ..
+    inc vm_stack_ptr + 1                                              ; 9a05: e6 01       ..
 .c9a07
     rts                                                               ; 9a07: 60          `
 
@@ -4397,7 +4395,7 @@ oscli                           = &fff7
     sbc l0014                                                         ; 9a2c: e5 14       ..
     sta vm_stack_ptr                                                  ; 9a2e: 85 00       ..
     bcs c9a34                                                         ; 9a30: b0 02       ..
-    dec l0001                                                         ; 9a32: c6 01       ..
+    dec vm_stack_ptr + 1                                              ; 9a32: c6 01       ..
 .c9a34
     rts                                                               ; 9a34: 60          `
 
@@ -4430,7 +4428,7 @@ oscli                           = &fff7
     lda vm_stack_ptr                                                  ; 9a57: a5 00       ..
     sbc l0014                                                         ; 9a59: e5 14       ..
     sta l000a                                                         ; 9a5b: 85 0a       ..
-    lda l0001                                                         ; 9a5d: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; 9a5d: a5 01       ..
     sbc #0                                                            ; 9a5f: e9 00       ..
     sta l000b                                                         ; 9a61: 85 0b       ..
     rts                                                               ; 9a63: 60          `
@@ -4452,9 +4450,9 @@ oscli                           = &fff7
     sbc l0014                                                         ; 9a77: e5 14       ..
     sta vm_stack_ptr                                                  ; 9a79: 85 00       ..
     sta l000a                                                         ; 9a7b: 85 0a       ..
-    lda l0001                                                         ; 9a7d: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; 9a7d: a5 01       ..
     sbc #0                                                            ; 9a7f: e9 00       ..
-    sta l0001                                                         ; 9a81: 85 01       ..
+    sta vm_stack_ptr + 1                                              ; 9a81: 85 01       ..
     sta l000b                                                         ; 9a83: 85 0b       ..
     rts                                                               ; 9a85: 60          `
 
@@ -4469,28 +4467,28 @@ oscli                           = &fff7
     lda vm_stack_ptr                                                  ; 9a8f: a5 00       ..
     sbc l0014                                                         ; 9a91: e5 14       ..
     sta l000c                                                         ; 9a93: 85 0c       ..
-    lda l0001                                                         ; 9a95: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; 9a95: a5 01       ..
     sbc #0                                                            ; 9a97: e9 00       ..
     sta l000d                                                         ; 9a99: 85 0d       ..
     rts                                                               ; 9a9b: 60          `
 
-.set_l008_to_vm_pc_plus_1
+.set_l0008_to_vm_pc_plus_1
     lda #1                                                            ; 9a9c: a9 01       ..
-    bne set_l008_to_vm_pc_plus_a                                      ; 9a9e: d0 0a       ..
-.set_l008_to_vm_pc_plus_2
+    bne set_l0008_to_vm_pc_plus_a                                     ; 9a9e: d0 0a       ..
+.set_l0008_to_vm_pc_plus_2
     lda #2                                                            ; 9aa0: a9 02       ..
-    bne set_l008_to_vm_pc_plus_a                                      ; 9aa2: d0 06       ..
-.set_l008_to_vm_pc_plus_4
+    bne set_l0008_to_vm_pc_plus_a                                     ; 9aa2: d0 06       ..
+.set_l0008_to_vm_pc_plus_4
     lda #4                                                            ; 9aa4: a9 04       ..
-    bne set_l008_to_vm_pc_plus_a                                      ; 9aa6: d0 02       ..
-.set_l008_to_vm_pc_plus_5
+    bne set_l0008_to_vm_pc_plus_a                                     ; 9aa6: d0 02       ..
+.set_l0008_to_vm_pc_plus_5
     lda #5                                                            ; 9aa8: a9 05       ..
-.set_l008_to_vm_pc_plus_a
+.set_l0008_to_vm_pc_plus_a
     clc                                                               ; 9aaa: 18          .
     adc vm_pc                                                         ; 9aab: 65 02       e.
     sta l0008                                                         ; 9aad: 85 08       ..
     lda #0                                                            ; 9aaf: a9 00       ..
-    adc l0003                                                         ; 9ab1: 65 03       e.
+    adc vm_pc + 1                                                     ; 9ab1: 65 03       e.
     sta l0009                                                         ; 9ab3: 85 09       ..
     rts                                                               ; 9ab5: 60          `
 
@@ -4499,7 +4497,7 @@ oscli                           = &fff7
     lda vm_pc                                                         ; 9ab7: a5 02       ..
     adc #1                                                            ; 9ab9: 69 01       i.
     sta l000a                                                         ; 9abb: 85 0a       ..
-    lda l0003                                                         ; 9abd: a5 03       ..
+    lda vm_pc + 1                                                     ; 9abd: a5 03       ..
     adc #0                                                            ; 9abf: 69 00       i.
     sta l000b                                                         ; 9ac1: 85 0b       ..
     rts                                                               ; 9ac3: 60          `
@@ -4688,7 +4686,7 @@ oscli                           = &fff7
     rts                                                               ; 9bd4: 60          `
 
 .bytecode_opcode_d6_handler
-    jsr set_l008_to_vm_pc_plus_4                                      ; 9bd5: 20 a4 9a     ..
+    jsr set_l0008_to_vm_pc_plus_4                                     ; 9bd5: 20 a4 9a     ..
     jsr sub_c9af1                                                     ; 9bd8: 20 f1 9a     ..
     sta l0014                                                         ; 9bdb: 85 14       ..
     ldy #3                                                            ; 9bdd: a0 03       ..
@@ -4713,7 +4711,7 @@ oscli                           = &fff7
     ldy #2                                                            ; 9bfa: a0 02       ..
     bne c9c1c                                                         ; 9bfc: d0 1e       ..
 .bytecode_opcode_d8_handler
-    jsr set_l008_to_vm_pc_plus_5                                      ; 9bfe: 20 a8 9a     ..
+    jsr set_l0008_to_vm_pc_plus_5                                     ; 9bfe: 20 a8 9a     ..
     jsr sub_c8b88                                                     ; 9c01: 20 88 8b     ..
     ldy #3                                                            ; 9c04: a0 03       ..
     lda (vm_pc),y                                                     ; 9c06: b1 02       ..
@@ -4771,7 +4769,7 @@ oscli                           = &fff7
     equb 0                                                            ; 9c53: 00          .
 
 .bytecode_opcode_d5_handler
-    jsr set_l008_to_vm_pc_plus_5                                      ; 9c54: 20 a8 9a     ..
+    jsr set_l0008_to_vm_pc_plus_5                                     ; 9c54: 20 a8 9a     ..
     jsr sub_c9af1                                                     ; 9c57: 20 f1 9a     ..
     sec                                                               ; 9c5a: 38          8
     ldy #3                                                            ; 9c5b: a0 03       ..
@@ -4783,7 +4781,7 @@ oscli                           = &fff7
     bcc c9c9d                                                         ; 9c66: 90 35       .5
 .bytecode_opcode_d7_handler
     lda #9                                                            ; 9c68: a9 09       ..
-    jsr set_l008_to_vm_pc_plus_a                                      ; 9c6a: 20 aa 9a     ..
+    jsr set_l0008_to_vm_pc_plus_a                                     ; 9c6a: 20 aa 9a     ..
     jsr sub_c8b88                                                     ; 9c6d: 20 88 8b     ..
     sec                                                               ; 9c70: 38          8
     ldx #4                                                            ; 9c71: a2 04       ..
@@ -4846,7 +4844,7 @@ oscli                           = &fff7
     jsr c9735                                                         ; 9cc6: 20 35 97     5.
     lda vm_pc                                                         ; 9cc9: a5 02       ..
     sta l001e                                                         ; 9ccb: 85 1e       ..
-    lda l0003                                                         ; 9ccd: a5 03       ..
+    lda vm_pc + 1                                                     ; 9ccd: a5 03       ..
     sta l001f                                                         ; 9ccf: 85 1f       ..
     lda #0                                                            ; 9cd1: a9 00       ..
     rts                                                               ; 9cd3: 60          `
@@ -7897,17 +7895,17 @@ oscli                           = &fff7
     ldy oshwm_high_zp                                                 ; af46: a4 05       ..
 .caf48
     stx vm_pc                                                         ; af48: 86 02       ..
-    sty l0003                                                         ; af4a: 84 03       ..
+    sty vm_pc + 1                                                     ; af4a: 84 03       ..
     jsr sub_cafd9                                                     ; af4c: 20 d9 af     ..
     stx vm_stack_ptr                                                  ; af4f: 86 00       ..
-    sta l0001                                                         ; af51: 85 01       ..
+    sta vm_stack_ptr + 1                                              ; af51: 85 01       ..
     ldx oshwm_low_zp                                                  ; af53: a6 04       ..
     ldy oshwm_high_zp                                                 ; af55: a4 05       ..
     jsr cb404                                                         ; af57: 20 04 b4     ..
     lda l0027                                                         ; af5a: a5 27       .'
     sta vm_pc                                                         ; af5c: 85 02       ..
     lda l0028                                                         ; af5e: a5 28       .(
-    sta l0003                                                         ; af60: 85 03       ..
+    sta vm_pc + 1                                                     ; af60: 85 03       ..
     lda simplified_machine_type                                       ; af62: ad 17 04    ...
     cmp #3                                                            ; af65: c9 03       ..
     bne caf7a                                                         ; af67: d0 11       ..
@@ -8079,7 +8077,7 @@ oscli                           = &fff7
     inc vm_stack_ptr                                                  ; b092: e6 00       ..
     bne cb09e                                                         ; b094: d0 08       ..
 .cb096
-    inc l0001                                                         ; b096: e6 01       ..
+    inc vm_stack_ptr + 1                                              ; b096: e6 01       ..
     bne cb09e                                                         ; b098: d0 04       ..
 .loop_cb09a
     lda (l0010),y                                                     ; b09a: b1 10       ..
@@ -8251,7 +8249,7 @@ oscli                           = &fff7
     lda l0027                                                         ; b1a1: a5 27       .'
     cmp vm_pc                                                         ; b1a3: c5 02       ..
     lda l0028                                                         ; b1a5: a5 28       .(
-    sbc l0003                                                         ; b1a7: e5 03       ..
+    sbc vm_pc + 1                                                     ; b1a7: e5 03       ..
     rts                                                               ; b1a9: 60          `
 
 .sub_cb1aa
@@ -8260,7 +8258,7 @@ oscli                           = &fff7
     adc vm_stack_ptr                                                  ; b1ad: 65 00       e.
     tax                                                               ; b1af: aa          .
     lda #0                                                            ; b1b0: a9 00       ..
-    adc l0001                                                         ; b1b2: 65 01       e.
+    adc vm_stack_ptr + 1                                              ; b1b2: 65 01       e.
     cpx l0029                                                         ; b1b4: e4 29       .)
     sbc l002a                                                         ; b1b6: e5 2a       .*
     rts                                                               ; b1b8: 60          `
@@ -8285,13 +8283,13 @@ oscli                           = &fff7
     lda vm_stack_ptr                                                  ; b1cd: a5 00       ..
     sbc l0012                                                         ; b1cf: e5 12       ..
     tax                                                               ; b1d1: aa          .
-    lda l0001                                                         ; b1d2: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; b1d2: a5 01       ..
     sbc l0013                                                         ; b1d4: e5 13       ..
     tay                                                               ; b1d6: a8          .
     stx l000c                                                         ; b1d7: 86 0c       ..
     sty l000d                                                         ; b1d9: 84 0d       ..
     cpx vm_pc                                                         ; b1db: e4 02       ..
-    sbc l0003                                                         ; b1dd: e5 03       ..
+    sbc vm_pc + 1                                                     ; b1dd: e5 03       ..
     bcc cb1e2                                                         ; b1df: 90 01       ..
     rts                                                               ; b1e1: 60          `
 
@@ -8417,7 +8415,7 @@ oscli                           = &fff7
     lda vm_stack_ptr                                                  ; b2a5: a5 00       ..
     adc l003f                                                         ; b2a7: 65 3f       e?
     sta l0008                                                         ; b2a9: 85 08       ..
-    lda l0001                                                         ; b2ab: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; b2ab: a5 01       ..
     adc #0                                                            ; b2ad: 69 00       i.
     sta l0009                                                         ; b2af: 85 09       ..
     ldx l0015                                                         ; b2b1: a6 15       ..
@@ -8516,7 +8514,7 @@ oscli                           = &fff7
 .sub_cb34d
     lda vm_stack_ptr                                                  ; b34d: a5 00       ..
     sta l0010                                                         ; b34f: 85 10       ..
-    lda l0001                                                         ; b351: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; b351: a5 01       ..
     sta l0011                                                         ; b353: 85 11       ..
     rts                                                               ; b355: 60          `
 
@@ -8544,7 +8542,7 @@ oscli                           = &fff7
 
 .something_to_do_with_finding_cr
     ldx vm_stack_ptr                                                  ; b374: a6 00       ..
-    ldy l0001                                                         ; b376: a4 01       ..
+    ldy vm_stack_ptr + 1                                              ; b376: a4 01       ..
     stx l0010                                                         ; b378: 86 10       ..
     sty l0011                                                         ; b37a: 84 11       ..
 .sub_cb37c
@@ -8587,7 +8585,7 @@ oscli                           = &fff7
 
 .sub_cb3b1
     ldx vm_pc                                                         ; b3b1: a6 02       ..
-    ldy l0003                                                         ; b3b3: a4 03       ..
+    ldy vm_pc + 1                                                     ; b3b3: a4 03       ..
     stx l0010                                                         ; b3b5: 86 10       ..
     sty l0011                                                         ; b3b7: 84 11       ..
     tax                                                               ; b3b9: aa          .
@@ -8645,9 +8643,9 @@ oscli                           = &fff7
     sbc l000a                                                         ; b40b: e5 0a       ..
     stx vm_pc                                                         ; b40d: 86 02       ..
     tax                                                               ; b40f: aa          .
-    lda l0003                                                         ; b410: a5 03       ..
+    lda vm_pc + 1                                                     ; b410: a5 03       ..
     sbc l000b                                                         ; b412: e5 0b       ..
-    sty l0003                                                         ; b414: 84 03       ..
+    sty vm_pc + 1                                                     ; b414: 84 03       ..
     tay                                                               ; b416: a8          .
     stx l0012                                                         ; b417: 86 12       ..
     sty l0013                                                         ; b419: 84 13       ..
@@ -8655,10 +8653,10 @@ oscli                           = &fff7
     sbc l0012                                                         ; b41d: e5 12       ..
     sta l000e                                                         ; b41f: 85 0e       ..
     sta vm_stack_ptr                                                  ; b421: 85 00       ..
-    lda l0001                                                         ; b423: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; b423: a5 01       ..
     sbc l0013                                                         ; b425: e5 13       ..
     sta l000f                                                         ; b427: 85 0f       ..
-    sta l0001                                                         ; b429: 85 01       ..
+    sta vm_stack_ptr + 1                                              ; b429: 85 01       ..
 .copyish_from_l000a_to_l000e
     stx l0012                                                         ; b42b: 86 12       ..
     sty l0013                                                         ; b42d: 84 13       ..
@@ -8699,11 +8697,11 @@ oscli                           = &fff7
 .bulk_copy_from_l0000_to_vm_pc
     lda vm_stack_ptr                                                  ; b45c: a5 00       ..
     sta l000a                                                         ; b45e: 85 0a       ..
-    lda l0001                                                         ; b460: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; b460: a5 01       ..
     sta l000b                                                         ; b462: 85 0b       ..
     lda vm_pc                                                         ; b464: a5 02       ..
     sta l000e                                                         ; b466: 85 0e       ..
-    lda l0003                                                         ; b468: a5 03       ..
+    lda vm_pc + 1                                                     ; b468: a5 03       ..
     sta l000f                                                         ; b46a: 85 0f       ..
     sec                                                               ; b46c: 38          8
     txa                                                               ; b46d: 8a          .
@@ -8711,16 +8709,16 @@ oscli                           = &fff7
     stx vm_stack_ptr                                                  ; b470: 86 00       ..
     tax                                                               ; b472: aa          .
     tya                                                               ; b473: 98          .
-    sbc l0001                                                         ; b474: e5 01       ..
-    sty l0001                                                         ; b476: 84 01       ..
+    sbc vm_stack_ptr + 1                                              ; b474: e5 01       ..
+    sty vm_stack_ptr + 1                                              ; b476: 84 01       ..
     tay                                                               ; b478: a8          .
     clc                                                               ; b479: 18          .
     txa                                                               ; b47a: 8a          .
     adc vm_pc                                                         ; b47b: 65 02       e.
     sta vm_pc                                                         ; b47d: 85 02       ..
     tya                                                               ; b47f: 98          .
-    adc l0003                                                         ; b480: 65 03       e.
-    sta l0003                                                         ; b482: 85 03       ..
+    adc vm_pc + 1                                                     ; b480: 65 03       e.
+    sta vm_pc + 1                                                     ; b482: 85 03       ..
     jmp some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes    ; b484: 4c d5 89    L..
 
 .sub_cb487
@@ -8735,7 +8733,7 @@ oscli                           = &fff7
     adc vm_stack_ptr                                                  ; b494: 65 00       e.
     tax                                                               ; b496: aa          .
     lda #0                                                            ; b497: a9 00       ..
-    adc l0001                                                         ; b499: 65 01       e.
+    adc vm_stack_ptr + 1                                              ; b499: 65 01       e.
     tay                                                               ; b49b: a8          .
     jmp bulk_copy_from_l0000_to_vm_pc                                 ; b49c: 4c 5c b4    L\.
 
@@ -8761,7 +8759,7 @@ oscli                           = &fff7
     bcc loop_cb4b2                                                    ; b4b9: 90 f7       ..
     stx vm_stack_ptr                                                  ; b4bb: 86 00       ..
     lda l000d                                                         ; b4bd: a5 0d       ..
-    sta l0001                                                         ; b4bf: 85 01       ..
+    sta vm_stack_ptr + 1                                              ; b4bf: 85 01       ..
     rts                                                               ; b4c1: 60          `
 
 .sub_cb4c2
@@ -9177,11 +9175,11 @@ oscli                           = &fff7
     lda oshwm_low_zp                                                  ; b77e: a5 04       ..
     sta vm_pc                                                         ; b780: 85 02       ..
     lda oshwm_high_zp                                                 ; b782: a5 05       ..
-    sta l0003                                                         ; b784: 85 03       ..
+    sta vm_pc + 1                                                     ; b784: 85 03       ..
     jsr sub_cb727                                                     ; b786: 20 27 b7     '.
     lda vm_pc                                                         ; b789: a5 02       ..
     sta l040b                                                         ; b78b: 8d 0b 04    ...
-    lda l0003                                                         ; b78e: a5 03       ..
+    lda vm_pc + 1                                                     ; b78e: a5 03       ..
     sta l040e                                                         ; b790: 8d 0e 04    ...
     jmp c8574                                                         ; b793: 4c 74 85    Lt.
 
@@ -9205,7 +9203,7 @@ oscli                           = &fff7
     jsr sub_cbe3c                                                     ; b7b2: 20 3c be     <.
     lda vm_stack_ptr                                                  ; b7b5: a5 00       ..
     sta l0624                                                         ; b7b7: 8d 24 06    .$.
-    lda l0001                                                         ; b7ba: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; b7ba: a5 01       ..
     sta l0625                                                         ; b7bc: 8d 25 06    .%.
     jsr sub_c8432                                                     ; b7bf: 20 32 84     2.
     jsr sub_cb711                                                     ; b7c2: 20 11 b7     ..
@@ -9215,7 +9213,7 @@ oscli                           = &fff7
 .cb7cc
     lda vm_pc                                                         ; b7cc: a5 02       ..
     sta l000c                                                         ; b7ce: 85 0c       ..
-    lda l0003                                                         ; b7d0: a5 03       ..
+    lda vm_pc + 1                                                     ; b7d0: a5 03       ..
     sta l000d                                                         ; b7d2: 85 0d       ..
     jsr sub_cb359                                                     ; b7d4: 20 59 b3     Y.
     sta l0014                                                         ; b7d7: 85 14       ..
@@ -9223,7 +9221,7 @@ oscli                           = &fff7
     lda vm_pc                                                         ; b7da: a5 02       ..
     sbc l0014                                                         ; b7dc: e5 14       ..
     tax                                                               ; b7de: aa          .
-    lda l0003                                                         ; b7df: a5 03       ..
+    lda vm_pc + 1                                                     ; b7df: a5 03       ..
     sbc #0                                                            ; b7e1: e9 00       ..
     tay                                                               ; b7e3: a8          .
     jmp cb404                                                         ; b7e4: 4c 04 b4    L..
@@ -9238,12 +9236,12 @@ oscli                           = &fff7
     jsr sub_cb487                                                     ; b7f2: 20 87 b4     ..
     lda vm_pc                                                         ; b7f5: a5 02       ..
     sta l0008                                                         ; b7f7: 85 08       ..
-    lda l0003                                                         ; b7f9: a5 03       ..
+    lda vm_pc + 1                                                     ; b7f9: a5 03       ..
     ldx vm_stack_ptr                                                  ; b7fb: a6 00       ..
-    ldy l0001                                                         ; b7fd: a4 01       ..
+    ldy vm_stack_ptr + 1                                              ; b7fd: a4 01       ..
     jsr sub_c859b                                                     ; b7ff: 20 9b 85     ..
     stx vm_pc                                                         ; b802: 86 02       ..
-    sty l0003                                                         ; b804: 84 03       ..
+    sty vm_pc + 1                                                     ; b804: 84 03       ..
     ldx l0008                                                         ; b806: a6 08       ..
     ldy l0009                                                         ; b808: a4 09       ..
     jsr cb404                                                         ; b80a: 20 04 b4     ..
@@ -9656,7 +9654,7 @@ oscli                           = &fff7
     jsr sub_cbc7b                                                     ; babc: 20 7b bc     {.
     lda vm_pc                                                         ; babf: a5 02       ..
     sta l0050                                                         ; bac1: 85 50       .P
-    lda l0003                                                         ; bac3: a5 03       ..
+    lda vm_pc + 1                                                     ; bac3: a5 03       ..
     sta l0051                                                         ; bac5: 85 51       .Q
     lda l004e                                                         ; bac7: a5 4e       .N
     sta l004c                                                         ; bac9: 85 4c       .L
@@ -9832,13 +9830,13 @@ oscli                           = &fff7
     lda l001a                                                         ; bbe0: a5 1a       ..
     sta vm_stack_ptr                                                  ; bbe2: 85 00       ..
     lda l001b                                                         ; bbe4: a5 1b       ..
-    sta l0001                                                         ; bbe6: 85 01       ..
+    sta vm_stack_ptr + 1                                              ; bbe6: 85 01       ..
     lda l003c                                                         ; bbe8: a5 3c       .<
     sta l0017                                                         ; bbea: 85 17       ..
 .cbbec
     lda vm_pc                                                         ; bbec: a5 02       ..
     cmp l0018                                                         ; bbee: c5 18       ..
-    lda l0003                                                         ; bbf0: a5 03       ..
+    lda vm_pc + 1                                                     ; bbf0: a5 03       ..
     sbc l0019                                                         ; bbf2: e5 19       ..
     bcs loop_cbbda                                                    ; bbf4: b0 e4       ..
     ldy l0017                                                         ; bbf6: a4 17       ..
@@ -9886,7 +9884,7 @@ oscli                           = &fff7
     sta (vm_pc,x)                                                     ; bc45: 81 02       ..
     inc vm_pc                                                         ; bc47: e6 02       ..
     bne cbbec                                                         ; bc49: d0 a1       ..
-    inc l0003                                                         ; bc4b: e6 03       ..
+    inc vm_pc + 1                                                     ; bc4b: e6 03       ..
     bne cbbec                                                         ; bc4d: d0 9d       ..
 .cbc4f
     and #&7f                                                          ; bc4f: 29 7f       ).
@@ -9898,7 +9896,7 @@ oscli                           = &fff7
     sta l000b                                                         ; bc5a: 85 0b       ..
     lda vm_pc                                                         ; bc5c: a5 02       ..
     sta l000e                                                         ; bc5e: 85 0e       ..
-    lda l0003                                                         ; bc60: a5 03       ..
+    lda vm_pc + 1                                                     ; bc60: a5 03       ..
     sta l000f                                                         ; bc62: 85 0f       ..
     clc                                                               ; bc64: 18          .
     lda l0634,y                                                       ; bc65: b9 34 06    .4.
@@ -9907,8 +9905,8 @@ oscli                           = &fff7
     sta vm_pc                                                         ; bc6b: 85 02       ..
     lda l063c,y                                                       ; bc6d: b9 3c 06    .<.
     tay                                                               ; bc70: a8          .
-    adc l0003                                                         ; bc71: 65 03       e.
-    sta l0003                                                         ; bc73: 85 03       ..
+    adc vm_pc + 1                                                     ; bc71: 65 03       e.
+    sta vm_pc + 1                                                     ; bc73: 85 03       ..
     jsr some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes    ; bc75: 20 d5 89     ..
     jmp cbbec                                                         ; bc78: 4c ec bb    L..
 
@@ -9940,7 +9938,7 @@ oscli                           = &fff7
     sta l0052                                                         ; bca5: 85 52       .R
 .cbca7
     ldx vm_stack_ptr                                                  ; bca7: a6 00       ..
-    ldy l0001                                                         ; bca9: a4 01       ..
+    ldy vm_stack_ptr + 1                                              ; bca9: a4 01       ..
 .cbcab
     stx l0018                                                         ; bcab: 86 18       ..
     sty l0019                                                         ; bcad: 84 19       ..
@@ -10023,7 +10021,7 @@ oscli                           = &fff7
     sta l0047                                                         ; bd3f: 85 47       .G
 .cbd41
     ldx vm_stack_ptr                                                  ; bd41: a6 00       ..
-    ldy l0001                                                         ; bd43: a4 01       ..
+    ldy vm_stack_ptr + 1                                              ; bd43: a4 01       ..
 .loop_cbd45
     stx l0018                                                         ; bd45: 86 18       ..
     sty l0019                                                         ; bd47: 84 19       ..
@@ -10068,13 +10066,13 @@ oscli                           = &fff7
     cmp vm_stack_ptr                                                  ; bd95: c5 00       ..
     lda l001e                                                         ; bd97: a5 1e       ..
     sta l001f                                                         ; bd99: 85 1f       ..
-    sbc l0001                                                         ; bd9b: e5 01       ..
+    sbc vm_stack_ptr + 1                                              ; bd9b: e5 01       ..
     bcc cbda0                                                         ; bd9d: 90 01       ..
     dex                                                               ; bd9f: ca          .
 .cbda0
     lda vm_stack_ptr                                                  ; bda0: a5 00       ..
     sta l001c,x                                                       ; bda2: 95 1c       ..
-    lda l0001                                                         ; bda4: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; bda4: a5 01       ..
     sta l001e,x                                                       ; bda6: 95 1e       ..
     jsr cb71f                                                         ; bda8: 20 1f b7     ..
     inc l0039                                                         ; bdab: e6 39       .9
@@ -10107,7 +10105,7 @@ oscli                           = &fff7
     bne cbdb4                                                         ; bdcf: d0 e3       ..
     jsr sub_cbe3c                                                     ; bdd1: 20 3c be     <.
     stx vm_stack_ptr                                                  ; bdd4: 86 00       ..
-    sty l0001                                                         ; bdd6: 84 01       ..
+    sty vm_stack_ptr + 1                                              ; bdd6: 84 01       ..
     jmp cb71f                                                         ; bdd8: 4c 1f b7    L..
 
 .sub_cbddb
@@ -10121,12 +10119,12 @@ oscli                           = &fff7
     bne something_16_handler                                          ; bdeb: d0 12       ..
     lda vm_stack_ptr                                                  ; bded: a5 00       ..
     cmp l0021                                                         ; bdef: c5 21       .!
-    lda l0001                                                         ; bdf1: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; bdf1: a5 01       ..
     sbc l0023                                                         ; bdf3: e5 23       .#
     bcc cbdb4                                                         ; bdf5: 90 bd       ..
     lda vm_pc                                                         ; bdf7: a5 02       ..
     sta l0021                                                         ; bdf9: 85 21       .!
-    lda l0003                                                         ; bdfb: a5 03       ..
+    lda vm_pc + 1                                                     ; bdfb: a5 03       ..
     sta l0023                                                         ; bdfd: 85 23       .#
 .something_16_handler
     lda #0                                                            ; bdff: a9 00       ..
@@ -10138,8 +10136,8 @@ oscli                           = &fff7
     lda vm_stack_ptr                                                  ; be07: a5 00       ..
     sbc vm_pc                                                         ; be09: e5 02       ..
     sta l000c                                                         ; be0b: 85 0c       ..
-    lda l0001                                                         ; be0d: a5 01       ..
-    sbc l0003                                                         ; be0f: e5 03       ..
+    lda vm_stack_ptr + 1                                              ; be0d: a5 01       ..
+    sbc vm_pc + 1                                                     ; be0f: e5 03       ..
     sta l000d                                                         ; be11: 85 0d       ..
     ldy l0039                                                         ; be13: a4 39       .9
     lda #0                                                            ; be15: a9 00       ..
@@ -10151,7 +10149,7 @@ oscli                           = &fff7
     cpx vm_stack_ptr                                                  ; be1e: e4 00       ..
     lda l001e,y                                                       ; be20: b9 1e 00    ...
     pha                                                               ; be23: 48          H
-    sbc l0001                                                         ; be24: e5 01       ..
+    sbc vm_stack_ptr + 1                                              ; be24: e5 01       ..
     bcs cbe33                                                         ; be26: b0 0b       ..
     sec                                                               ; be28: 38          8
     txa                                                               ; be29: 8a          .
@@ -10178,7 +10176,7 @@ oscli                           = &fff7
     jsr sub_cb48a                                                     ; be46: 20 8a b4     ..
     lda vm_stack_ptr                                                  ; be49: a5 00       ..
     sta l004c                                                         ; be4b: 85 4c       .L
-    lda l0001                                                         ; be4d: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; be4d: a5 01       ..
     sta l004d                                                         ; be4f: 85 4d       .M
     lda l0039                                                         ; be51: a5 39       .9
     beq cbe72                                                         ; be53: f0 1d       ..
@@ -10188,7 +10186,7 @@ oscli                           = &fff7
     ldy l0022                                                         ; be5d: a4 22       ."
     lda l0053                                                         ; be5f: a5 53       .S
     beq cbe79                                                         ; be61: f0 16       ..
-    lda l0001                                                         ; be63: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; be63: a5 01       ..
     pha                                                               ; be65: 48          H
     lda vm_stack_ptr                                                  ; be66: a5 00       ..
     pha                                                               ; be68: 48          H
@@ -10223,7 +10221,7 @@ oscli                           = &fff7
     sta l000b                                                         ; be95: 85 0b       ..
     stx vm_stack_ptr                                                  ; be97: 86 00       ..
     stx l000e                                                         ; be99: 86 0e       ..
-    sty l0001                                                         ; be9b: 84 01       ..
+    sty vm_stack_ptr + 1                                              ; be9b: 84 01       ..
     sty l000f                                                         ; be9d: 84 0f       ..
     jsr sub_cb42f                                                     ; be9f: 20 2f b4     /.
 .cbea2
@@ -10242,14 +10240,14 @@ oscli                           = &fff7
     lda l0023                                                         ; beb8: a5 23       .#
     sta l000f                                                         ; beba: 85 0f       ..
     ldx vm_pc                                                         ; bebc: a6 02       ..
-    ldy l0003                                                         ; bebe: a4 03       ..
+    ldy vm_pc + 1                                                     ; bebe: a4 03       ..
     bne cbed2                                                         ; bec0: d0 10       ..
 .cbec2
     stx l000e                                                         ; bec2: 86 0e       ..
     sty l000f                                                         ; bec4: 84 0f       ..
     lda vm_stack_ptr                                                  ; bec6: a5 00       ..
     sta l000a                                                         ; bec8: 85 0a       ..
-    lda l0001                                                         ; beca: a5 01       ..
+    lda vm_stack_ptr + 1                                              ; beca: a5 01       ..
     sta l000b                                                         ; becc: 85 0b       ..
     ldx l0021                                                         ; bece: a6 21       .!
     ldy l0023                                                         ; bed0: a4 23       .#
@@ -10943,8 +10941,6 @@ oscli                           = &fff7
 ;     cbf14
 ;     cbf3a
 ;     cbf4b
-;     l0001
-;     l0003
 ;     l0006
 ;     l0007
 ;     l0008
