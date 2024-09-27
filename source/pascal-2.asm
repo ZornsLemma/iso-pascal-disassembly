@@ -3815,7 +3815,7 @@ oscli                           = &fff7
     bcs c96a1                                                         ; 96bd: b0 e2       ..
 .c96bf
     jsr c9709                                                         ; 96bf: 20 09 97     ..
-    jmp c9735                                                         ; 96c2: 4c 35 97    L5.
+    jmp branch_to_l001e_plus_16_bit_operand                           ; 96c2: 4c 35 97    L5.
 
 .bytecode_opcode_bc_handler
     jsr sub_c9664                                                     ; 96c5: 20 64 96     d.
@@ -3823,7 +3823,7 @@ oscli                           = &fff7
     beq c96ae                                                         ; 96ca: f0 e2       ..
 .c96cc
     jsr c971c                                                         ; 96cc: 20 1c 97     ..
-    jmp c9735                                                         ; 96cf: 4c 35 97    L5.
+    jmp branch_to_l001e_plus_16_bit_operand                           ; 96cf: 4c 35 97    L5.
 
 .bytecode_opcode_b7_handler
     jsr sub_c9673                                                     ; 96d2: 20 73 96     s.
@@ -3834,15 +3834,15 @@ oscli                           = &fff7
     bcs c9709                                                         ; 96dc: b0 2b       .+
     ldy #3                                                            ; 96de: a0 03       ..
     cmp (l000a),y                                                     ; 96e0: d1 0a       ..
-    bcc c9735                                                         ; 96e2: 90 51       .Q
-    beq c9735                                                         ; 96e4: f0 4f       .O
+    bcc branch_to_l001e_plus_16_bit_operand                           ; 96e2: 90 51       .Q
+    beq branch_to_l001e_plus_16_bit_operand                           ; 96e4: f0 4f       .O
     bne c9709                                                         ; 96e6: d0 21       .!
 .bytecode_opcode_b9_handler
     jsr sub_c9685                                                     ; 96e8: 20 85 96     ..
     jsr sub_c8b58                                                     ; 96eb: 20 58 8b     X.
     bvs c971c                                                         ; 96ee: 70 2c       p,
     jsr c8eb5                                                         ; 96f0: 20 b5 8e     ..
-    bcs c9735                                                         ; 96f3: b0 40       .@
+    bcs branch_to_l001e_plus_16_bit_operand                           ; 96f3: b0 40       .@
     bcc c971c                                                         ; 96f5: 90 25       .%
 .bytecode_opcode_bb_handler
     jsr sub_c9673                                                     ; 96f7: 20 73 96     s.
@@ -3853,7 +3853,7 @@ oscli                           = &fff7
     bcc c9709                                                         ; 9701: 90 06       ..
     ldy #3                                                            ; 9703: a0 03       ..
     cmp (l000a),y                                                     ; 9705: d1 0a       ..
-    bcs c9735                                                         ; 9707: b0 2c       .,
+    bcs branch_to_l001e_plus_16_bit_operand                           ; 9707: b0 2c       .,
 .c9709
     lda #1                                                            ; 9709: a9 01       ..
     bne c971e                                                         ; 970b: d0 11       ..
@@ -3862,8 +3862,8 @@ oscli                           = &fff7
     jsr sub_c8b70                                                     ; 9710: 20 70 8b     p.
     bvs c971c                                                         ; 9713: 70 07       p.
     jsr c8eb5                                                         ; 9715: 20 b5 8e     ..
-    bcc c9735                                                         ; 9718: 90 1b       ..
-    beq c9735                                                         ; 971a: f0 19       ..
+    bcc branch_to_l001e_plus_16_bit_operand                           ; 9718: 90 1b       ..
+    beq branch_to_l001e_plus_16_bit_operand                           ; 971a: f0 19       ..
 .c971c
     lda #4                                                            ; 971c: a9 04       ..
 .c971e
@@ -3883,7 +3883,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_44_handler
     jsr sub_c8a1e                                                     ; 9732: 20 1e 8a     ..
-.c9735
+.branch_to_l001e_plus_16_bit_operand
     ldy #2                                                            ; 9735: a0 02       ..
     lda (vm_pc),y                                                     ; 9737: b1 02       ..
     tax                                                               ; 9739: aa          .
@@ -3902,7 +3902,7 @@ oscli                           = &fff7
 .bytecode_opcode_45_handler
     jsr sub_c8a1e                                                     ; 974a: 20 1e 8a     ..
     jsr sub_c9af1                                                     ; 974d: 20 f1 9a     ..
-    beq c9735                                                         ; 9750: f0 e3       ..
+    beq branch_to_l001e_plus_16_bit_operand                           ; 9750: f0 e3       ..
     lda #3                                                            ; 9752: a9 03       ..
     rts                                                               ; 9754: 60          `
 
@@ -3949,7 +3949,7 @@ oscli                           = &fff7
     sta vm_stack_ptr + 1                                              ; 9791: 85 01       ..
     ldx vm_stack_ptr                                                  ; 9793: a6 00       ..
     jsr c90e5                                                         ; 9795: 20 e5 90     ..
-    bne c9735                                                         ; 9798: d0 9b       ..
+    bne branch_to_l001e_plus_16_bit_operand                           ; 9798: d0 9b       ..
 .sub_c979a
     clc                                                               ; 979a: 18          .
     lda l0012                                                         ; 979b: a5 12       ..
@@ -4757,7 +4757,7 @@ oscli                           = &fff7
     iny                                                               ; 9c40: c8          .
     ora (vm_pc),y                                                     ; 9c41: 11 02       ..
     beq c9c48                                                         ; 9c43: f0 03       ..
-    jmp c9735                                                         ; 9c45: 4c 35 97    L5.
+    jmp branch_to_l001e_plus_16_bit_operand                           ; 9c45: 4c 35 97    L5.
 
 .c9c48
     brk                                                               ; 9c48: 00          .
@@ -4841,7 +4841,7 @@ oscli                           = &fff7
     rts                                                               ; 9cc5: 60          `
 
 .bytecode_opcode_f1_handler
-    jsr c9735                                                         ; 9cc6: 20 35 97     5.
+    jsr branch_to_l001e_plus_16_bit_operand                           ; 9cc6: 20 35 97     5.
     lda vm_pc                                                         ; 9cc9: a5 02       ..
     sta l001e                                                         ; 9ccb: 85 1e       ..
     lda vm_pc + 1                                                     ; 9ccd: a5 03       ..
@@ -10537,7 +10537,6 @@ oscli                           = &fff7
 ;     c9709
 ;     c971c
 ;     c971e
-;     c9735
 ;     c973d
 ;     c9761
 ;     c97a7

@@ -172,6 +172,8 @@ entry(0x9184, "set_yx_to_41a")
 
 entry(0x92d9, "oswrch_or_osbput")
 
+entry(0x9735, "branch_to_l001e_plus_16_bit_operand")
+
 entry(0x99d5, "push_word_l0008_to_vm_stack")
 entry(0x99e4, "add_4_to_vm_stack_ptr")
 entry(0x99e8, "add_5_to_vm_stack_ptr")
