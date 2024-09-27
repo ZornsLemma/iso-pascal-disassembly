@@ -29,8 +29,11 @@ class CpuVM(trace.Cpu):
         self.indent_level_dict = collections.defaultdict(int)
 
         self.opcodes = {
+            0x00: self.OpcodeN("OP00", 1), # TODO: push immediate?
+            0x01: self.OpcodeN("OP01", 2), # TODO: push immediate?
             0x07: self.OpcodeNRel("JSRS", 1),
             0x10: self.OpcodeN("OP10", 1),
+            0x28: self.OpcodeN("OP28", 1),
             0x31: self.OpcodeNRel("JSRL", 2),
             0x50: self.OpcodeN("OP50", 1),
             0xa7: self.OpcodeN("OPA7", 4),
@@ -123,9 +126,9 @@ class CpuVM(trace.Cpu):
         def _target(self, binary_addr):
             base = movemanager.b2r(binary_addr)
             if self.operand_length == 1:
-                return base + memorymanager.get_u8_binary(binary_addr + 1)
+                return base + 2 + memorymanager.get_u8_binary(binary_addr + 1)
             elif self.operand_length == 2:
-                return base + memorymanager.get_s16_binary(binary_addr + 1)
+                return base + 3 + self.operamemorymanager.get_s16_binary(binary_addr + 1)
             else:
                 assert False
 
