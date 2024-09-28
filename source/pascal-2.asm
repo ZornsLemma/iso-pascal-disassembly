@@ -4840,6 +4840,7 @@ oscli                           = &fff7
     sec                                                               ; 9cc4: 38          8
     rts                                                               ; 9cc5: 60          `
 
+; Opcode &F1 is documented in the manual in section 9 'Using machine code from Pascal'.
 .bytecode_opcode_f1_handler
     jsr branch_to_l001e_plus_16_bit_operand                           ; 9cc6: 20 35 97     5.
     lda vm_pc                                                         ; 9cc9: a5 02       ..

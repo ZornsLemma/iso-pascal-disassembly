@@ -437,6 +437,8 @@ brk(0xb9d9)
 brk(0xba3b)
 brk(0xbdb4)
 
+comment(0x9cc6, "Opcode &F1 is documented in the manual in section 9 'Using machine code from Pascal'.")
+
 go()
 
 # TODO: possible opcodes:
