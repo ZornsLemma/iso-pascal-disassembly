@@ -37,6 +37,8 @@ entry(0x8094, "unrecognised_osbyte_handler_rts")
 
 entry(0x80e5, "fancy_print_error_at_l00fd")
 entry(0x80e9, "fancy_print_error_at_yx")
+label(0x653, "frame_ptr") # TODO: bit of a guess
+expr_label(0x654, make_add("frame_ptr", 1))
 label(0x65b, "line_number_low") # TODO GUESS
 label(0x65c, "line_number_high") # TODO GUESS
 
@@ -356,7 +358,7 @@ comment(0xb15a, "Do 'setup' OSBYTE calls")
 
 comment(0x955b, "TODO: This looks vaguely like some kind of table-based branch.")
 
-comment(0x952f, "TODO: Why do we do this indirect OSCLI via ROM? We could save a few bytes by doing LDX#/LDY# and getting rid of the pointer. AFAICS we do not rely on this do vary the command depending on which of our two ROMs is paged in, but maybe we do. I suspect the reason for this is that this code executes only when the interpreter has been copied into main RAM to run the compiler, and the relocation code used to copy the interpreter will relocate LDX/LDY abs but has no way to know LDX #/LDY # operands are actually parts of an absoloute address.")
+comment(0x952f, "TODO: Why do we do this indirect OSCLI via ROM? We could save a few bytes by doing LDX#/LDY# and getting rid of the pointer. AFAICS we do not rely on this do vary the command depending on which of our two ROMs is paged in, but maybe we do. I suspect the reason for this is that this code executes only when the interpreter has been copied into main RAM to run the compiler, and the relocation code used to copy the interpreter will relocate LDX/LDY abs but has no way to know LDX #/LDY # operands are actually parts of an absolute address.")
 label(0x9539, "oscli_ptr")
 word(0x9539)
 expr_label(0x953a, "oscli_ptr + 1")

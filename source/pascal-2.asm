@@ -179,8 +179,7 @@ l0644                           = &0644
 l064a                           = &064a
 l064e                           = &064e
 l0652                           = &0652
-l0653                           = &0653
-l0654                           = &0654
+frame_ptr                       = &0653
 l0655                           = &0655
 l0656                           = &0656
 l0657                           = &0657
@@ -3574,7 +3573,7 @@ oscli                           = &fff7
 ; the reason for this is that this code executes only when the interpreter has been
 ; copied into main RAM to run the compiler, and the relocation code used to copy the
 ; interpreter will relocate LDX/LDY abs but has no way to know LDX #/LDY # operands are
-; actually parts of an absoloute address.
+; actually parts of an absolute address.
 .c952f
     ldx oscli_ptr                                                     ; 952f: ae 39 95    .9.
     ldy oscli_ptr + 1                                                 ; 9532: ac 3a 95    .:.
@@ -3585,15 +3584,15 @@ oscli                           = &fff7
     equw fx163_192_2                                                  ; 9539: 46 a7       F.
 
 .bytecode_opcode_b1_handler
-    lda l0653                                                         ; 953b: ad 53 06    .S.
+    lda frame_ptr                                                     ; 953b: ad 53 06    .S.
     sta (vm_stack_ptr),y                                              ; 953e: 91 00       ..
     iny                                                               ; 9540: c8          .
-    lda l0654                                                         ; 9541: ad 54 06    .T.
+    lda frame_ptr + 1                                                 ; 9541: ad 54 06    .T.
     sta (vm_stack_ptr),y                                              ; 9544: 91 00       ..
     lda vm_stack_ptr                                                  ; 9546: a5 00       ..
-    sta l0653                                                         ; 9548: 8d 53 06    .S.
+    sta frame_ptr                                                     ; 9548: 8d 53 06    .S.
     lda vm_stack_ptr + 1                                              ; 954b: a5 01       ..
-    sta l0654                                                         ; 954d: 8d 54 06    .T.
+    sta frame_ptr + 1                                                 ; 954d: 8d 54 06    .T.
     lda #9                                                            ; 9550: a9 09       ..
     jsr add_a_to_vm_stack_ptr                                         ; 9552: 20 fe 99     ..
     lda #1                                                            ; 9555: a9 01       ..
@@ -3611,9 +3610,9 @@ oscli                           = &fff7
 .c9564
     asl a                                                             ; 9564: 0a          .
     sta l0016                                                         ; 9565: 85 16       ..
-    lda l0653                                                         ; 9567: ad 53 06    .S.
+    lda frame_ptr                                                     ; 9567: ad 53 06    .S.
     sta l000c                                                         ; 956a: 85 0c       ..
-    lda l0654                                                         ; 956c: ad 54 06    .T.
+    lda frame_ptr + 1                                                 ; 956c: ad 54 06    .T.
     sta l000d                                                         ; 956f: 85 0d       ..
     clc                                                               ; 9571: 18          .
     ldy #4                                                            ; 9572: a0 04       ..
@@ -3626,12 +3625,12 @@ oscli                           = &fff7
     sta (l000c),y                                                     ; 957e: 91 0c       ..
     ldy #1                                                            ; 9580: a0 01       ..
     lda (l000c),y                                                     ; 9582: b1 0c       ..
-    sta l0654                                                         ; 9584: 8d 54 06    .T.
+    sta frame_ptr + 1                                                 ; 9584: 8d 54 06    .T.
     lda l001b                                                         ; 9587: a5 1b       ..
     sta (l000c),y                                                     ; 9589: 91 0c       ..
     dey                                                               ; 958b: 88          .
     lda (l000c),y                                                     ; 958c: b1 0c       ..
-    sta l0653                                                         ; 958e: 8d 53 06    .S.
+    sta frame_ptr                                                     ; 958e: 8d 53 06    .S.
     lda l001a                                                         ; 9591: a5 1a       ..
     sta (l000c),y                                                     ; 9593: 91 0c       ..
     ldy l0016                                                         ; 9595: a4 16       ..
@@ -11064,8 +11063,6 @@ oscli                           = &fff7
 ;     l064a
 ;     l064e
 ;     l0652
-;     l0653
-;     l0654
 ;     l0655
 ;     l0656
 ;     l0657
