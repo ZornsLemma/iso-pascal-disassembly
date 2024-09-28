@@ -6751,7 +6751,7 @@ oscli                           = &fff7
     lda #8                                                            ; a7d7: a9 08       ..
 .ca7d9
     jsr sub_c9189                                                     ; a7d9: 20 89 91     ..
-.ca7dc
+.call_osword
     jsr osword                                                        ; a7dc: 20 f1 ff     ..
     lda #1                                                            ; a7df: a9 01       ..
     rts                                                               ; a7e1: 60          `
@@ -6777,7 +6777,7 @@ oscli                           = &fff7
 .sub_ca800
     ldy #0                                                            ; a800: a0 00       ..
     ldx #&6a ; 'j'                                                    ; a802: a2 6a       .j
-    bne ca7dc                                                         ; a804: d0 d6       ..
+    bne call_osword                                                   ; a804: d0 d6       ..
 .bytecode_opcode_99_handler
     sty l065f                                                         ; a806: 8c 5f 06    ._.
     jsr sub_c91df                                                     ; a809: 20 df 91     ..
@@ -10679,7 +10679,6 @@ oscli                           = &fff7
 ;     ca7a5
 ;     ca7b7
 ;     ca7d9
-;     ca7dc
 ;     ca820
 ;     ca828
 ;     ca85d

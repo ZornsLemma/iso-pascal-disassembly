@@ -36,6 +36,8 @@ class CpuVM(trace.Cpu):
         self.opcodes = {
             0x00: self.OpcodeN("OP00", 1), # TODO: push immediate?
             0x01: self.OpcodeN("OP01", 2), # TODO: push immediate?
+            0x02: self.OpcodeN("OP02", 4), # TODO: push immediate?
+            0x03: self.OpcodeN("OP03", 5), # TODO: push immediate?
             0x04: self.Opcode04("OP04"),
             0x05: self.OpcodeN("OP05", 1),
             0x06: self.OpcodeN("OP06", 2),
@@ -57,10 +59,12 @@ class CpuVM(trace.Cpu):
             0x3a: self.OpcodeN("OP3A", 2),
             0x44: self.OpcodeNRel2("BRA", 2), # TODO: THIS IMPL IS WRONG, THE OFFSET IS APPLIED TO THE 16-BIT WORD AT &1E, *NOT* THE VM PC - THE FIRST BRA EXECUTED GOES TO BB99 - I THINK &1E MAY CONTAIN THE ORIGINAL ENTRY POINT (IE &8670 HERE) - OPCODE F1 MODIFIED L001E MID-RUN BUT IT OTHERWISE SEEMS PRETTY "STABLE", NOT SURE WHAT F1 IS FOR YET, IF IT IS USED IN ANGER THAT COULD MAKE DISASSEMBLING RELIABLY VERY COMPLEX
             0x50: self.OpcodeN("OP50", 1),
+            0x78: self.OpcodeN("OP78", 1),
             0xa7: self.OpcodeN("OPA7", 4),
             0xab: self.OpcodeN("OPAB", 4),
             0xaf: self.OpcodeN("OPAF", 3),
             0xdd: self.OpcodeN("OPDD", 5),
+            0xe8: self.OpcodeN("OSWORD2", 0),
             0xf2: self.OpcodeN("PUSH0B", 0), # TODO: push 0 byte?
             0xfc: self.OpcodeN("PUSH0W", 0), # TODO: push 0 word?
         }

@@ -250,6 +250,8 @@ expr(0xaa92, make_hi("string_true"))
 label_and_expr(0xa72b, "string_false", 0xaa88, 0xaa8a)
 string(0xa72b, 5)
 
+entry(0xa7dc, "call_osword")
+
 entry(0x9976, "escape")
 entry(0x999a, "clear_c_iff_tape_or_rom_filing_system")
 
