@@ -1392,7 +1392,7 @@ oscli                           = &fff7
     ldx #3                                                            ; 8811: a2 03       ..
     bne c8821                                                         ; 8813: d0 0c       ..
 .bytecode_opcode_20_handler
-    jsr sub_c9ae2                                                     ; 8815: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 8815: 20 e2 9a     ..
     ldx #1                                                            ; 8818: a2 01       ..
     bne c8821                                                         ; 881a: d0 05       ..
 .bytecode_opcode_08_handler
@@ -1404,7 +1404,7 @@ oscli                           = &fff7
     iny                                                               ; 8825: c8          .
     sty l004c                                                         ; 8826: 84 4c       .L
     cmp (l0008),y                                                     ; 8828: d1 08       ..
-    bne c8889                                                         ; 882a: d0 5d       .]
+    bne push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 882a: d0 5d       .]
     cmp #0                                                            ; 882c: c9 00       ..
     bne c886b                                                         ; 882e: d0 3b       .;
 .c8830
@@ -1430,7 +1430,7 @@ oscli                           = &fff7
 .bytecode_opcode_1c_handler
     lda operand_size_minus_1_table - 24,x                             ; 8844: bd 1c a7    ...
     sta l004c                                                         ; 8847: 85 4c       .L
-    jsr sub_c9ae2                                                     ; 8849: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 8849: 20 e2 9a     ..
     ldx #1                                                            ; 884c: a2 01       ..
     bne c886b                                                         ; 884e: d0 1b       ..
 .bytecode_opcode_00_handler
@@ -1458,10 +1458,10 @@ oscli                           = &fff7
 .c886b
     ldy l004c                                                         ; 886b: a4 4c       .L
     lda l065a                                                         ; 886d: ad 5a 06    .Z.
-    beq c8889                                                         ; 8870: f0 17       ..
+    beq push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 8870: f0 17       ..
     bpl c8877                                                         ; 8872: 10 03       ..
     tya                                                               ; 8874: 98          .
-    beq c8889                                                         ; 8875: f0 12       ..
+    beq push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 8875: f0 12       ..
 .c8877
     lda (l0008),y                                                     ; 8877: b1 08       ..
     sta (vm_stack_ptr),y                                              ; 8879: 91 00       ..
@@ -1478,12 +1478,13 @@ oscli                           = &fff7
 
 .c8887
     ldy l004c                                                         ; 8887: a4 4c       .L
-.c8889
+.push_l004c_plus_1_bytes_at_l0008_to_vm_stack
+.push_y_plus_1_bytes_at_l0008_to_vm_stack
     lda (l0008),y                                                     ; 8889: b1 08       ..
     sta (vm_stack_ptr),y                                              ; 888b: 91 00       ..
 .c888d
     dey                                                               ; 888d: 88          .
-    bpl c8889                                                         ; 888e: 10 f9       ..
+    bpl push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 888e: 10 f9       ..
     sec                                                               ; 8890: 38          8
     lda vm_stack_ptr                                                  ; 8891: a5 00       ..
     adc l004c                                                         ; 8893: 65 4c       eL
@@ -1549,7 +1550,7 @@ oscli                           = &fff7
 .bytecode_opcode_1e_handler
     lda operand_size_minus_1_table - 29,x                             ; 88ef: bd 17 a7    ...
     sta l004c                                                         ; 88f2: 85 4c       .L
-    jsr sub_c9ae2                                                     ; 88f4: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 88f4: 20 e2 9a     ..
     ldx #1                                                            ; 88f7: a2 01       ..
     bne c8916                                                         ; 88f9: d0 1b       ..
 .bytecode_opcode_05_handler
@@ -1619,7 +1620,7 @@ oscli                           = &fff7
     lda operand_size_minus_1_table - 33,x                             ; 894c: bd 13 a7    ...
     sta l004c                                                         ; 894f: 85 4c       .L
     jsr sub_c892d                                                     ; 8951: 20 2d 89     -.
-    jsr sub_c9ae2                                                     ; 8954: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 8954: 20 e2 9a     ..
     ldx #1                                                            ; 8957: a2 01       ..
     bne c8966                                                         ; 8959: d0 0b       ..
 .bytecode_opcode_11_handler
@@ -1660,7 +1661,7 @@ oscli                           = &fff7
     lda operand_size_minus_1_table - 38,x                             ; 898b: bd 0e a7    ...
     sta l004c                                                         ; 898e: 85 4c       .L
     jsr sub_c9a68                                                     ; 8990: 20 68 9a     h.
-    jsr sub_c9ae2                                                     ; 8993: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 8993: 20 e2 9a     ..
     ldx #1                                                            ; 8996: a2 01       ..
     bne c8966                                                         ; 8998: d0 cc       ..
 .bytecode_opcode_49_handler
@@ -1831,7 +1832,7 @@ oscli                           = &fff7
     rts                                                               ; 8a87: 60          `
 
 .bytecode_opcode_4b_handler
-    jsr sub_c9ae2                                                     ; 8a88: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 8a88: 20 e2 9a     ..
     jsr sub_c9227                                                     ; 8a8b: 20 27 92     '.
     ldy #4                                                            ; 8a8e: a0 04       ..
     lda (l0008),y                                                     ; 8a90: b1 08       ..
@@ -1848,7 +1849,7 @@ oscli                           = &fff7
     equb 0                                                            ; 8aa0: 00          .
 
 .bytecode_opcode_f0_handler
-    jsr sub_c9ae2                                                     ; 8aa1: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 8aa1: 20 e2 9a     ..
     jsr sub_c9227                                                     ; 8aa4: 20 27 92     '.
     ldy #4                                                            ; 8aa7: a0 04       ..
     lda (l0008),y                                                     ; 8aa9: b1 08       ..
@@ -1917,7 +1918,7 @@ oscli                           = &fff7
 .c8b14
     sty l004c                                                         ; 8b14: 84 4c       .L
     ldx #1                                                            ; 8b16: a2 01       ..
-    jmp c8889                                                         ; 8b18: 4c 89 88    L..
+    jmp push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 8b18: 4c 89 88    L..
 
 .bytecode_opcode_a9_handler
     jsr subtract_1_from_vm_stack_ptr                                  ; 8b1b: 20 11 9a     ..
@@ -2802,7 +2803,7 @@ oscli                           = &fff7
     beq c905a                                                         ; 9055: f0 03       ..
     jsr sub_c9ad3                                                     ; 9057: 20 d3 9a     ..
 .c905a
-    jsr sub_c9ae2                                                     ; 905a: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 905a: 20 e2 9a     ..
     ldy #3                                                            ; 905d: a0 03       ..
     lda (vm_pc),y                                                     ; 905f: b1 02       ..
     dey                                                               ; 9061: 88          .
@@ -3108,7 +3109,7 @@ oscli                           = &fff7
     equb 0                                                            ; 9223: 00          .
 
 .sub_c9224
-    jsr sub_c9ae2                                                     ; 9224: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 9224: 20 e2 9a     ..
 .sub_c9227
     jsr sub_c8faa                                                     ; 9227: 20 aa 8f     ..
     bcc c91f8                                                         ; 922a: 90 cc       ..
@@ -3179,7 +3180,7 @@ oscli                           = &fff7
     jmp loop_c9286                                                    ; 9291: 4c 86 92    L..
 
 .bytecode_opcode_8d_handler
-    jsr sub_c9ae2                                                     ; 9294: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 9294: 20 e2 9a     ..
     jsr sub_c91ab                                                     ; 9297: 20 ab 91     ..
     jmp c92a7                                                         ; 929a: 4c a7 92    L..
 
@@ -3238,7 +3239,7 @@ oscli                           = &fff7
     jmp osbput                                                        ; 92ed: 4c d4 ff    L..            ; Write a single byte A to an open file Y
 
 .bytecode_opcode_8f_handler
-    jsr sub_c9ae2                                                     ; 92f0: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 92f0: 20 e2 9a     ..
     jsr sub_c91cf                                                     ; 92f3: 20 cf 91     ..
     ldy #0                                                            ; 92f6: a0 00       ..
     lda (l000a),y                                                     ; 92f8: b1 0a       ..
@@ -3353,7 +3354,7 @@ oscli                           = &fff7
     rts                                                               ; 93be: 60          `
 
 .bytecode_opcode_89_handler
-    jsr sub_c9ae2                                                     ; 93bf: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 93bf: 20 e2 9a     ..
     jsr sub_c91e2                                                     ; 93c2: 20 e2 91     ..
     lda (l0008),y                                                     ; 93c5: b1 08       ..
     and #&20 ; ' '                                                    ; 93c7: 29 20       )
@@ -3386,7 +3387,7 @@ oscli                           = &fff7
     jmp c8e46                                                         ; 93f4: 4c 46 8e    LF.
 
 .bytecode_opcode_8e_handler
-    jsr sub_c9ae2                                                     ; 93f7: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 93f7: 20 e2 9a     ..
     jsr sub_c91ab                                                     ; 93fa: 20 ab 91     ..
     jmp c944f                                                         ; 93fd: 4c 4f 94    LO.
 
@@ -3457,7 +3458,7 @@ oscli                           = &fff7
     rts                                                               ; 946a: 60          `
 
 .bytecode_opcode_90_handler
-    jsr sub_c9ae2                                                     ; 946b: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 946b: 20 e2 9a     ..
     jsr sub_c91cf                                                     ; 946e: 20 cf 91     ..
     jmp c9490                                                         ; 9471: 4c 90 94    L..
 
@@ -3870,7 +3871,7 @@ oscli                           = &fff7
     tax                                                               ; 971e: aa          .
     asl a                                                             ; 971f: 0a          .
     jsr subtract_a_from_vm_stack_ptr                                  ; 9720: 20 27 9a     '.
-    jsr sub_c9ae2                                                     ; 9723: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 9723: 20 e2 9a     ..
     txa                                                               ; 9726: 8a          .
     tay                                                               ; 9727: a8          .
     lda #&b8                                                          ; 9728: a9 b8       ..
@@ -4207,7 +4208,7 @@ oscli                           = &fff7
 .bytecode_opcode_b4_handler
     jsr copy_8_bit_operand_to_l0012                                   ; 993d: 20 05 9b     ..
 .sub_c9940
-    jsr sub_c9ae2                                                     ; 9940: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; 9940: 20 e2 9a     ..
     lda l0009                                                         ; 9943: a5 09       ..
     beq c9955                                                         ; 9945: f0 0e       ..
     cmp l0008                                                         ; 9947: c5 08       ..
@@ -4522,7 +4523,7 @@ oscli                           = &fff7
     sta l000e                                                         ; 9adf: 85 0e       ..
     rts                                                               ; 9ae1: 60          `
 
-.sub_c9ae2
+.pull_word_l0008_from_vm_stack
     jsr subtract_2_from_vm_stack_ptr                                  ; 9ae2: 20 15 9a     ..
     ldy #1                                                            ; 9ae5: a0 01       ..
     lda (vm_stack_ptr),y                                              ; 9ae7: b1 00       ..
@@ -7663,7 +7664,7 @@ oscli                           = &fff7
 .bytecode_opcode_d9_handler
     jsr sub_c9ac4                                                     ; adc5: 20 c4 9a     ..
     jsr sub_c9ad3                                                     ; adc8: 20 d3 9a     ..
-    jsr sub_c9ae2                                                     ; adcb: 20 e2 9a     ..
+    jsr pull_word_l0008_from_vm_stack                                 ; adcb: 20 e2 9a     ..
     ldy #1                                                            ; adce: a0 01       ..
     lda (vm_pc),y                                                     ; add0: b1 02       ..
     sta l0033                                                         ; add2: 85 33       .3
@@ -10415,7 +10416,6 @@ oscli                           = &fff7
 ;     c886b
 ;     c8877
 ;     c8887
-;     c8889
 ;     c888d
 ;     c889b
 ;     c88dc
@@ -11337,7 +11337,6 @@ oscli                           = &fff7
 ;     sub_c9ab6
 ;     sub_c9ac4
 ;     sub_c9ad3
-;     sub_c9ae2
 ;     sub_c9af1
 ;     sub_c9b07
 ;     sub_c9b1a

@@ -159,6 +159,9 @@ entry(0x87c7, "interpreter_loop_no_advance")
 entry(0x87e2, "jmp_indirect_via_l0008")
 label(0x8797, "fx163_192_0")
 
+entry(0x8889, "push_l004c_plus_1_bytes_at_l0008_to_vm_stack")
+entry(0x8889, "push_y_plus_1_bytes_at_l0008_to_vm_stack")
+
 comment(0x8916, "TODO: I think this is zero-extending a value being pushed onto the stack to four bytes")
 comment(0x8921, "TODO: I think this is copying the non-zero-extended part of the value onto the stack")
 entry(0x89d5, "some_sort_of_bulk_copy_from_l000a_to_l000e_of_yx_ish_bytes")
@@ -195,6 +198,8 @@ entry(0x9aa0, "set_l0008_to_vm_pc_plus_2")
 entry(0x9aa4, "set_l0008_to_vm_pc_plus_4")
 entry(0x9aa8, "set_l0008_to_vm_pc_plus_5")
 entry(0x9aaa, "set_l0008_to_vm_pc_plus_a")
+
+entry(0x9ae2, "pull_word_l0008_from_vm_stack")
 
 entry(0x9af9, "copy_16_bit_operand_to_l0012")
 entry(0x9afb, "copy_16_bit_operand_at_offset_y_to_l0012")
