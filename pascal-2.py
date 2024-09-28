@@ -463,3 +463,9 @@ go()
 # 0x05 - push immediate single byte onto stack (zero-extending to 4 bytes)
 # 0x06 - push immediate 16-bit word onto stack (zero-extending to 4 bytes)
 # 0x50 - set l065a to 8-bit immediate
+
+# VM stack appears to grow upwards - I am guessing this is because you can easily(ish) apply positive offsets using (zp),Y addressing but not negative offsets.
+
+# TODO: opcode b1 (implied) may be some kind of function setup routine
+# - this suggests a function has a 9 byte stack frame
+# - offset 0: copy of frame_ptr for calling function

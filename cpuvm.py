@@ -63,6 +63,7 @@ class CpuVM(trace.Cpu):
             0xa7: self.OpcodeN("OPA7", 4),
             0xab: self.OpcodeN("OPAB", 4),
             0xaf: self.OpcodeN("OPAF", 3),
+            0xb1: self.OpcodeN("ENTER", 0),
             0xdd: self.OpcodeN("OPDD", 5),
             0xe8: self.OpcodeN("OSWORD2", 0),
             0xf2: self.OpcodeN("PUSH0B", 0), # TODO: push 0 byte?
