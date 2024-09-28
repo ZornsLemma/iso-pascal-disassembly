@@ -62,7 +62,7 @@ class CpuVM(trace.Cpu):
             0x78: self.OpcodeN("OP78", 1),
             0xa7: self.OpcodeN("OPA7", 4),
             0xab: self.OpcodeN("OPAB", 4),
-            0xaf: self.OpcodeN("OPAF", 3),
+            0xaf: self.OpcodeAF(),
             0xb1: self.OpcodeN("ENTER", 0),
             0xdd: self.OpcodeN("OPDD", 5),
             0xe8: self.OpcodeN("OSWORD2", 0),
@@ -144,6 +144,19 @@ class CpuVM(trace.Cpu):
             data = [classification.get_constant8(binary_addr + i) for i in range(0, self.operand_length + 1)]
             s = "%sEQUB %s ; %s" % (utils.make_indent(1), ", ".join(data), self.mnemonic)
             return s
+
+
+    class OpcodeAF(OpcodeN):
+        def __init__(self):
+            super(CpuVM.OpcodeAF, self).__init__("OPAF", operand_length=3)
+
+        # I think this target is the first free byte after the code; in the case of the compiler this is of course in ROM, but for other programs it is probably the first byte available for the stack.
+        def _target(self, binary_addr):
+            base = movemanager.b2r(memorymanager.BinaryAddr(0x8670)) # TODO HACK movemanager.b2r(binary_addr)
+            return base + get_s16_binary(binary_addr + 2)
+
+        def as_string(self, binary_addr):
+            return utils.LazyString("%s%s %s,%s", utils.make_indent(1), utils.force_case(self.mnemonic), classification.get_constant8(binary_addr + 1), disassembly.get_label(self._target(binary_addr), binary_addr))
         
 
     class Opcode04(Opcode):

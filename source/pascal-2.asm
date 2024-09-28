@@ -3524,10 +3524,12 @@ oscli                           = &fff7
     sty l0657                                                         ; 94d6: 8c 57 06    .W.
     sty l0658                                                         ; 94d9: 8c 58 06    .X.
     sty l0652                                                         ; 94dc: 8c 52 06    .R.
+; TODO: First operand seems to triggset setting l0017 to 0 iff it's zero - why?
     iny                                                               ; 94df: c8          .
     lda (vm_pc),y                                                     ; 94e0: b1 02       ..
     bne c94e6                                                         ; 94e2: d0 02       ..
     sta l0017                                                         ; 94e4: 85 17       ..
+; Set l001c/1d to vm_base_ptr+(word at opcode+2/3)
 .c94e6
     clc                                                               ; 94e6: 18          .
     iny                                                               ; 94e7: c8          .
@@ -3540,6 +3542,8 @@ oscli                           = &fff7
     sta l001d                                                         ; 94f3: 85 1d       ..
     lda machine_high_order_address_low                                ; 94f5: ad 00 04    ...
     bne c9510                                                         ; 94f8: d0 16       ..
+; Special case tube initialisation - TODO: comparing this with diagrams in manual may
+; be instructive
     sta l0630                                                         ; 94fa: 8d 30 06    .0.
     sta pydis_end                                                     ; 94fd: 8d 00 c0    ...
     sta lc001                                                         ; 9500: 8d 01 c0    ...
@@ -3548,6 +3552,8 @@ oscli                           = &fff7
     sta lc003                                                         ; 9508: 8d 03 c0    ...
     lda #&c0                                                          ; 950b: a9 c0       ..
     sta l0631                                                         ; 950d: 8d 31 06    .1.
+; TODO: Probably set l001a/1b to start of stack and initialise vm_stack_ptr to that
+; plus 9, suggesting there is some kind of initial frame allocation here
 .c9510
     clc                                                               ; 9510: 18          .
     lda l0018                                                         ; 9511: a5 18       ..
@@ -3614,6 +3620,7 @@ oscli                           = &fff7
     sta l000c                                                         ; 956a: 85 0c       ..
     lda frame_ptr + 1                                                 ; 956c: ad 54 06    .T.
     sta l000d                                                         ; 956f: 85 0d       ..
+; Save vm_pc+X at offset 4/5 in frame
     clc                                                               ; 9571: 18          .
     ldy #4                                                            ; 9572: a0 04       ..
     txa                                                               ; 9574: 8a          .
@@ -3623,6 +3630,8 @@ oscli                           = &fff7
     lda #0                                                            ; 957a: a9 00       ..
     adc vm_pc + 1                                                     ; 957c: 65 03       e.
     sta (l000c),y                                                     ; 957e: 91 0c       ..
+; Restore old frame_ptr from offset 0/1 in frame, replacing offset 0/1 with copy of
+; l001a/l001b TODO: why??
     ldy #1                                                            ; 9580: a0 01       ..
     lda (l000c),y                                                     ; 9582: b1 0c       ..
     sta frame_ptr + 1                                                 ; 9584: 8d 54 06    .T.

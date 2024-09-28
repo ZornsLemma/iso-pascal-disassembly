@@ -356,7 +356,14 @@ entry(0xb17f, "do_x_osbyte_calls_from_table_starting_at_y")
 entry(0xb172, "set_tab_char_to_9_if_not_electron_and_do_cleanup_osbyte_calls")
 comment(0xb15a, "Do 'setup' OSBYTE calls")
 
+comment(0x94df, "TODO: First operand seems to triggset setting l0017 to 0 iff it's zero - why?")
+comment(0x94e6, "Set l001c/1d to vm_base_ptr+(word at opcode+2/3)")
+comment(0x94fa, "Special case tube initialisation - TODO: comparing this with diagrams in manual may be instructive")
+comment(0x9510, "TODO: Probably set l001a/1b to start of stack and initialise vm_stack_ptr to that plus 9, suggesting there is some kind of initial frame allocation here")
+
 comment(0x955b, "TODO: This looks vaguely like some kind of table-based branch.")
+comment(0x9571, "Save vm_pc+X at offset 4/5 in frame")
+comment(0x9580, "Restore old frame_ptr from offset 0/1 in frame, replacing offset 0/1 with copy of l001a/l001b TODO: why??")
 
 comment(0x952f, "TODO: Why do we do this indirect OSCLI via ROM? We could save a few bytes by doing LDX#/LDY# and getting rid of the pointer. AFAICS we do not rely on this do vary the command depending on which of our two ROMs is paged in, but maybe we do. I suspect the reason for this is that this code executes only when the interpreter has been copied into main RAM to run the compiler, and the relocation code used to copy the interpreter will relocate LDX/LDY abs but has no way to know LDX #/LDY # operands are actually parts of an absolute address.")
 label(0x9539, "oscli_ptr")
