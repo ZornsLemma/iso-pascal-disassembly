@@ -51,7 +51,7 @@ l0018                           = &0018
 l0019                           = &0019
 l001a                           = &001a
 l001b                           = &001b
-l001c                           = &001c
+program_data_ptr                = &001c
 l001d                           = &001d
 vm_base_ptr                     = &001e
 l0020                           = &0020
@@ -420,12 +420,12 @@ oscli                           = &fff7
     ldy l0016                                                         ; 8127: a4 16       ..
     clc                                                               ; 8129: 18          .
     lda vm_base_ptr                                                   ; 812a: a5 1e       ..
-    adc (l001c),y                                                     ; 812c: 71 1c       q.
+    adc (program_data_ptr),y                                          ; 812c: 71 1c       q.
     sta l000c                                                         ; 812e: 85 0c       ..
     tax                                                               ; 8130: aa          .
     iny                                                               ; 8131: c8          .
     lda vm_base_ptr + 1                                               ; 8132: a5 1f       ..
-    adc (l001c),y                                                     ; 8134: 71 1c       q.
+    adc (program_data_ptr),y                                          ; 8134: 71 1c       q.
     sta l000d                                                         ; 8136: 85 0d       ..
     bcs c816b                                                         ; 8138: b0 31       .1
     cpx vm_pc                                                         ; 813a: e4 02       ..
@@ -3535,7 +3535,7 @@ oscli                           = &fff7
     iny                                                               ; 94e7: c8          .
     lda vm_base_ptr                                                   ; 94e8: a5 1e       ..
     adc (vm_pc),y                                                     ; 94ea: 71 02       q.
-    sta l001c                                                         ; 94ec: 85 1c       ..
+    sta program_data_ptr                                              ; 94ec: 85 1c       ..
     iny                                                               ; 94ee: c8          .
     lda vm_base_ptr + 1                                               ; 94ef: a5 1f       ..
     adc (vm_pc),y                                                     ; 94f1: 71 02       q.
@@ -3642,13 +3642,15 @@ oscli                           = &fff7
     sta frame_ptr                                                     ; 958e: 8d 53 06    .S.
     lda l001a                                                         ; 9591: a5 1a       ..
     sta (l000c),y                                                     ; 9593: 91 0c       ..
+; TODO: l0016 appears to be the offset of a pointer in the program_data which we will
+; transfer control to - the address itself being relative to vm_base_ptr.
     ldy l0016                                                         ; 9595: a4 16       ..
     lda vm_base_ptr                                                   ; 9597: a5 1e       ..
-    adc (l001c),y                                                     ; 9599: 71 1c       q.
+    adc (program_data_ptr),y                                          ; 9599: 71 1c       q.
     sta vm_pc                                                         ; 959b: 85 02       ..
     iny                                                               ; 959d: c8          .
     lda vm_base_ptr + 1                                               ; 959e: a5 1f       ..
-    adc (l001c),y                                                     ; 95a0: 71 1c       q.
+    adc (program_data_ptr),y                                          ; 95a0: 71 1c       q.
     sta vm_pc + 1                                                     ; 95a2: 85 03       ..
     lda l000c                                                         ; 95a4: a5 0c       ..
     sta l001a                                                         ; 95a6: 85 1a       ..
@@ -8446,7 +8448,7 @@ oscli                           = &fff7
 .cb2d0
     dey                                                               ; b2d0: 88          .
     bmi cb2ef                                                         ; b2d1: 30 1c       0.
-    ldx l001c,y                                                       ; b2d3: b6 1c       ..
+    ldx program_data_ptr,y                                            ; b2d3: b6 1c       ..
     cpx l0008                                                         ; b2d5: e4 08       ..
     lda vm_base_ptr,y                                                 ; b2d7: b9 1e 00    ...
     sbc l0009                                                         ; b2da: e5 09       ..
@@ -8454,7 +8456,7 @@ oscli                           = &fff7
     sec                                                               ; b2de: 38          8
     txa                                                               ; b2df: 8a          .
     sbc l0015                                                         ; b2e0: e5 15       ..
-    sta l001c,y                                                       ; b2e2: 99 1c 00    ...
+    sta program_data_ptr,y                                            ; b2e2: 99 1c 00    ...
     lda vm_base_ptr,y                                                 ; b2e5: b9 1e 00    ...
     sbc #0                                                            ; b2e8: e9 00       ..
     sta vm_base_ptr,y                                                 ; b2ea: 99 1e 00    ...
@@ -10070,7 +10072,7 @@ oscli                           = &fff7
     beq cbda0                                                         ; bd8b: f0 13       ..
     cpx #1                                                            ; bd8d: e0 01       ..
     bne cbdb4                                                         ; bd8f: d0 23       .#
-    lda l001c                                                         ; bd91: a5 1c       ..
+    lda program_data_ptr                                              ; bd91: a5 1c       ..
     sta l001d                                                         ; bd93: 85 1d       ..
     cmp vm_stack_ptr                                                  ; bd95: c5 00       ..
     lda vm_base_ptr                                                   ; bd97: a5 1e       ..
@@ -10080,7 +10082,7 @@ oscli                           = &fff7
     dex                                                               ; bd9f: ca          .
 .cbda0
     lda vm_stack_ptr                                                  ; bda0: a5 00       ..
-    sta l001c,x                                                       ; bda2: 95 1c       ..
+    sta program_data_ptr,x                                            ; bda2: 95 1c       ..
     lda vm_stack_ptr + 1                                              ; bda4: a5 01       ..
     sta vm_base_ptr,x                                                 ; bda6: 95 1e       ..
     jsr cb71f                                                         ; bda8: 20 1f b7     ..
@@ -10154,7 +10156,7 @@ oscli                           = &fff7
 .cbe19
     dey                                                               ; be19: 88          .
     bmi cbe3b                                                         ; be1a: 30 1f       0.
-    ldx l001c,y                                                       ; be1c: b6 1c       ..
+    ldx program_data_ptr,y                                            ; be1c: b6 1c       ..
     cpx vm_stack_ptr                                                  ; be1e: e4 00       ..
     lda vm_base_ptr,y                                                 ; be20: b9 1e 00    ...
     pha                                                               ; be23: 48          H
@@ -10964,7 +10966,6 @@ oscli                           = &fff7
 ;     l0019
 ;     l001a
 ;     l001b
-;     l001c
 ;     l001d
 ;     l0020
 ;     l0021
