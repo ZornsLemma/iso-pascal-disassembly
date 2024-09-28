@@ -244,6 +244,9 @@ string(0xa72b, 5)
 entry(0x9976, "escape")
 entry(0x999a, "clear_c_iff_tape_or_rom_filing_system")
 
+entry(0xa297, "something_pop_top_of_stack_check_for_zero_ish")
+entry(0xa2a0, "something_check_for_zero_ish")
+
 label(0xaa16, "something2")
 expr(0xa9f9, make_lo("something2"))
 expr(0xa9fd, make_hi("something2"))

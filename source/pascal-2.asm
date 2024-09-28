@@ -5206,7 +5206,7 @@ oscli                           = &fff7
 .bytecode_opcode_c8_handler
 .bytecode_opcode_c9_handler
     jsr sub_c9a4a                                                     ; 9f22: 20 4a 9a     J.
-    jsr ca2a0                                                         ; 9f25: 20 a0 a2     ..
+    jsr something_check_for_zero_ish                                  ; 9f25: 20 a0 a2     ..
     beq c9f39                                                         ; 9f28: f0 0f       ..
     cpx #&c8                                                          ; 9f2a: e0 c8       ..
     beq c9f32                                                         ; 9f2c: f0 04       ..
@@ -5715,13 +5715,13 @@ oscli                           = &fff7
     bne ca226                                                         ; a292: d0 92       ..
     jmp ca214                                                         ; a294: 4c 14 a2    L..
 
-.sub_ca297
+.something_pop_top_of_stack_check_for_zero_ish
     jsr subtract_5_from_vm_stack_ptr_and_copy_to_l000a                ; a297: 20 6c 9a     l.
-    jmp ca2a0                                                         ; a29a: 4c a0 a2    L..
+    jmp something_check_for_zero_ish                                  ; a29a: 4c a0 a2    L..
 
 .ca29d
     jsr sub_ca368                                                     ; a29d: 20 68 a3     h.
-.ca2a0
+.something_check_for_zero_ish
     ldy #4                                                            ; a2a0: a0 04       ..
     lda (l000a),y                                                     ; a2a2: b1 0a       ..
     sta l0044                                                         ; a2a4: 85 44       .D
@@ -7007,7 +7007,7 @@ oscli                           = &fff7
 .bytecode_opcode_67_handler
     lda something_table - 98,x                                        ; a961: bd af a6    ...
     sta l0663                                                         ; a964: 8d 63 06    .c.
-    jsr sub_ca297                                                     ; a967: 20 97 a2     ..
+    jsr something_pop_top_of_stack_check_for_zero_ish                 ; a967: 20 97 a2     ..
     jsr subtract_5_from_vm_stack_ptr_and_copy_to_l000a                ; a96a: 20 6c 9a     l.
     jsr sub_ca973                                                     ; a96d: 20 73 a9     s.
     jmp c8e35                                                         ; a970: 4c 35 8e    L5.
@@ -7055,7 +7055,7 @@ oscli                           = &fff7
     sta l0008                                                         ; a9af: 85 08       ..
     lda opcode_subrange2_jump_table_high - 120,x                      ; a9b1: bd 51 a9    .Q.
     sta l0009                                                         ; a9b4: 85 09       ..
-    jsr sub_ca297                                                     ; a9b6: 20 97 a2     ..
+    jsr something_pop_top_of_stack_check_for_zero_ish                 ; a9b6: 20 97 a2     ..
     jsr sub_c9a4a                                                     ; a9b9: 20 4a 9a     J.
     jsr jmp_indirect_via_l0008                                        ; a9bc: 20 e2 87     ..
     jsr ca2df                                                         ; a9bf: 20 df a2     ..
@@ -7084,7 +7084,7 @@ oscli                           = &fff7
     sta l0008                                                         ; a9d0: 85 08       ..
     lda opcode_subrange1_jump_table_high - 202,x                      ; a9d2: bd 20 a9    . .
     sta l0009                                                         ; a9d5: 85 09       ..
-    jsr sub_ca297                                                     ; a9d7: 20 97 a2     ..
+    jsr something_pop_top_of_stack_check_for_zero_ish                 ; a9d7: 20 97 a2     ..
     jsr jmp_indirect_via_l0008                                        ; a9da: 20 e2 87     ..
     jsr sub_c9da1                                                     ; a9dd: 20 a1 9d     ..
     lda #1                                                            ; a9e0: a9 01       ..
@@ -7109,7 +7109,7 @@ oscli                           = &fff7
 
 .bytecode_opcode_d1_handler
 .bytecode_opcode_d2_handler
-    jsr sub_ca297                                                     ; a9f1: 20 97 a2     ..
+    jsr something_pop_top_of_stack_check_for_zero_ish                 ; a9f1: 20 97 a2     ..
     cpx #&d1                                                          ; a9f4: e0 d1       ..
     beq caa0d                                                         ; a9f6: f0 15       ..
     lda #<something2                                                  ; a9f8: a9 16       ..
@@ -7174,7 +7174,7 @@ oscli                           = &fff7
     jsr sub_c91df                                                     ; aa58: 20 df 91     ..
     ldy #&0c                                                          ; aa5b: a0 0c       ..
     jsr sub_c9300                                                     ; aa5d: 20 00 93     ..
-    jsr sub_ca297                                                     ; aa60: 20 97 a2     ..
+    jsr something_pop_top_of_stack_check_for_zero_ish                 ; aa60: 20 97 a2     ..
     ldx #1                                                            ; aa63: a2 01       ..
     lda l0658                                                         ; aa65: ad 58 06    .X.
     bne caa77                                                         ; aa68: d0 0d       ..
@@ -7234,7 +7234,7 @@ oscli                           = &fff7
     sta l000a                                                         ; aac4: 85 0a       ..
     lda #&aa                                                          ; aac6: a9 aa       ..
     sta l000b                                                         ; aac8: 85 0b       ..
-    jsr ca2a0                                                         ; aaca: 20 a0 a2     ..
+    jsr something_check_for_zero_ish                                  ; aaca: 20 a0 a2     ..
     sec                                                               ; aacd: 38          8
     lda #0                                                            ; aace: a9 00       ..
     sbc l003a                                                         ; aad0: e5 3a       .:
@@ -7309,7 +7309,7 @@ oscli                           = &fff7
     lda l0041                                                         ; ab44: a5 41       .A
     beq cab53                                                         ; ab46: f0 0b       ..
     jsr sub_ca331                                                     ; ab48: 20 31 a3     1.
-    jsr ca2a0                                                         ; ab4b: 20 a0 a2     ..
+    jsr something_check_for_zero_ish                                  ; ab4b: 20 a0 a2     ..
     bne cab65                                                         ; ab4e: d0 15       ..
 .loop_cab50
     jmp c8bc5                                                         ; ab50: 4c c5 8b    L..
@@ -7431,7 +7431,7 @@ oscli                           = &fff7
     sta l000a                                                         ; ac07: 85 0a       ..
     lda #&bf                                                          ; ac09: a9 bf       ..
     sta l000b                                                         ; ac0b: 85 0b       ..
-    jsr ca2a0                                                         ; ac0d: 20 a0 a2     ..
+    jsr something_check_for_zero_ish                                  ; ac0d: 20 a0 a2     ..
 .loop_cac10
     jsr sub_ca368                                                     ; ac10: 20 68 a3     h.
     jsr opcode_7b_sub_handler                                         ; ac13: 20 59 ab     Y.
@@ -7612,7 +7612,7 @@ oscli                           = &fff7
     jsr opcode_78_sub_handler                                         ; ad5d: 20 03 a1     ..
     jsr ca2df                                                         ; ad60: 20 df a2     ..
     jsr sub_ca360                                                     ; ad63: 20 60 a3     `.
-    jsr ca2a0                                                         ; ad66: 20 a0 a2     ..
+    jsr something_check_for_zero_ish                                  ; ad66: 20 a0 a2     ..
     jsr sub_cabf5                                                     ; ad69: 20 f5 ab     ..
     jsr opcode_ca_sub_handler                                         ; ad6c: 20 ed aa     ..
     jsr sub_ca368                                                     ; ad6f: 20 68 a3     h.
@@ -10648,7 +10648,6 @@ oscli                           = &fff7
 ;     ca226
 ;     ca232
 ;     ca29d
-;     ca2a0
 ;     ca2cc
 ;     ca2d9
 ;     ca2df
@@ -11360,7 +11359,6 @@ oscli                           = &fff7
 ;     sub_ca202
 ;     sub_ca227
 ;     sub_ca27e
-;     sub_ca297
 ;     sub_ca2cf
 ;     sub_ca2d3
 ;     sub_ca2d7
