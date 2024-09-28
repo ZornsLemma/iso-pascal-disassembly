@@ -154,7 +154,7 @@ class CpuVM(trace.Cpu):
             super(CpuVM.OpcodeNRel2, self).__init__(mnemonic, operand_length, update=None)
 
         def _target(self, binary_addr):
-            base = movemanager.b2r(binary_addr)
+            base = movemanager.b2r(memorymanager.BinaryAddr(0x8670)) # TODO HACK movemanager.b2r(binary_addr)
             if self.operand_length == 1: # TODO: This case may not even exist
                 return base + memorymanager.get_u8_binary(binary_addr + 1)
             elif self.operand_length == 2:
