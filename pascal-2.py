@@ -159,8 +159,9 @@ entry(0x87c7, "interpreter_loop_no_advance")
 entry(0x87e2, "jmp_indirect_via_l0008")
 label(0x8797, "fx163_192_0")
 
-entry(0x8889, "push_l004c_plus_1_bytes_at_l0008_to_vm_stack")
+entry(0x8887, "push_l004c_plus_1_bytes_at_l0008_to_vm_stack")
 entry(0x8889, "push_y_plus_1_bytes_at_l0008_to_vm_stack")
+entry(0x888d, "push_y_bytes_at_l0008_to_vm_stack")
 
 comment(0x8916, "TODO: I think this is zero-extending a value being pushed onto the stack to four bytes")
 comment(0x8921, "TODO: I think this is copying the non-zero-extended part of the value onto the stack")
@@ -374,6 +375,7 @@ expr(0x8e57, make_subtract("something_table", 0x5a))
 expr(0x8e28, make_subtract("something_table", 0x54))
 
 label(0xa72f+0x5, "operand_size_minus_1_table") # TODO: guessing
+expr(0x8864, make_subtract("operand_size_minus_1_table", 0x9))
 expr(0x88fc, make_subtract("operand_size_minus_1_table", 0x5))
 expr(0x88f0, make_subtract("operand_size_minus_1_table", 0x1d))
 expr(0x894d, make_subtract("operand_size_minus_1_table", 0x21))

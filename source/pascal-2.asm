@@ -1404,7 +1404,7 @@ oscli                           = &fff7
     iny                                                               ; 8825: c8          .
     sty l004c                                                         ; 8826: 84 4c       .L
     cmp (l0008),y                                                     ; 8828: d1 08       ..
-    bne push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 882a: d0 5d       .]
+    bne push_y_plus_1_bytes_at_l0008_to_vm_stack                      ; 882a: d0 5d       .]
     cmp #0                                                            ; 882c: c9 00       ..
     bne c886b                                                         ; 882e: d0 3b       .;
 .c8830
@@ -1443,7 +1443,7 @@ oscli                           = &fff7
     ldx l004c                                                         ; 8858: a6 4c       .L
     inx                                                               ; 885a: e8          .
     inx                                                               ; 885b: e8          .
-    bne c8887                                                         ; 885c: d0 29       .)
+    bne push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 885c: d0 29       .)
 .bytecode_opcode_f7_handler
     jsr bytecode_opcode_2f_handler                                    ; 885e: 20 11 8a     ..
     ldx #9                                                            ; 8861: a2 09       ..
@@ -1452,21 +1452,21 @@ oscli                           = &fff7
 .bytecode_opcode_0b_handler
 .bytecode_opcode_0c_handler
 .bytecode_opcode_0d_handler
-    lda string_false,x                                                ; 8863: bd 2b a7    .+.
+    lda operand_size_minus_1_table - 9,x                              ; 8863: bd 2b a7    .+.
     jsr sub_c87e5                                                     ; 8866: 20 e5 87     ..
     ldx #2                                                            ; 8869: a2 02       ..
 .c886b
     ldy l004c                                                         ; 886b: a4 4c       .L
     lda l065a                                                         ; 886d: ad 5a 06    .Z.
-    beq push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 8870: f0 17       ..
+    beq push_y_plus_1_bytes_at_l0008_to_vm_stack                      ; 8870: f0 17       ..
     bpl c8877                                                         ; 8872: 10 03       ..
     tya                                                               ; 8874: 98          .
-    beq push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 8875: f0 12       ..
+    beq push_y_plus_1_bytes_at_l0008_to_vm_stack                      ; 8875: f0 12       ..
 .c8877
     lda (l0008),y                                                     ; 8877: b1 08       ..
     sta (vm_stack_ptr),y                                              ; 8879: 91 00       ..
     cmp #&b8                                                          ; 887b: c9 b8       ..
-    bne c888d                                                         ; 887d: d0 0e       ..
+    bne push_y_bytes_at_l0008_to_vm_stack                             ; 887d: d0 0e       ..
     dey                                                               ; 887f: 88          .
     bpl c8877                                                         ; 8880: 10 f5       ..
     brk                                                               ; 8882: 00          .
@@ -1476,15 +1476,14 @@ oscli                           = &fff7
     equb 128 + 3                                                      ; 8885: 83          .              ; "variable" (token 3)
     equb 0                                                            ; 8886: 00          .
 
-.c8887
-    ldy l004c                                                         ; 8887: a4 4c       .L
 .push_l004c_plus_1_bytes_at_l0008_to_vm_stack
+    ldy l004c                                                         ; 8887: a4 4c       .L
 .push_y_plus_1_bytes_at_l0008_to_vm_stack
     lda (l0008),y                                                     ; 8889: b1 08       ..
     sta (vm_stack_ptr),y                                              ; 888b: 91 00       ..
-.c888d
+.push_y_bytes_at_l0008_to_vm_stack
     dey                                                               ; 888d: 88          .
-    bpl push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 888e: 10 f9       ..
+    bpl push_y_plus_1_bytes_at_l0008_to_vm_stack                      ; 888e: 10 f9       ..
     sec                                                               ; 8890: 38          8
     lda vm_stack_ptr                                                  ; 8891: a5 00       ..
     adc l004c                                                         ; 8893: 65 4c       eL
@@ -1508,10 +1507,10 @@ oscli                           = &fff7
     tay                                                               ; 88af: a8          .
     lda (vm_pc),y                                                     ; 88b0: b1 02       ..
     cmp #&ef                                                          ; 88b2: c9 ef       ..
-    bne c8887                                                         ; 88b4: d0 d1       ..
+    bne push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 88b4: d0 d1       ..
     jsr bytecode_opcode_ef_handler                                    ; 88b6: 20 b2 ae     ..
     tax                                                               ; 88b9: aa          .
-    bne c8887                                                         ; 88ba: d0 cb       ..
+    bne push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 88ba: d0 cb       ..
 .bytecode_opcode_04_handler
     iny                                                               ; 88bc: c8          .
     lda (vm_pc),y                                                     ; 88bd: b1 02       ..
@@ -1918,7 +1917,7 @@ oscli                           = &fff7
 .c8b14
     sty l004c                                                         ; 8b14: 84 4c       .L
     ldx #1                                                            ; 8b16: a2 01       ..
-    jmp push_l004c_plus_1_bytes_at_l0008_to_vm_stack                  ; 8b18: 4c 89 88    L..
+    jmp push_y_plus_1_bytes_at_l0008_to_vm_stack                      ; 8b18: 4c 89 88    L..
 
 .bytecode_opcode_a9_handler
     jsr subtract_1_from_vm_stack_ptr                                  ; 8b1b: 20 11 9a     ..
@@ -10415,8 +10414,6 @@ oscli                           = &fff7
 ;     c8830
 ;     c886b
 ;     c8877
-;     c8887
-;     c888d
 ;     c889b
 ;     c88dc
 ;     c8916
@@ -12180,6 +12177,7 @@ oscli                           = &fff7
     assert operand_size_minus_1_table - 56 == &a6fc
     assert operand_size_minus_1_table - 59 == &a6f9
     assert operand_size_minus_1_table - 64 == &a6f4
+    assert operand_size_minus_1_table - 9 == &a72b
     assert osbyte_163_192_x_minus_1_table - 1 == &8094
     assert osbyte_acknowledge_escape == &7e
     assert osbyte_enter_language == &8e

@@ -36,10 +36,21 @@ class CpuVM(trace.Cpu):
         self.opcodes = {
             0x00: self.OpcodeN("OP00", 1), # TODO: push immediate?
             0x01: self.OpcodeN("OP01", 2), # TODO: push immediate?
+            0x05: self.OpcodeN("OP05", 1),
+            0x06: self.OpcodeN("OP06", 2),
             0x07: self.OpcodeNRel("JSRS", 1),
+            0x09: self.OpcodeN("OP09", 1),
+            0x0A: self.OpcodeN("OP0A", 2),
+            0x0B: self.OpcodeN("OP0B", 4),
+            0x0C: self.OpcodeN("OP0C", 5),
+            0x0D: self.OpcodeN("OP0D", 0x20),
             0x10: self.OpcodeN("OP10", 1),
             0x11: self.OpcodeN("OP11", 1),
             0x12: self.OpcodeN("OP12", 2),
+            0x17: self.OpcodeN("OP17", 1),
+            0x18: self.OpcodeN("OP18", 1),
+            0x19: self.OpcodeN("OP19", 2),
+            0x1A: self.OpcodeN("OP1A", 4),
             0x28: self.OpcodeN("OP28", 1),
             0x31: self.OpcodeNRel("JSRL", 2),
             0x3a: self.OpcodeN("OP3A", 2),
