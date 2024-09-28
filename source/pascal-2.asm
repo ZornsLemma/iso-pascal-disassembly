@@ -1645,21 +1645,21 @@ oscli                           = &fff7
 .bytecode_opcode_17_handler
     lda la71e,x                                                       ; 8971: bd 1e a7    ...
     jsr sub_c87e5                                                     ; 8974: 20 e5 87     ..
-    jsr sub_c9a68                                                     ; 8977: 20 68 9a     h.
+    jsr subtract_4_from_vm_stack_ptr_and_copy_to_l000a                ; 8977: 20 68 9a     h.
     ldx #2                                                            ; 897a: a2 02       ..
     bne c8966                                                         ; 897c: d0 e8       ..
 .bytecode_opcode_40_handler
 .bytecode_opcode_41_handler
     lda operand_size_minus_1_table - 64,x                             ; 897e: bd f4 a6    ...
     jsr sub_c87f9                                                     ; 8981: 20 f9 87     ..
-    jsr sub_c9a68                                                     ; 8984: 20 68 9a     h.
+    jsr subtract_4_from_vm_stack_ptr_and_copy_to_l000a                ; 8984: 20 68 9a     h.
     ldx #3                                                            ; 8987: a2 03       ..
     bne c8966                                                         ; 8989: d0 db       ..
 .bytecode_opcode_26_handler
 .bytecode_opcode_27_handler
     lda operand_size_minus_1_table - 38,x                             ; 898b: bd 0e a7    ...
     sta l004c                                                         ; 898e: 85 4c       .L
-    jsr sub_c9a68                                                     ; 8990: 20 68 9a     h.
+    jsr subtract_4_from_vm_stack_ptr_and_copy_to_l000a                ; 8990: 20 68 9a     h.
     jsr pull_word_l0008_from_vm_stack                                 ; 8993: 20 e2 9a     ..
     ldx #1                                                            ; 8996: a2 01       ..
     bne c8966                                                         ; 8998: d0 cc       ..
@@ -1995,7 +1995,7 @@ oscli                           = &fff7
     rts                                                               ; 8b87: 60          `
 
 .sub_c8b88
-    jsr sub_c9a68                                                     ; 8b88: 20 68 9a     h.
+    jsr subtract_4_from_vm_stack_ptr_and_copy_to_l000a                ; 8b88: 20 68 9a     h.
 .sub_c8b8b
     ldy #3                                                            ; 8b8b: a0 03       ..
 .loop_c8b8d
@@ -2272,7 +2272,7 @@ oscli                           = &fff7
     sta l0008                                                         ; 8d37: 85 08       ..
     lda opcode_subrange3_jump_table_high - 114,x                      ; 8d39: bd 9a a6    ...
     sta l0009                                                         ; 8d3c: 85 09       ..
-    jsr sub_c9a68                                                     ; 8d3e: 20 68 9a     h.
+    jsr subtract_4_from_vm_stack_ptr_and_copy_to_l000a                ; 8d3e: 20 68 9a     h.
     jsr sub_c8b96                                                     ; 8d41: 20 96 8b     ..
     jsr sub_c9a46                                                     ; 8d44: 20 46 9a     F.
     jsr sub_c8b8b                                                     ; 8d47: 20 8b 8b     ..
@@ -2518,7 +2518,7 @@ oscli                           = &fff7
 .bytecode_opcode_61_handler
     lda something_table - 92,x                                        ; 8ea0: bd b5 a6    ...
     sta l0663                                                         ; 8ea3: 8d 63 06    .c.
-    jsr sub_c9a68                                                     ; 8ea6: 20 68 9a     h.
+    jsr subtract_4_from_vm_stack_ptr_and_copy_to_l000a                ; 8ea6: 20 68 9a     h.
     jsr c9a8a                                                         ; 8ea9: 20 8a 9a     ..
     jsr subtract_4_from_vm_stack_ptr                                  ; 8eac: 20 19 9a     ..
     jsr c8eb5                                                         ; 8eaf: 20 b5 8e     ..
@@ -2576,12 +2576,12 @@ oscli                           = &fff7
     rts                                                               ; 8efb: 60          `
 
 .bytecode_opcode_81_handler
-    jsr sub_c9a70                                                     ; 8efc: 20 70 9a     p.
+    jsr subtract_32_from_vm_stack_ptr_and_copy_to_l000a               ; 8efc: 20 70 9a     p.
     jsr sub_c9af1                                                     ; 8eff: 20 f1 9a     ..
     jmp c8f10                                                         ; 8f02: 4c 10 8f    L..
 
 .bytecode_opcode_83_handler
-    jsr sub_c9a70                                                     ; 8f05: 20 70 9a     p.
+    jsr subtract_32_from_vm_stack_ptr_and_copy_to_l000a               ; 8f05: 20 70 9a     p.
     jsr sub_c9cb4                                                     ; 8f08: 20 b4 9c     ..
     bcc c8f10                                                         ; 8f0b: 90 03       ..
     jmp bytecode_opcode_fb_handler                                    ; 8f0d: 4c 52 8e    LR.
@@ -3465,12 +3465,12 @@ oscli                           = &fff7
     jsr sub_c91df                                                     ; 9474: 20 df 91     ..
     ldy #1                                                            ; 9477: a0 01       ..
     lda (l0008),y                                                     ; 9479: b1 08       ..
-    jsr c9a72                                                         ; 947b: 20 72 9a     r.
+    jsr subtract_a_from_vm_stack_ptr_and_copy_to_l000a                ; 947b: 20 72 9a     r.
     jmp c9490                                                         ; 947e: 4c 90 94    L..
 
 .bytecode_opcode_a2_handler
 .bytecode_opcode_a3_handler
-    jsr sub_c9a68                                                     ; 9481: 20 68 9a     h.
+    jsr subtract_4_from_vm_stack_ptr_and_copy_to_l000a                ; 9481: 20 68 9a     h.
     jsr sub_c91df                                                     ; 9484: 20 df 91     ..
     jmp c9490                                                         ; 9487: 4c 90 94    L..
 
@@ -4367,7 +4367,7 @@ oscli                           = &fff7
 
 .sub_c9a08
     ldy #&1f                                                          ; 9a08: a0 1f       ..
-    jsr sub_c9a70                                                     ; 9a0a: 20 70 9a     p.
+    jsr subtract_32_from_vm_stack_ptr_and_copy_to_l000a               ; 9a0a: 20 70 9a     p.
 .sub_c9a0d
     lda #&20 ; ' '                                                    ; 9a0d: a9 20       .
     bne subtract_a_from_vm_stack_ptr                                  ; 9a0f: d0 16       ..
@@ -4435,15 +4435,15 @@ oscli                           = &fff7
 
     equb &a9,   2, &d0, &0a                                           ; 9a64: a9 02 d0... ...
 
-.sub_c9a68
+.subtract_4_from_vm_stack_ptr_and_copy_to_l000a
     lda #4                                                            ; 9a68: a9 04       ..
-    bne c9a72                                                         ; 9a6a: d0 06       ..
-.sub_c9a6c
+    bne subtract_a_from_vm_stack_ptr_and_copy_to_l000a                ; 9a6a: d0 06       ..
+.subtract_5_from_vm_stack_ptr_and_copy_to_l000a
     lda #5                                                            ; 9a6c: a9 05       ..
-    bne c9a72                                                         ; 9a6e: d0 02       ..
-.sub_c9a70
+    bne subtract_a_from_vm_stack_ptr_and_copy_to_l000a                ; 9a6e: d0 02       ..
+.subtract_32_from_vm_stack_ptr_and_copy_to_l000a
     lda #&20 ; ' '                                                    ; 9a70: a9 20       .
-.c9a72
+.subtract_a_from_vm_stack_ptr_and_copy_to_l000a
     sta l0014                                                         ; 9a72: 85 14       ..
     sec                                                               ; 9a74: 38          8
     lda vm_stack_ptr                                                  ; 9a75: a5 00       ..
@@ -5716,7 +5716,7 @@ oscli                           = &fff7
     jmp ca214                                                         ; a294: 4c 14 a2    L..
 
 .sub_ca297
-    jsr sub_c9a6c                                                     ; a297: 20 6c 9a     l.
+    jsr subtract_5_from_vm_stack_ptr_and_copy_to_l000a                ; a297: 20 6c 9a     l.
     jmp ca2a0                                                         ; a29a: 4c a0 a2    L..
 
 .ca29d
@@ -7008,7 +7008,7 @@ oscli                           = &fff7
     lda something_table - 98,x                                        ; a961: bd af a6    ...
     sta l0663                                                         ; a964: 8d 63 06    .c.
     jsr sub_ca297                                                     ; a967: 20 97 a2     ..
-    jsr sub_c9a6c                                                     ; a96a: 20 6c 9a     l.
+    jsr subtract_5_from_vm_stack_ptr_and_copy_to_l000a                ; a96a: 20 6c 9a     l.
     jsr sub_ca973                                                     ; a96d: 20 73 a9     s.
     jmp c8e35                                                         ; a970: 4c 35 8e    L5.
 
@@ -10558,7 +10558,6 @@ oscli                           = &fff7
 ;     c9a07
 ;     c9a34
 ;     c9a54
-;     c9a72
 ;     c9a8a
 ;     c9a8c
 ;     c9b34
@@ -11327,9 +11326,6 @@ oscli                           = &fff7
 ;     sub_c9a4a
 ;     sub_c9a4e
 ;     sub_c9a52
-;     sub_c9a68
-;     sub_c9a6c
-;     sub_c9a70
 ;     sub_c9a86
 ;     sub_c9ab6
 ;     sub_c9ac4

@@ -194,6 +194,11 @@ comment(0x9a21, "TODO: dead code?")
 entry(0x9a25, "subtract_16_from_vm_stack_ptr")
 entry(0x9a27, "subtract_a_from_vm_stack_ptr")
 
+entry(0x9a68, "subtract_4_from_vm_stack_ptr_and_copy_to_l000a")
+entry(0x9a6c, "subtract_5_from_vm_stack_ptr_and_copy_to_l000a")
+entry(0x9a70, "subtract_32_from_vm_stack_ptr_and_copy_to_l000a")
+entry(0x9a72, "subtract_a_from_vm_stack_ptr_and_copy_to_l000a")
+
 entry(0x9a9c, "set_l0008_to_vm_pc_plus_1")
 entry(0x9aa0, "set_l0008_to_vm_pc_plus_2")
 entry(0x9aa4, "set_l0008_to_vm_pc_plus_4")
