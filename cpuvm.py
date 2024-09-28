@@ -36,6 +36,7 @@ class CpuVM(trace.Cpu):
         self.opcodes = {
             0x00: self.OpcodeN("OP00", 1), # TODO: push immediate?
             0x01: self.OpcodeN("OP01", 2), # TODO: push immediate?
+            0x04: self.Opcode04("OP04"),
             0x05: self.OpcodeN("OP05", 1),
             0x06: self.OpcodeN("OP06", 2),
             0x07: self.OpcodeNRel("JSRS", 1),
@@ -138,6 +139,22 @@ class CpuVM(trace.Cpu):
             data = [classification.get_constant8(binary_addr + i) for i in range(0, self.operand_length + 1)]
             s = "%sEQUB %s ; %s" % (utils.make_indent(1), ", ".join(data), self.mnemonic)
             return s
+        
+
+    class Opcode04(Opcode):
+        def __init__(self, mnemonic):
+            super(CpuVM.Opcode04, self).__init__(mnemonic, operand_length=2, update=None) # TODO: fixed operand_length here is not very meaningful
+
+        def disassemble(self, binary_addr):
+            # TODO: As elsewhere where exactly do we need to apply_move()? Perhaps we don't need it  here given it's relative, feeling my way..
+            return [binary_addr + 3 + memorymanager.get_u8_binary(binary_addr + 1)]
+
+        def as_string(self, binary_addr):
+            # TODO: Would be nice to get EQUB, comment syntax etc from current assembler
+            data = [classification.get_constant8(binary_addr + i) for i in range(0, 3 + memorymanager.get_u8_binary(binary_addr + 1))]
+            s = "%sEQUB %s ; %s" % (utils.make_indent(1), ", ".join(data), self.mnemonic)
+            return s
+
 
 
     class OpcodeNRel(Opcode):
