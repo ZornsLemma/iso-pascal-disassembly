@@ -356,7 +356,7 @@ entry(0xb17f, "do_x_osbyte_calls_from_table_starting_at_y")
 entry(0xb172, "set_tab_char_to_9_if_not_electron_and_do_cleanup_osbyte_calls")
 comment(0xb15a, "Do 'setup' OSBYTE calls")
 
-comment(0x94df, "TODO: First operand seems to triggset setting l0017 to 0 iff it's zero - why?")
+comment(0x94df, "TODO: First operand seems to trigger setting l0017 to 0 iff it's zero - why?")
 comment(0x94e6, "Set l001c/1d to vm_base_ptr+(word at opcode+2/3)")
 comment(0x94fa, "Special case tube initialisation - TODO: comparing this with diagrams in manual may be instructive")
 comment(0x9510, "TODO: Probably set l001a/1b to start of stack and initialise vm_stack_ptr to that plus 9, suggesting there is some kind of initial frame allocation here")

@@ -3524,7 +3524,7 @@ oscli                           = &fff7
     sty l0657                                                         ; 94d6: 8c 57 06    .W.
     sty l0658                                                         ; 94d9: 8c 58 06    .X.
     sty l0652                                                         ; 94dc: 8c 52 06    .R.
-; TODO: First operand seems to triggset setting l0017 to 0 iff it's zero - why?
+; TODO: First operand seems to trigger setting l0017 to 0 iff it's zero - why?
     iny                                                               ; 94df: c8          .
     lda (vm_pc),y                                                     ; 94e0: b1 02       ..
     bne c94e6                                                         ; 94e2: d0 02       ..
