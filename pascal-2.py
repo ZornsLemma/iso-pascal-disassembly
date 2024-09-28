@@ -44,6 +44,9 @@ label(0x0, "vm_stack_ptr") # TODO: guess
 expr_label(0x1, make_add("vm_stack_ptr", 1))
 label(0x2, "vm_pc")
 expr_label(0x3, make_add("vm_pc", 1))
+# TODO: I suspect these addresses are used as temporaries in one or two places but this is probably the least confusing name.
+label(0x1e, "vm_base_ptr")
+expr_label(0x1f, make_add("vm_base_ptr", 1))
 
 label(0x8095, "osbyte_163_192_x_minus_1_table")
 byte(0x8095, 3)
@@ -350,6 +353,8 @@ entry(0xb163, "set_tab_char_to_x_if_not_electron")
 entry(0xb17f, "do_x_osbyte_calls_from_table_starting_at_y")
 entry(0xb172, "set_tab_char_to_9_if_not_electron_and_do_cleanup_osbyte_calls")
 comment(0xb15a, "Do 'setup' OSBYTE calls")
+
+comment(0x955b, "TODO: This looks vaguely like some kind of table-based branch.")
 
 comment(0x952f, "TODO: Why do we do this indirect OSCLI via ROM? We could save a few bytes by doing LDX#/LDY# and getting rid of the pointer. AFAICS we do not rely on this do vary the command depending on which of our two ROMs is paged in, but maybe we do. I suspect the reason for this is that this code executes only when the interpreter has been copied into main RAM to run the compiler, and the relocation code used to copy the interpreter will relocate LDX/LDY abs but has no way to know LDX #/LDY # operands are actually parts of an absoloute address.")
 label(0x9539, "oscli_ptr")
