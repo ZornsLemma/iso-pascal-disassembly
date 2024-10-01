@@ -33,6 +33,7 @@ class CpuVM(trace.Cpu):
         # TODO: indent_level is a bit of a hack (after all, arguably byte/word directives etc should have it too) and should probably be handled at a higher level by the code controlling emission of text disassembly output
         self.indent_level_dict = collections.defaultdict(int)
 
+        # Opcode names taken from https://gtoal.com/acorn/arm/TutuPascal2/ACOMP/pascomp.txt TODO: not all yet, and I am not sure the numbers match so may want to undo some of these (but it is still at least a useful "hint")
         self.opcodes = {
             0x00: self.OpcodeN("OP00", 1), # TODO: push immediate?
             0x01: self.OpcodeN("OP01", 2), # TODO: push immediate?
@@ -41,17 +42,17 @@ class CpuVM(trace.Cpu):
             0x04: self.Opcode04("OP04"),
             0x05: self.OpcodeN("OP05", 1),
             0x06: self.OpcodeN("OP06", 2),
-            0x07: self.OpcodeNRel("JSRS", 1),
-            0x09: self.OpcodeN("OP09", 1),
+            0x07: self.OpcodeNRel("LOCILD", 1),
+            0x09: self.OpcodeN("PUSH", 1),
             0x0A: self.OpcodeN("OP0A", 2),
             0x0B: self.OpcodeN("OP0B", 4),
             0x0C: self.OpcodeN("OP0C", 5),
             0x0D: self.OpcodeN("OP0D", 0x20),
-            0x10: self.OpcodeN("OP10", 1),
-            0x11: self.OpcodeN("OP11", 1),
+            0x10: self.OpcodeN("LOCATE", 1), # 16
+            0x11: self.OpcodeN("POP", 1), # 17
             0x12: self.OpcodeN("OP12", 2),
             0x17: self.OpcodeN("OP17", 1),
-            0x18: self.OpcodeN("OP18", 1),
+            0x18: self.OpcodeN("IPUSH", 1), # 24
             0x19: self.OpcodeN("OP19", 2),
             0x1A: self.OpcodeN("OP1A", 4),
             0x28: self.OpcodeN("OP28", 1),
@@ -62,9 +63,10 @@ class CpuVM(trace.Cpu):
             0x78: self.OpcodeN("OP78", 1),
             0xa7: self.OpcodeN("OPA7", 4),
             0xab: self.OpcodeN("OPAB", 4),
-            0xaf: self.OpcodeAF(),
-            0xb1: self.OpcodeN("ENTER", 0),
-            0xdd: self.OpcodeN("OPDD", 5),
+            0xaf: self.OpcodeAF(), # 175
+            # TODO 0xb0/176 is EXITS
+            0xb1: self.OpcodeN("MARKS", 0), # 177
+            0xdd: self.OpcodeN("ENTERL", 5), # 221
             0xe8: self.OpcodeN("OSWORD2", 0),
             0xf2: self.OpcodeN("PUSH0B", 0), # TODO: push 0 byte?
             0xfc: self.OpcodeN("PUSH0W", 0), # TODO: push 0 word?
@@ -148,7 +150,7 @@ class CpuVM(trace.Cpu):
 
     class OpcodeAF(OpcodeN):
         def __init__(self):
-            super(CpuVM.OpcodeAF, self).__init__("OPAF", operand_length=3)
+            super(CpuVM.OpcodeAF, self).__init__("INITS", operand_length=3)
 
         # I think this target is the first free byte after the code; in the case of the compiler this is of course in ROM, but for other programs it is probably the first byte available for the stack.
         def _target(self, binary_addr):

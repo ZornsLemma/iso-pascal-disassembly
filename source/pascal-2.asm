@@ -3643,7 +3643,9 @@ oscli                           = &fff7
     lda l001a                                                         ; 9591: a5 1a       ..
     sta (l000c),y                                                     ; 9593: 91 0c       ..
 ; TODO: l0016 appears to be the offset of a pointer in the program_data which we will
-; transfer control to - the address itself being relative to vm_base_ptr.
+; transfer control to - the address itself being relative to vm_base_ptr. This might be
+; a way of compressing code, by avoiding a 16-bit address for each function call and
+; instead making do with a single byte index (which gets doubled) into this table.
     ldy l0016                                                         ; 9595: a4 16       ..
     lda vm_base_ptr                                                   ; 9597: a5 1e       ..
     adc (program_data_ptr),y                                          ; 9599: 71 1c       q.
